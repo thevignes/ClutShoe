@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <link rel="stylesheet" href="/evara-frontend/assets/css/vendors/otp.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>OTP Verification</h1>
+        <div class="timer" id="timer">01:00</div>
+        <form id="otpForm" action="/verify-otp" method="POST">
+            <input type="text" name="otp" id="otpInput" placeholder="Enter OTP">
+            <button type="submit">Submit OTP</button>
+        </form>
+
+        <form action="/resend-otp" id="resendForm" method="POST">
+            <button id="resendOtp" style="display: none;" type="submit">Resend OTPeeee</button>
+        </form>
+
+        <div id="errorMessage" style="color: red; display: none;"></div>
+    </div>
+
+    <script src="/evara-frontend/assets/js/otp.js"></script>
+
+
+
+</body>
+
+</html>

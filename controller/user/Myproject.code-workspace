@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../.."
+		},
+		{
+			"path": "../../../../../Downloads/evara-bootstrap-5-ecommerce-html-template"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "Myproject"
+	}
+}

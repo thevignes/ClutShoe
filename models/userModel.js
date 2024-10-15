@@ -16,8 +16,13 @@ const UserSchema = new Schema({
     },
     password:{
         type:String,
-        required: true,
+        required: false,
       
+    },
+    googleId:{
+        type: String,
+        unique: true, 
+        sparse: true 
     },
 
     IsBlocked:{
@@ -49,15 +54,21 @@ const UserSchema = new Schema({
     wallet:[{
         type:Schema.Types.ObjectId,
         ref:'Transaction'
-    }]
- 
+    }],
+    otp: {
+        type: String,
+      },
+      otpExpires: {
+        type: Date,
+      },
+      isVerified: {
+        type: Boolean,
+        default: false,
+      }
 
 
 })
 
-// UserSchema.pre('save', async function(next) {
-//     if (!this.isModified('password')) return next();
-// });
 
 const User = mongoose.model('User',UserSchema)
 
