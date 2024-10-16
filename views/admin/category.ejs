@@ -1,138 +1,282 @@
+
+
+<html lang="en">
 <head>
-    <%-include("../../views/partial/admin/header")%>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
     
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css"/>
-    <style>
-      .col-md-3 {
-        padding: 20px;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        margin: 10px;
-      }
-      .form-label {
-        margin-bottom: 8px;
-      }
-      .form-control {
-        width: 100%;
-        padding: 8px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-sizing: border-box;
-      }
-      .d-grid {
-        margin-top: 20px;
-      }
-      .btn-primary {
-        background-color: #007bff;
-        color: #fff;
-        border: 1px solid #007bff;
-        border-radius: 5px;
-        padding: 10px 20px;
-        cursor: pointer;
-      }
-      .btn-primary:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
-      }
-      .pagination-container {
-        text-align: center;
-      }
-      .pagination {
-        display: inline-block;
-      }
-      .pagination a,
-      .pagination .current-page {
-        display: inline-block;
-        padding: 5px 10px;
-        margin: 0 2px;
-        border: 1px solid #ddd;
-        text-decoration: none;
-        color: #333;
-      }
-      .pagination a:hover {
-        background-color: #f5f5f5;
-      }
-      .error-message {
-        color: red;
-        font-size: 12px;
-        display: none;
-      }
-    </style>
-  </head>
-  <body>
-    <section class="content-main">
-      <div class="content-header">
-        <div>
-          <h2 class="content-title card-title">Category</h2>
-        </div>
+
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css"/> -->
+  <%- include("../../views/partial/admin/header") %>
+
+  <style>
+    .col-md-3 {
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      margin: 10px;
+    }
+
+    .form-label {
+      margin-bottom: 8px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    .d-grid {
+      margin-top: 20px;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      color: #fff;
+      border: 1px solid #007bff;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+      border-color: #0056b3;
+    }
+
+    .pagination-container {
+      text-align: center;
+    }
+
+    .pagination {
+      display: inline-block;
+    }
+
+    .pagination a,
+    .pagination .current-page {
+      display: inline-block;
+      padding: 5px 10px;
+      margin: 0 2px;
+      border: 1px solid #ddd;
+      text-decoration: none;
+      color: #333;
+    }
+
+    .pagination a:hover {
+      background-color: #f5f5f5;
+    }
+
+    .error-message {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <section class="content-main">
+    <div class="content-header">
+      <div>
+        <h2 class="content-title card-title">Category</h2>
       </div>
-      <header class="card-header text-center mb-20">
-        <form action="/admin/category/" method="get" class="d-inline">
-          <div class="input-group input-group-sm border border-1 border-grey rounded-pill" style="width: 500px; margin-left: 230px">
-            <input type="text" class="form-control border-0 rounded-pill mt-3" placeholder="Search categories" name="search"/>
-            <button class="btn" type="submit">Search</button>
+    </div>
+    <header class="card-header text-center mb-20">
+      <form action="/admin/category" method="get" class="d-inline">
+        <div class="input-group input-group-sm border border-1 border-grey rounded-pill" style="width: 500px; margin-left: 230px">
+          <input type="text" class="form-control border-0 rounded-pill mt-3" placeholder="Search categories" name="search">
+          <button class="btn" type="submit">Search</button>
+        </div>
+      </form>
+    </header>
+    <div class="card">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3">
+            <form method="post" action="/admin/addCategory" onsubmit="return handelFormSubmit(event)">
+              <div class="mb-4">
+                <label for="product_name" class="form-label">Name</label>
+                <input type="text" name="name" placeholder="Type here" class="form-control" id="product_name" >
+                <div id="name-error" class="error-message"></div>
+              </div>
+              <div class="mb-4">
+                <label class="form-label">Description</label>
+                <textarea placeholder="Type here" name="description" class="form-control" id="descriptionId" ></textarea>
+                <div id="description-error" class="error-message"></div>
+              </div>
+              <div class="d-grid">
+                <button class="btn btn-primary" type="submit">
+                  Create category
+                </button>
+              </div>
+            </form>
           </div>
-        </form>
-      </header>
-      <div class="card">
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-3">
-              <form method="post" action="/admin/addCategory" onsubmit="return handleFormSubmit(event)">
-                <div class="mb-4">
-                  <label for="product_name" class="form-label">Name</label>
-                  <input type="text" name="name" placeholder="Type here" class="form-control" id="product_name" required/>
-                  <div id="name-error" class="error-message">Please enter a category name.</div>
-                </div>
-                <div class="mb-4">
-                  <label class="form-label">Description</label>
-                  <textarea placeholder="Type here" name="description" class="form-control" id="descriptionId" required></textarea>
-                  <div id="description-error" class="error-message">Please enter a description.</div>
-                </div>
-                <div class="d-grid">
-                  <button class="btn btn-primary" type="submit">
-                    Create category
-                  </button>
-                </div>
-              </form>
+
+          <!-- Category table -->
+          <div class="col-md-8 ml-10">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th class="text-center"></th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Offer Price</th>
+                    <th>Offer</th>
+                    <th>Status</th>
+                    <th>List/Unlist</th>
+                    <th class="text-start">Edit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% cate.forEach(function(Category) { %>
+                  <tr>
+                    <td></td>
+                    <td class="text-start"><%= Category.name %></td>
+                    <td class="text-start"><%= Category.description %></td>
+                    <td><%= Category.offerPrice %></td>
+                    <td class="text-start">
+                      <a href="#" class="btn btn-info text-white" style="width: 100px">Add Offer</a>
+                      <a href="#" class="btn btn-info text-white" style="width: 100px">Remove</a>
+                    </td>
+                    <td class="text-start">
+                      <% if (Category.status === 'listed') { %>
+                        <span class="badge rounded-pill alert-success" style="width: 60px">Listed</span>
+                      <% } else { %>
+                        <span class="badge rounded-pill alert-danger" style="width: 60px">Unlisted</span>
+                      <% } %>
+                    </td>
+                    <td class="text-start">
+                      <% if (   Category.status === 'listed') { %>
+                        <a href="/admin/unlist/<%= Category._id %>" class="btn btn-danger text-white" style="width: 70px">Unlist</a>
+                      <% } else { %>
+                        <a href="/admin/list/<%= Category._id %>" class="btn btn-success text-white" style="width: 70px">List</a>
+                      <% } %>
+                    </td>
+                    <td class="text-start">
+                      <a href="/admin/edit/<%= category._id %>" class="btn btn-info text-white">Edit</a>
+                    </td>
+                  </tr>
+                  <% }); %>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </div>
-    </section>
-  
-    <script>
-      function handleFormSubmit(event) {
-        event.preventDefault(); // Prevent the form from submitting
-        const nameInput = document.getElementById('product_name');
-        const descriptionInput = document.getElementById('descriptionId');
-        const nameError = document.getElementById('name-error');
-        const descriptionError = document.getElementById('description-error');
-  
-        let isValid = true;
-  
-        // Reset previous error messages
-        nameError.style.display = 'none';
-        descriptionError.style.display = 'none';
-  
-        // Validate name
-        if (nameInput.value.trim() === '') {
-          nameError.style.display = 'block';
-          isValid = false;
-        }
-  
-        // Validate description
-        if (descriptionInput.value.trim() === '') {
-          descriptionError.style.display = 'block';
-          isValid = false;
-        }
-  
+    </div>
 
-        if (isValid) {
-          event.target.submit();
+    <!-- Pagination -->
+    <div class="pagination-container">
+      <% if (currentPage > 1) { %>
+        <a href="?page=<%= currentPage - 1 %>">&laquo; Previous</a>
+      <% } %>
+      <span class="current-page">Page <%= currentPage %> of <%= TotalPages %></span>
+      <% if (currentPage < TotalPages) { %>
+        <a href="?page=<%= currentPage + 1 %>">Next &raquo;</a>
+      <% } %>
+    </div>
+  </section>
+</body>
+</html>
+<%- include("../../views/partial/admin/footer") %>
+
+  <script>
+function handelFormSubmit(event) {
+    event.preventDefault();
+
+ 
+    if (!validateForm()) {
+        return; 
+    }
+
+    const name = document.getElementById("name").value; 
+    const description = document.getElementById('descriptionId').value;
+consle.log('fetchoingyghghg')
+    fetch('/admin/addCategory', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, description })
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => {
+                throw new Error(err.error); 
+            });
         }
-      }
-    </script>
-  </body>
-  <%-include("../../views/partial/admin/footer")%>
+        return response.json();
+    })
+    .then(data => {
+
+     location.reload()
+    })
+    .catch(error => {
+        if(error.message){
+            Swal.fire({
+                icon: 'error',
+                title: 'oops Error!',
+                text: error.message,
+            })
+        }else{
+            Swal.fire({
+                icon: 'error',
+                title: 'oops Error!',
+                text: 'Something went wrong, please try again later',
+            })
+            console.log(Swal)
+        }
+
+       
+    });
+}
+
+function validateForm() {
+    clearErrorMessage();
+    const name = document.getElementById('name').value;
+    const description = document.getElementById('descriptionId').value;
+    let valid = true;
+
+    // Check for name input
+    if (name === "") {
+        displayErrorMessage('#name-error', "Please enter a name");
+        valid = false;
+    } else if (!/^[a-zA-Z\s]+$/.test(name)) {
+        displayErrorMessage('#name-error', "Please enter a valid name (letters only)");
+        valid = false;
+    }
+
+    // Check for description input
+    if (description === "") {
+        displayErrorMessage('#description-error', "Please enter a description");
+        valid = false;
+    }
+
+    return valid; // Make sure to return the validation result
+}
+
+    function displayErrorMessage(elementId, message) {
+    const errorMessageElement = document.querySelector(elementId);
+    if (errorMessageElement) {
+        errorMessageElement.innerText = message;
+        errorMessageElement.style.display = "block";
+    }
+}
+
+function clearErrorMessage() {
+    const errorMessageElements = document.querySelectorAll('.error-message');
+  
+    Array.from(errorMessageElements).forEach((element) => {
+        element.innerText = "";
+        element.style.display = "none";
+    });
+}
+
+
+  </script>
+
