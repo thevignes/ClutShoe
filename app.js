@@ -7,7 +7,7 @@ const passport = require('passport')
 
 require('dotenv').config();
 
-require('./config/passport');
+require('./config/passport');~`    `
 
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes")
