@@ -77,7 +77,7 @@ const getUSers = async(req,res)=>{
     try{
     const user = await User.find()
 
-    res.render('adminUsers',{user})
+    res.render('adminUsers',{user,currentPage:null,totalPages:null})
 
     // console.log(user)?
     }catch(err){
@@ -121,6 +121,37 @@ const getUSers = async(req,res)=>{
           }
         }
 
+        //user side pagination
+        const Userlist = async (req, res) => {
+          const page = Math.max(1, parseInt(req.query.page)) || 1;
+          const limit = Math.max(1, parseInt(req.query.limit)) || 5;
+
+          
+          try {
+            const users = await User.find()
+              .skip((page - 1) * limit)
+              .limit(limit);
+        
+            const totalUsers = await User.countDocuments();
+            const totalPages = Math.ceil(totalUsers / limit);
+        
+            console.log("Current Page:", page);
+            console.log("Total Pages:", totalPages);
+        
+            console.log("Rendering view with currentPage:", page);
+        
+            res.render('adminUsers', {
+              user: users,
+              currentPage: page, 
+              totalPages: totalPages
+            });
+          } catch (err) {
+            console.log('Error fetching users:', err);
+            res.status(500).send('Server Error');
+          }
+        };
+        
+      
       
 
 
@@ -133,5 +164,6 @@ module.exports = {
   getUSers,
   blockUser,
   UnblockUser,
+  Userlist
  
 };

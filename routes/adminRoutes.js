@@ -23,5 +23,11 @@ router.get('/category',CategoryController.CategoryDet)
 
 router.post('/addCategory',CategoryController.addCategory)
 
+router.get('/editCategory/:id', CategoryController.editCatePage);
+
+router.post('/editCategory/:id', CategoryController.editCategory)
+
+router.post('/CategoryDelete/:id', CategoryController.CategoryDelete)
+
 // router.get('/editCategory/:id', AdminController.editCategory)
 module.exports = router

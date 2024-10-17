@@ -10,7 +10,7 @@
     <meta property="og:title" content="">
     <meta property="og:type" content="">
     <meta property="og:url" content="">
-    <meta property="og:image" content="">
+    <meta property="og:image" content="">z  
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
     <link rel="stylesheet" href="/evara-backend/assets/imgs/theme/favicon.svg">
@@ -64,10 +64,14 @@
                     </a>
                
                 </li>
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-transactions-1.html"> <i class="icon material-icons md-monetization_on"></i>
-                        <span class="text">Category</span>
-                    </a>
+                <li class="menu-item has-submenu"><i class="icon material-icons md-monetization_on"></i>
+                    <div style="position: absolute; left: 20%;margin-top: -7%;">
+                        <a href="/admin/category" style="color: #292f46;">category</a> 
+                    </div>
+                    
+                
+                        <!-- <span class="text">Category</span> -->
+                 
                  
                 </li>
                 <li class="menu-item has-submenu">
@@ -99,9 +103,9 @@
                         <a href="page-settings-2.html">Setting sample 2</a>
                     </div>
                 </li>
-                <li class="menu-item">
-                    <a  style="left: 5%; font-size: 10px;" class="menu-link" href="/admin/signin"> <i class="fa-solid fa-right-from-bracket">  Logout    </i> </i></i >
-                     
+                <li class="menu-item"> <i class="fa-solid fa-right-from-bracket"></i> 
+                    <a  style="left: 5%; font-size: 10px;" class="menu-link" href="/admin/signin">
+                     <span>Logout</span>
                     </a >
                 </li>
             </ul>
@@ -114,7 +118,7 @@
             <div class="col-search">
                 <form class="searchform">
                     <div class="input-group">
-                        <input list="search_terms" type="text" class="form-control" placeholder="Search term">
+                        <input list="search_terms" type="text" class="form-control" placeholder="Search term" style="border: solid 1px gray; border-radius: 5%;">
                         <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
                     </div>
                     <datalist id="search_terms">

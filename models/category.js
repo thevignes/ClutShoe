@@ -17,6 +17,15 @@ const categorySchema = new mongoose.Schema({
     ref: 'Category',
     required: false 
   },
+  isDelete:{
+    type:Boolean,
+    default: false
+  },
+  deletedAt: {
+    type: Date,
+    required: false
+  },
+
   createdAt: {
     type: Date,
     default: Date.now
@@ -25,6 +34,7 @@ const categorySchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   }
-});
+},{timestamps:true});
+
 const Category =  mongoose.model ('Category',categorySchema)
 module.exports = Category
