@@ -1,199 +1,191 @@
-<%- include("../../views/partials/admin/header") %>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css"/>
-  <style>
-    .col-md-3 {
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      margin: 10px;
-    }
-
-    .form-label {
-      margin-bottom: 8px;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      box-sizing: border-box;
-    }
-
-    .d-grid {
-      margin-top: 20px;
-    }
-
-    .btn-primary {
-      background-color: #007bff;
-      color: #fff;
-      border: 1px solid #007bff;
-      border-radius: 5px;
-      padding: 10px 20px;
-      cursor: pointer;
-    }
-
-    .btn-primary:hover {
-      background-color: #0056b3;
-      border-color: #0056b3;
-    }
-
-    .pagination-container {
-      text-align: center;
-    }
-
-    .pagination {
-      display: inline-block;
-    }
-
-    .pagination a,
-    .pagination .current-page {
-      display: inline-block;
-      padding: 5px 10px;
-      margin: 0 2px;
-      border: 1px solid #ddd;
-      text-decoration: none;
-      color: #333;
-    }
-
-    .pagination a:hover {
-      background-color: #f5f5f5;
-    }
-
-    .error-message {
-      color: red;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List with Validation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 2rem;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        .form-header {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        .save-btn {
+            background-color: #007bff;
+            color: white;
+            margin-right: 10px;
+        }
+        .publish-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .save-btn:hover, .publish-btn:hover {
+            opacity: 0.9;
+        }
+        .custom-file-input {
+            border: 1px solid #ced4da;
+        }
+        .category-select {
+            width: 100%;
+        }
+        .form-text {
+            font-size: 0.85rem;
+        }
+        .form-card {
+            padding: 1.5rem;
+        }
+    </style>
 </head>
 <body>
-  <section class="content-main">
-    <div class="content-header">
-      <div>
-        <h2 class="content-title card-title">Category</h2>
-      </div>
-    </div>
-    <header class="card-header text-center mb-20">
-      <form action="/admin/category/" method="get" class="d-inline">
-        <div class="input-group input-group-sm border border-1 border-grey rounded-pill" style="width: 500px; margin-left: 230px">
-          <input type="text" class="form-control border-0 rounded-pill mt-3" placeholder="Search categories" name="search"/>
-          <button class="btn" type="submit">Search</button>
-        </div>
-      </form>
-    </header>
-    <div class="card">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-md-3">
-            <form method="post" action="/admin/addCategory">
-              <div class="mb-4">
-                <label for="product_name" class="form-label">Name</label>
-                <input type="text" name="name" placeholder="Type here" class="form-control" id="product_name" required/>
-                <div id="name-error" class="error-message"></div>
-              </div>
-              <div class="mb-4">
-                <label class="form-label">Description</label>
-                <textarea placeholder="Type here" name="description" class="form-control" id="descriptionId" required></textarea>
-                <div id="description-error" class="error-message"></div>
-              </div>
-              <div class="d-grid">
-                <button class="btn btn-primary" type="submit">
-                  Create category
-                </button>
-              </div>
-            </form>
-          </div>
 
-          <!-- Category table -->
-          <div class="col-md-8 ml-10">
-            <div class="table-responsive">
-              <table class="table table-hover">
-                <thead>
-                  <tr>
-                    <th class="text-center"></th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Offer Price</th>
-                    <th>Offer</th>
-                    <th>Status</th>
-                    <th>List/Unlist</th>
-                    <th class="text-start">Edit</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% categories.forEach(function(category) { %>
-                  <tr>
-                    <td></td>
-                    <td class="text-start"><%= category.name %></td>
-                    <td class="text-start"><%= category.description %></td>
-                    <td><%= category.offerPrice %></td>
-                    <td class="text-start">
-                      <a href="#" class="btn btn-info text-white" style="width: 100px">Add Offer</a>
-                      <a href="#" class="btn btn-info text-white" style="width: 100px">Remove</a>
-                    </td>
-                    <td class="text-start">
-                      <% if (category.status === 'listed') { %>
-                        <span class="badge rounded-pill alert-success" style="width: 60px">Listed</span>
-                      <% } else { %>
-                        <span class="badge rounded-pill alert-danger" style="width: 60px">Unlisted</span>
-                      <% } %>
-                    </td>
-                    <td class="text-start">
-                      <% if (category.status === 'listed') { %>
-                        <a href="/admin/unlist/<%= category._id %>" class="btn btn-danger text-white" style="width: 70px">Unlist</a>
-                      <% } else { %>
-                        <a href="/admin/list/<%= category._id %>" class="btn btn-success text-white" style="width: 70px">List</a>
-                      <% } %>
-                    </td>
-                    <td class="text-start">
-                      <a href="/admin/edit/<%= category._id %>" class="btn btn-info text-white">Edit</a>
-                    </td>
-                  </tr>
-                  <% }); %>
-                </tbody>
-              </table>
+<div class="container">
+    <h2 class="form-header">Add New Product</h2>
+    <div class="row">
+        <!-- Basic Details -->
+        <div class="col-md-8">
+            <div class="card form-card">
+                <h5>Basic</h5>
+                <form action="/products/add" method="POST" enctype="multipart/form-data" id="productForm" novalidate>
+                    <!-- Product Title -->
+                    <div class="mb-3">
+                        <label for="productTitle" class="form-label">Product Title</label>
+                        <input type="text" class="form-control" id="productTitle" name="productTitle" placeholder="Enter product title" required>
+                        <div class="invalid-feedback">Product title is required.</div>
+                    </div>
+
+                    <!-- Product Description -->
+                    <div class="mb-3">
+                        <label for="productDescription" class="form-label">Full Description</label>
+                        <textarea class="form-control" id="productDescription" name="productDescription" rows="3" placeholder="Enter a full description" required></textarea>
+                        <div class="invalid-feedback">Product description is required.</div>
+                    </div>
+
+                    <!-- Pricing Details -->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="regularPrice" class="form-label">Regular Price</label>
+                            <input type="number" class="form-control" id="regularPrice" name="regularPrice" placeholder="$" required min="1">
+                            <div class="invalid-feedback">Please enter a valid regular price greater than 0.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="promotionalPrice" class="form-label">Promotional Price</label>
+                            <input type="number" class="form-control" id="promotionalPrice" name="promotionalPrice" placeholder="$" min="0">
+                            <div class="invalid-feedback">Please enter a valid promotional price (if applicable).</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="currency" class="form-label">Currency</label>
+                            <select class="form-select" id="currency" name="currency" required>
+                                <option value="" disabled selected>Select currency</option>
+                                <option value="USD">USD</option>
+                                <option value="EUR">EUR</option>
+                                <option value="INR">INR</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a currency.</div>
+                        </div>
+                    </div>
+
+                    <!-- Tax Rate -->
+                    <div class="mb-3 mt-3">
+                        <label for="taxRate" class="form-label">Tax Rate (%)</label>
+                        <input type="number" class="form-control" id="taxRate" name="taxRate" placeholder="Enter tax rate" min="0" required>
+                        <div class="invalid-feedback">Please enter a valid tax rate.</div>
+                    </div>
+
+                    <!-- Save and Publish Buttons -->
+                    <button type="button" class="btn save-btn" id="saveBtn">Save to Draft</button>
+                    <button type="submit" class="btn publish-btn">Publish</button>
+                </form>
             </div>
-          </div>
         </div>
-      </div>
+
+        <!-- Media Upload -->
+        <div class="col-md-4">
+            <div class="card form-card">
+                <h5>Media</h5>
+                <div class="mb-3">
+                    <label for="image1" class="form-label">Upload Image 1</label>
+                    <input type="file" class="form-control custom-file-input" id="image1" name="image1" accept="image/*" required>
+                    <div class="invalid-feedback">Please upload the first image.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="image2" class="form-label">Upload Image 2</label>
+                    <input type="file" class="form-control custom-file-input" id="image2" name="image2" accept="image/*" required>
+                    <div class="invalid-feedback">Please upload the second image.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="image3" class="form-label">Upload Image 3</label>
+                    <input type="file" class="form-control custom-file-input" id="image3" name="image3" accept="image/*" required>
+                    <div class="invalid-feedback">Please upload the third image.</div>
+                </div>
+                <small class="form-text text-muted">Please upload exactly 3 images.</small>
+            </div>
+
+            <!-- Organization -->
+            <div class="card form-card">
+                <h5>Organization</h5>
+                <div class="mb-3">
+                    <label for="category" class="form-label">Category</label>
+                    <select class="form-select category-select" id="category" name="category" required>
+                        <option value="" disabled selected>Select category</option>
+                        <option value="automobile">Automobile</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="fashion">Fashion</option>
+                    </select>
+                    <div class="invalid-feedback">Please select a category.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="subcategory" class="form-label">Sub-category</label>
+                    <select class="form-select category-select" id="subcategory" name="subcategory" required>
+                        <option value="" disabled selected>Select sub-category</option>
+                        <option value="nissan">Nissan</option>
+                        <option value="toyota">Toyota</option>
+                        <option value="bmw">BMW</option>
+                    </select>
+                    <div class="invalid-feedback">Please select a sub-category.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="tags" class="form-label">Tags</label>
+                    <input type="text" class="form-control" id="tags" name="tags" placeholder="Enter tags" required>
+                    <div class="invalid-feedback">Please enter at least one tag.</div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
-    <!-- Pagination -->
-    <div class="pagination-container">
-      <% if (currentPage > 1) { %>
-        <a href="?page=<%= currentPage - 1 %>">&laquo; Previous</a>
-      <% } %>
-      <span class="current-page">Page <%= currentPage %> of <%= totalPages %></span>
-      <% if (currentPage < totalPages) { %>
-        <a href="?page=<%= currentPage + 1 %>">Next &raquo;</a>
-      <% } %>
-    </div>
-  </section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- Custom Validation Script -->
+<script>
+    (function () {
+        'use strict'
+        const form = document.getElementById('productForm');
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })()
+</script>
 
-  <!-- Client-side validation (if needed) -->
-  <script>
-    document.querySelector('form').addEventListener('submit', function(e) {
-      const name = document.querySelector('#product_name').value;
-      const description = document.querySelector('#descriptionId').value;
-      let valid = true;
-
-      if (!name) {
-        document.querySelector('#name-error').textContent = "Name is required";
-        valid = false;
-      }
-
-      if (!description) {
-        document.querySelector('#description-error').textContent = "Description is required";
-        valid = false;
-      }
-
-      if (!valid) {
-        e.preventDefault();
-      }
-    });
-  </script>
-<%- include("../../views/partials/admin/footer") %>
+</body>
+</html>

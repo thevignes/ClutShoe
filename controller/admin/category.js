@@ -82,6 +82,7 @@ const editCategory = async (req, res) => {
 };
 
 ///deleting category SoftDelete
+
 const CategoryDelete = async (req, res) => {
   const id = req.params.id;
   console.log('The ID is', id);
@@ -109,6 +110,39 @@ const CategoryDelete = async (req, res) => {
   }
 };
 
+const CategoryList = async (req,res)=>{
+  
+  const id = req.params.id
+  try {
+    const Updatecate = await Category.findByIdAndUpdate(id,{
+      isListed:true
+    },{new:true})
+    res.redirect('/admin/category')
+
+    console.log("the listed category is :",Updatecate)
+  } catch (error) {
+    console.log(error)
+    res.status(500).send('Server error. Please try again.')
+  }
+}
+
+const UnCategoryList = async (req,res)=>{
+  const id = req.params.id;
+  try {
+    const Updatecate = await Category.findByIdAndUpdate(id,{
+      isListed:false
+    },{new:true})
+    res.redirect('/admin/category' )
+    
+    console.log("the listed category is :",Updatecate)
+  } catch (error) {
+    console.log(error)
+    res.status(500).send('Server error. Please try again.')
+  }
+}
+
+
+
 
 module.exports = {
     CategoryDet,
@@ -116,6 +150,8 @@ module.exports = {
     editCategory,
     editCatePage,
     CategoryDelete,
+    CategoryList,
+    UnCategoryList
     
 
 }

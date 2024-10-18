@@ -4,7 +4,7 @@ const session = require("express-session");
 const path = require("path");
 const mongoose = require("mongoose");
 const passport = require('passport')
-
+const flash = require('connect-flash');
 require('dotenv').config();
 
 require('./config/passport');~`    `
@@ -33,6 +33,16 @@ app.use((req,res,next)=>{
   next();    
 })
 
+
+//middleware of flash 
+
+app.use(flash());
+
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success');
+  res.locals.error_msg = req.flash('error');
+  next();
+});
 // /connect to mongodb//
 mongoose
   .connect("mongodb://127.0.0.1:27017/ClutchShoe", {})

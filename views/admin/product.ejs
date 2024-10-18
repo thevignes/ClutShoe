@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product List</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f7f9fc;
+    }
+    .table-container {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+    .page-header {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 28px;
+      font-weight: 600;
+    }
+    .btn {
+      padding: 5px 10px;
+      font-size: 14px;
+    }
+    .table thead th {
+      text-align: center;
+    }
+    .table tbody td {
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <%- include("../../views/partial/admin/header") %>
+
+  <!-- Main Content -->
+  <div class="container table-container">
+    <form action="/admin/addProduct">
+        <button type="submit" class="bg-success text-white rounded border-noned-flex position-absolue justify-content-end p-2 px-2" style="border: none; right: 0px; align-items: center;">add product</button>
+    </form>
+    <h2 class="page-header">Product List</h2>
+    <table class="table table-bordered table-hover text-center align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Product Name</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+     
+    </table>
+  </div>
+
+  <!-- Footer -->
+
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+
+  
+<%- include("../../views/partial/admin/footer") %>

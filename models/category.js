@@ -17,6 +17,10 @@ const categorySchema = new mongoose.Schema({
     ref: 'Category',
     required: false 
   },
+  isListed:{
+    type: Boolean,
+    default: true
+  },
   isDelete:{
     type:Boolean,
     default: false
