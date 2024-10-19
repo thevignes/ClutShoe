@@ -5,9 +5,11 @@ const CategoryController = require ('../controller/admin/category')
 const ProductController = require('../controller/admin/product')
 const multer = require('multer')
 const storage = require('../helpers/multer')
+// const upload = require("../helpers/multer")
 const uploads= multer({ storage: storage })
+const {UserAuth,AdminAuth} = require('../middlewares/auth')
 
-router.get('/dashboard',AdminController.Dashboard)
+router.get('/dashboard',AdminAuth,AdminController.Dashboard)
 
 router.get('/signin',AdminController.AdminLogin)
 
@@ -44,9 +46,12 @@ router.post('/UnCategoryList/:id',CategoryController.UnCategoryList)
 
 router.get('/product',ProductController.ProductList)
 
-router.get('/addProduct',ProductController.AddProduct)
+router.get('/addProduct',ProductController.AddProductPage)
 
 router.post('/addProduct',uploads.array("images",4),ProductController.addProduct)
 
+router.get('/editproduct/:id',ProductController.editProductPage )
+
+router.post('/editProduct/:id',ProductController.editProduct)
 
 module.exports = router

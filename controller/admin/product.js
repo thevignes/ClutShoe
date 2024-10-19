@@ -1,5 +1,6 @@
 const { MongoDBCollectionNamespace } = require('mongodb')
 const Product = require ('../../models/product')
+
 const User = require('../../models/userModel')
 const fs = require ('fs')
 const Sharp = require('sharp')
@@ -10,7 +11,9 @@ const Category = require('../../models/category')
 
 const ProductList = async (req,res)=>{
     try {
-        res.render('product')
+        const products = await Product.find();
+
+        res.render('product',{products})
     } catch (error) {
          console.log(error)
          res.status(500).send('Server Error')
@@ -18,7 +21,7 @@ const ProductList = async (req,res)=>{
     
 }
 
-const AddProduct = async (req,res) => {
+const AddProductPage = async (req,res) => {
    
         try {
             const category = await Category.find({isListed:true})
@@ -32,66 +35,159 @@ const AddProduct = async (req,res) => {
         }
     
 }
-const addProduct = async (req, res) => {
-    try {
-        const product = req.body;
-        const ProductExist = await Product.findOne({ name: product.productName }); // Check 'name', not 'productName'
 
-        if (!ProductExist) {
-            const images = [];
+        //adding new product in product page 
+        const addProduct = async (req, res) => {
+            
+            try {
+                console.log("Processing the product addition...");
+                // const product = req.body
+                const {productName,description,price,images,size,category,regularPrice,salePrice,colors,review,quantity,isListed,stock} = req.body
+                console.log(req.body)
+                // const { category: categoryName } = req.body;
+                // Check if the product already exists
+                const productExist = await Product.findOne({ productName });
 
-            if (req.files && req.files.length > 0) {
-                for (let i = 0; i < req.files.length; i++) {
-                    const originalImagePath = req.files[i].path;
-                    const resizedImagesPath = path.join('public', 'uploads', 'product-images', req.files[i].filename);
-
-                    // Resize and save image using Sharp
-                    await Sharp(originalImagePath)
-                        .resize({ width: 440, height: 440 })
-                        .toFile(resizedImagesPath);
-
-                    images.push(req.files[i].filename);
+                if (productExist) {
+                    return res.status(400).json({ error: 'Product already exists' });
                 }
+        
+                // Array to store image filenames
+                const uploadImages = [];
+        
+                // Handle file uploads using multer
+                if (req.files && req.files.length > 0) {
+                    for (let i = 0; i < req.files.length; i++) {
+                        
+                        const originalImagePath = req.files[i].path;
+                        console.log(originalImagePath,"its wwwww")
+                        const resizedImagesPath = path.join( 'public','public','uploads','re-image', req.files[i].filename);
+                        const resizedFilename = Date.now()+req.files[i].filename 
+                        const rePath =  path.join( 'public','public','uploads','re-image', resizedFilename);
+                        console.log(resizedImagesPath,"its also")
+                        
+                        const supportedFormats = ['image/jpeg', 'image/png', 'image/webp'];
+                        if (!supportedFormats.includes(req.files[i].mimetype)) {
+                            return res.status(400).json({ error: 'Unsupported image format' });
+                        }
+        
+                        
+                        try {
+                            await Sharp(resizedImagesPath)
+                                .resize({ width: 440, height: 440 })
+                                .toFile(rePath); 
+                        } catch (sharpError) {
+                            console.log('Error processing image with Sharp:', sharpError);
+                            return res.status(500).json({ error: 'Error processing image' });
+                        }
+        
+                        uploadImages.push(resizedFilename); 
+                    }
+                }
+        
+                // Find category by name
+                const categoryData = await Category.findOne({ name: category });
+                if (!categoryData) {
+                    return res.status(404).json({ error: 'Category not found' });
+                }
+              
+                // Create a new product with all details
+
+                const newProduct = new Product({
+                    productName,
+                    price,
+                    description,
+                    images : uploadImages,
+                    category:categoryData?._id,
+                    regularPrice,
+                    salePrice,
+                    quantity,
+                    size,
+                    colors,
+                    isListed,
+                    stock,
+                    review
+                });
+                // const newProduct = new Product({
+                //     productName,
+                //     price,
+                //     description,
+                //     images, // Array of uploaded image filenames
+                //     category, // Store category ID
+                //     regularPrice,
+                //     salePrice,
+                //     quantity,
+                //     size,
+                //     colors,
+                //     // status,
+                //     isListed,
+                //     stock
+                // });
+                    
+                // Save product to the database
+                await newProduct.save();
+                console.log("Product added successfully:", newProduct);
+                return res.redirect('/admin/addProduct');  // Redirect after success
+            } catch (error) {
+                console.log('Error saving product:', error);
+                return res.status(500).json({ error: 'An error occurred while saving the product' });
             }
+        };
+        
+        const editProduct = async (req, res) => {
+            try {
+            //   const product = req.body.
+              
 
-            const categoryId = await Category.findOne({ name: product.category });
-            if (!categoryId) {
-                return res.status(404).send('Category not found');
+              const id = req.params.id;
+              const updatedProductData = req.body;
+              const product = await Product.findByIdAndUpdate(id,updatedProductData,{new:true});
+              if (!product) {
+                return res.status(404).send({ message: "Product not found" });
+              }
+          
+              // console.log(category, " is edited");
+          
+              return res.redirect('/admin/product '); 
+            } catch (error) {
+              return res.status(500).send({ error: "Internal server error" });
             }
+          };
+  // To render the edit product page
+const editProductPage = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const product = await Product.findById(id).populate('category', 'name');
 
-            const newProduct = new Product({
-                name: product.productName, // Changed to 'name'
-                price: product.price,
-                description: product.description,
-                images,
-                category: categoryId._id,
-                regularPrice: product.regularPrice,
-                salePrice: product.salesPrice, // Changed to 'salePrice'
-                quantity: product.quantity,
-                createdAt: new Date(),
-                size: product.size,
-                colors: product.color, // Changed to 'colors'
-                review: product.reviews, // Changed to 'review'
-                status: "Available",
-                isListed: product.isListed
-            });
-
-            await newProduct.save();
-            console.log(newProduct, "Product added successfully");
-            return res.redirect('/admin/addProduct');
-        } else {
-            return res.status(400).json({ error: 'Product already exists' });
+        console.log('The ID is: ', id, 'and the product is: ', product);
+        if (!product) {
+            return res.status(404).send({ message: "Product not found" });
         }
+
+        console.log("Product id:", id);
+        console.log("Fetched Product:", product);
+
+        // Use res.render instead of res.redirect
+        return res.render('editProduct', { product });
     } catch (error) {
-        console.log('Error saving product:', error); // Logs detailed error
-        return res.status(500).json({ error: 'An error occurred while saving the product' });
+        console.error('Error fetching product:', error);
+        return res.status(500).send({ message: "Internal Server Error" });
     }
 };
 
+const  UpdateProduct = async (req,res) =>{
+    try{
+
+    }catch(err){
+        
+    }
+}
 
 module.exports = {
     ProductList,
-    AddProduct,
-    addProduct
+    AddProductPage,
+    addProduct,
+    editProduct,
+    editProductPage 
  
 }

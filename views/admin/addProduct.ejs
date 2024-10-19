@@ -198,7 +198,7 @@
                                                         </div>
                             </div>
                             <div>
-                                <button class="btn btn-md rounded font-sm hover-up"  type="button" onclick="validateAndSubmit()">Publish</button>
+                                <button class="btn btn-md rounded font-sm hover-up"  type="submit" onclick="validateAndSubmit()">Publish</button>
                             </div>
                         </form>
                     </div>
@@ -210,7 +210,7 @@
     <script>
         function validateAndSubmit(){
             if(validateForm()){
-                document.forms[0].submit();
+                document.form[0].submit();
             }
         }
         let cropper; 
