@@ -58,7 +58,7 @@ const ProductSchema = new mongoose.Schema({
     },
     isListed:{
         type: Boolean,
-        default: false
+        default:true
     },
     colors:{
         type: String,

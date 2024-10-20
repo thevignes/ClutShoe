@@ -3,7 +3,7 @@ const router = express.Router();
 const userControler = require('../controller/user/userControler');
 const passport = require('passport');
 
-router.get('/',userControler.HomePage)
+// router.get('/',userControler.HomePage)
 
 router.get('/PageNotfound',userControler.PageNotFound)
 
@@ -24,5 +24,7 @@ router.get('/auth/google',passport.authenticate('google',{scope:['profile','emai
 router.get('/auth/google/callback', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/register' }));
 
 router.post('/resend-otp',userControler.resendOtp)
+
+router.get('/ProducDetial/:id',userControler.ProducDetial)
 
 module.exports = router

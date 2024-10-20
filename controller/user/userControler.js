@@ -3,6 +3,10 @@ const User = require("../../models/userModel");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
+// const product = require ('../../models/product');
+// const category = require ('../../models/category');
+const Category = require("../../models/category");
+const Product = require("../../models/product");
 
 const HomePage = async (req, res) => {
   try {
@@ -21,14 +25,56 @@ const PageNotFound = async (req, res) => {
   }
 };
 
+// const homePage = async (req, res) => {
+//   try {
+//     const user = req.session.user
+//     const categories = await Category.find({isListed:true})
+//     let ProductData = await Product.find({isListed:true,
+//       category:{$in:categories.map(category => category._id)},quantity:{$gt:8}
+//     })
+//   ProductData.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt) )
+//   ProductData = ProductData.slice(0,4)
+//     // res.render("/");
+//     if(user){
+//       const userData = await User.findOne({_id:user._id})
+//       return res.render("home",{userData,ProductData})
+//     }else{
+//       return res.render("home",{ProductData})
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Server Error");
+//   }
+// };
 const homePage = async (req, res) => {
   try {
-    res.render("/");
+    const user = req.session.user;
+    console.log(user)
+    const categories = await Category.find({ isListed: true });
+    console.log(categories);
+    
+    // let ProductData = await Product.find({
+      
+    //   isListed: true,
+    //   category: { $in: categories.map(category => category._id) },
+    //   quantity: { $gt: 8 }
+    // }).sort({ createdAt: -1 }).limit(4);
+    let ProductData = await Product.find({isListed:true}).populate('category')
+    console.log(ProductData)
+    if (user) {
+      const userData = await User.findOne({ _id: user._id });
+      
+      return res.render("home", { userData, ProductData });
+    } else {
+      return res.render("home", { ProductData });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error");
   }
 };
+
+
 const SignUp = async (req, res) => {
   try {
     return res.render("register");
@@ -237,6 +283,23 @@ const GetLogin = async (req, res) => {
   }
 };
 
+  const ProducDetial = async (req,res)=>{
+    try {
+      const ProductId = req.params.id
+      let ProductData = await Product.find({isListed:true}).populate('category')
+      if(!ProductData){
+        return res.status(404).send({message:"Product not found"})
+      }
+     
+      res.render('productDetials', { ProductData });
+
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send("Server Error");
+      
+    }
+  }
+
 module.exports = {
   HomePage,
   PageNotFound,
@@ -248,4 +311,5 @@ module.exports = {
   GetLogin,
   resendOtp,
   VerifyResOtp,
+  ProducDetial
 };

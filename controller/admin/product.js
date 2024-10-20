@@ -11,7 +11,7 @@ const Category = require('../../models/category')
 
 const ProductList = async (req,res)=>{
     try {
-        const products = await Product.find();
+        const products = await Product.find().populate('category', 'name');
 
         res.render('product',{products})
     } catch (error) {
@@ -108,21 +108,7 @@ const AddProductPage = async (req,res) => {
                     stock,
                     review
                 });
-                // const newProduct = new Product({
-                //     productName,
-                //     price,
-                //     description,
-                //     images, // Array of uploaded image filenames
-                //     category, // Store category ID
-                //     regularPrice,
-                //     salePrice,
-                //     quantity,
-                //     size,
-                //     colors,
-                //     // status,
-                //     isListed,
-                //     stock
-                // });
+            
                     
                 // Save product to the database
                 await newProduct.save();
@@ -153,12 +139,11 @@ const AddProductPage = async (req,res) => {
               return res.status(500).send({ error: "Internal server error" });
             }
           };
-  // To render the edit product page
 const editProductPage = async (req, res) => {
     try {
         const id = req.params.id;
-        const product = await Product.findById(id).populate('category', 'name');
-
+        const product = await Product.findById(id)
+        const categoryData = await Category.find();
         console.log('The ID is: ', id, 'and the product is: ', product);
         if (!product) {
             return res.status(404).send({ message: "Product not found" });
@@ -167,27 +152,119 @@ const editProductPage = async (req, res) => {
         console.log("Product id:", id);
         console.log("Fetched Product:", product);
 
-        // Use res.render instead of res.redirect
-        return res.render('editProduct', { product });
+      
+        return res.render('editProduct', { product,cate:categoryData});
     } catch (error) {
         console.error('Error fetching product:', error);
         return res.status(500).send({ message: "Internal Server Error" });
     }
 };
 
-const  UpdateProduct = async (req,res) =>{
-    try{
+const UpdateProduct = async (req, res) => {
+    try {
+        const id = req.params.id 
+        const  product  = await Product.findOne({_id:id})
+        const exisitingProduct = await Product.findOne({
+            productName:data.productName,
+            _id:{$ne:id}
+        })
+        if(exisitingProduct){
+            return res.status(400).send({message:"Product already exists"})
+        }
+        const images = []
+        if (req.files && files.length>0){
+            files.forEach(file => {
+                images.push(req.files[i].filename)
 
-    }catch(err){
+            })
+        }
+        const updateField = {
+            productName: data.productName,
+            description:data.description,
+            category:product.category,
+            regularPrice:data.regularPrice,
+            salePrice:data.salePrice,
+            quantity:data.size,
+            color: data.color,
+
+        }
+        if(req.files.length>0){
+            updateField.$push = {productImages:{$each:images}}
+        }
+        await Product.findByIdAndUpdate(id,updateField,{new:true})
+        res.redirect('/admin/product')
+
+    } catch (error) {
+        console.error('Error updating product:', error);
+        return res.status(500).send({ message: "Internal Server Error" });
         
     }
-}
+};
+
+const productList = async (req, res) => {
+    const id = req.params.id;
+    try {
+      const updateProduct = await Product.findByIdAndUpdate(id,
+         { isListed: true }, { new: true });
+      res.redirect('/admin/product');
+      console.log("The listed product is:", updateProduct, id);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send('Server error. Please try again.');
+    }
+  };
+  
+  const unListProduct = async (req, res) => {
+    const id = req.params.id;
+    try {
+      const updateProduct = await Product.findByIdAndUpdate(id, { isListed: false }, { new: true });
+      res.redirect('/admin/product'); 
+      console.log("The unlisted product is:", updateProduct, id);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send('Server error. Please try again.');
+    }
+  };
+  const deleteSingleImage = async (req, res) => {
+    try {
+        const { imagesId, ProductId } = req.body; 
+
+        const product = await Product.findOneAndUpdate(
+            { _id: ProductId },
+            { $pull: { productImages: imagesId } },
+            { new: true }
+        );
+
+        const imagePath = path.join(__dirname, '..', 'public', 'public', 'uploads', 're-image', imagesId); // Correct path
+
+
+        if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+            console.log(`Image ${imagesId} deleted successfully`);
+        } else {
+            console.log(`Image ${imagesId} not found`);
+        }
+
+        res.send({ status: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ status: false, message: 'Error deleting image' });
+    }
+};
+
 
 module.exports = {
     ProductList,
     AddProductPage,
     addProduct,
     editProduct,
-    editProductPage 
+    editProductPage,
+    unListProduct,
+    productList,
+    UpdateProduct,
+    deleteSingleImage
+    
+
+    
  
 }

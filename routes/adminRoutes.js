@@ -9,7 +9,7 @@ const storage = require('../helpers/multer')
 const uploads= multer({ storage: storage })
 const {UserAuth,AdminAuth} = require('../middlewares/auth')
 
-router.get('/dashboard',AdminAuth,AdminController.Dashboard)
+router.get('/dashboard',AdminController.Dashboard)
 
 router.get('/signin',AdminController.AdminLogin)
 
@@ -54,4 +54,16 @@ router.get('/editproduct/:id',ProductController.editProductPage )
 
 router.post('/editProduct/:id',ProductController.editProduct)
 
-module.exports = router
+router.post('/listProduct/:id', (req, res, next) => {
+    console.log('Received POST request to /admin/listProduct with id:', req.params.id);
+    next();
+  },ProductController.productList);
+  
+
+router.post('/unListProduct/:id',ProductController.unListProduct)
+
+router.post('/admin/updateProduct/:id', uploads.single('image'), ProductController.UpdateProduct);
+
+router.post('/deleteSingleImage' , ProductController.deleteSingleImage)
+
+module.exports = router 
