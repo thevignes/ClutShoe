@@ -42,7 +42,7 @@ const AddProductPage = async (req,res) => {
             try {
                 console.log("Processing the product addition...");
                 // const product = req.body
-                const {productName,description,price,images,size,category,regularPrice,salePrice,colors,review,quantity,isListed,stock} = req.body
+                const {productName,description,price,images,size,category,regularPrice,salePrice,colors,review,quantity,isListed,stock,status} = req.body
                 console.log(req.body)
                 // const { category: categoryName } = req.body;
                 // Check if the product already exists
@@ -106,7 +106,8 @@ const AddProductPage = async (req,res) => {
                     colors,
                     isListed,
                     stock,
-                    review
+                    review,
+                    status
                 });
             
                     
@@ -162,44 +163,54 @@ const editProductPage = async (req, res) => {
 
 const UpdateProduct = async (req, res) => {
     try {
-        const id = req.params.id 
-        const  product  = await Product.findOne({_id:id})
-        const exisitingProduct = await Product.findOne({
-            productName:data.productName,
-            _id:{$ne:id}
-        })
-        if(exisitingProduct){
-            return res.status(400).send({message:"Product already exists"})
-        }
-        const images = []
-        if (req.files && files.length>0){
-            files.forEach(file => {
-                images.push(req.files[i].filename)
+        console.log('Product is being processed for editing');
+        
+        const id = req.params.id; 
+        const product = await Product.findOne({ _id: id });
 
-            })
+        const data = req.body; 
+
+        const existingProduct = await Product.findOne({
+            productName: data.productName,
+            _id: { $ne: id }
+        });
+
+        if (existingProduct) {
+            return res.status(400).send({ message: "Product already exists" });
         }
+
+        const images = [];
+        if (req.files && req.files.length > 0) {
+            req.files.forEach(file => {
+                images.push(file.filename);
+            });
+        }
+
         const updateField = {
             productName: data.productName,
-            description:data.description,
-            category:product.category,
-            regularPrice:data.regularPrice,
-            salePrice:data.salePrice,
-            quantity:data.size,
+            description: data.description,
+            category: product.category,
+            regularPrice: data.regularPrice,
+            salePrice: data.salePrice,
+            quantity: data.quantity ,
             color: data.color,
+        };
 
+
+        if (images.length > 0) {
+            updateField.$push = { productImages: { $each: images } };
         }
-        if(req.files.length>0){
-            updateField.$push = {productImages:{$each:images}}
-        }
-        await Product.findByIdAndUpdate(id,updateField,{new:true})
-        res.redirect('/admin/product')
+
+        await Product.findByIdAndUpdate(id, updateField, { new: true });
+        console.log('product edited successfully',updateField)
+        res.redirect('/admin/product');
 
     } catch (error) {
         console.error('Error updating product:', error);
         return res.status(500).send({ message: "Internal Server Error" });
-        
     }
 };
+
 
 const productList = async (req, res) => {
     const id = req.params.id;
@@ -225,34 +236,42 @@ const productList = async (req, res) => {
       res.status(500).send('Server error. Please try again.');
     }
   };
-  const deleteSingleImage = async (req, res) => {
-    try {
-        const { imagesId, ProductId } = req.body; 
 
-        const product = await Product.findOneAndUpdate(
-            { _id: ProductId },
-            { $pull: { productImages: imagesId } },
-            { new: true }
-        );
-
-        const imagePath = path.join(__dirname, '..', 'public', 'public', 'uploads', 're-image', imagesId); // Correct path
-
-
-        if (fs.existsSync(imagePath)) {
-            fs.unlinkSync(imagePath);
-            console.log(`Image ${imagesId} deleted successfully`);
-        } else {
-            console.log(`Image ${imagesId} not found`);
-        }
-
-        res.send({ status: true });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ status: false, message: 'Error deleting image' });
-    }
-};
-
-
+//   const deleteSingleImage = async (req, res) => {
+//       try {
+//           const { imagesId, ProductId } = req.body;
+  
+//           // Find the product and remove the image from the productImages array
+//           const product = await Product.findOneAndUpdate(
+//               { _id: ProductId },
+//               { $pull: { productImages: imagesId } },
+//               { new: true }
+//           );
+  
+//           if (!product) {
+//               return res.status(404).send({ status: false, message: 'Product not found' });
+//           }
+  
+//           // Path to the image file
+//           const imagePath = path.join(__dirname,'public', 'public', 'uploads', 're-image', imagesId);
+  
+//           // Check if the image exists on the server
+//           if (fs.existsSync(imagePath)) {
+//               fs.unlinkSync(imagePath); // Delete the image file
+//               console.log(`Image ${imagesId} deleted successfully from server`);
+//           } else {
+//               console.log(`Image ${imagesId} not found on server`);
+//           }
+  
+//           // Send success response to the client
+//           res.send({ status: true, message: 'Image deleted successfully' });
+  
+//       } catch (error) {
+//           console.error('Error deleting image:', error);
+//           res.status(500).send({ status: false, message: 'Error deleting image' });
+//       }
+//   };
+  
 module.exports = {
     ProductList,
     AddProductPage,
@@ -262,7 +281,7 @@ module.exports = {
     unListProduct,
     productList,
     UpdateProduct,
-    deleteSingleImage
+    // deleteSingleImage
     
 
     

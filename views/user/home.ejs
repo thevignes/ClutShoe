@@ -1,6 +1,8 @@
-<%-include('../../views/partial/user/header')%>
-
-<main class="main">       
+<%-include('../../views/partial/user/header',{user:user})%>
+<link rel="stylesheet" href="/evara-frontend/assets/css/blender.css">
+<!-- <link rel="stylesheet" href="/public/public/evara-frontend/assets/css/zoom.css"> -->
+<main class="main">  
+     
     <section class="home-slider position-relative pt-50">
         <div class="hero-slider-1 dot-style-1 dot-style-1-position-1">
             <div class="single-hero-slider single-animation-wrap">
@@ -15,9 +17,9 @@
                                 <a class="animated btn btn-brush btn-brush-3" href="shop-product-right.html"> Shop Now </a>
                             </div>
                         </div>
-                        <div class="col-lg-7 col-md-6">
+                        <div class="col-lg-7 col-md-6 mt-5">
                             <div class="single-slider-img single-slider-img-1">
-                                <img class="animated slider-1-1" src="https://i.pinimg.com/enabled/564x/af/c4/a3/afc4a37b50508acceff2f40ff4c9e199.jpg" alt="">
+                                <img class="animated slider-1-1 blender" src="https://i.pinimg.com/564x/55/8a/d1/558ad13fda7a1d2d6d06ab13d350792e.jpg" alt="">
                             </div>
                         </div>
                     </div>
@@ -29,16 +31,16 @@
                     <div class="row align-items-center slider-animated-1">
                         <div class="col-lg-5 col-md-6">
                             <div class="hero-slider-content-2">
-                                <h4 class="animated">Hot promotions</h4>
-                                <h2 class="animated fw-900">Fashion Trending</h2>
-                                <h1 class="animated fw-900 text-7">Great Collection</h1>
-                                <p class="animated">Save more with coupons & up to 20% off</p>
-                                <a class="animated btn btn-brush btn-brush-2" href="shop-product-right.html"> Discover Now </a>
+                                <h4 class="animated">Hot Promotions</h4>
+                                <h2 class="animated fw-900">Running Shoes Sale</h2>
+                                <h1 class="animated fw-900 text-7">Flat 30% Off</h1>
+                                <p class="animated">Run faster, go further, and achieve more; your journey to greatness starts with the right shoes!</p>
+                                <a class="animated btn btn-brush btn-brush-2" href="shop-product-right.html"> Gear Up for the Marathon! </a>
                             </div>
                         </div>
-                        <div class="col-lg-7 col-md-6">
+                        <div class="col-lg-7 col-md-6 ">
                             <div class="single-slider-img single-slider-img-1">
-                                <img class="animated slider-1-2" src="https://i.pinimg.com/736x/9e/16/fd/9e16fd991984fe4324c5f204e2f3d375.jpg" alt="">
+                                <img class="animated slider-1-2 blender " src="https://i.pinimg.com/736x/9e/16/fd/9e16fd991984fe4324c5f204e2f3d375.jpg" alt="">
                             </div>
                         </div>
                     </div>
@@ -47,18 +49,18 @@
             <div class="single-hero-slider single-animation-wrap">
                 <div class="container">
                     <div class="row align-items-center slider-animated-1">
-                        <div class="col-lg-5 col-md-6">
+                        <div class="col-lg-5 col-md-6 blender">
                             <div class="hero-slider-content-2">
-                                <h4 class="animated">Upcoming Offer</h4>
-                                <h2 class="animated fw-900">Big Deals From</h2>
-                                <h1 class="animated fw-900 text-8">Manufacturer</h1>
-                                <p class="animated">Clothing, Shoes, Bags, Wallets...</p>
-                                <a class="animated btn btn-brush btn-brush-1" href="shop-product-right.html"> Shop Now </a>
+                                <h4 class="animated">Sneaker Mania</h4>
+                                <h2 class="animated fw-900">The Sneaker Revolution</h2>
+                                <h1 class="animated fw-900 text-7">20% Off on New Arrivals</h1>
+                                <p class="animated">Life is too short for boring shoes; express your unique style with our vibrant new sneaker collection!</p>
+                                <a class="animated btn btn-brush btn-brush-2" href="shop-product-right.html"> Join the Sneaker Revolution! </a>
                             </div>
                         </div>
-                        <div class="col-lg-7 col-md-6">
+                        <div class="col-lg-7 col-md-6 blender">
                             <div class="single-slider-img single-slider-img-1">
-                                <img class="animated slider-1-3" src="https://i.pinimg.com/736x/e1/ed/78/e1ed7856c0cde48afb331d278f1225a9.jpg" alt="">
+                                <img class="animated slider-1-3 blender " src="https://i.pinimg.com/736x/e1/ed/78/e1ed7856c0cde48afb331d278f1225a9.jpg" alt="">
                             </div>
                         </div>
                     </div>
@@ -112,7 +114,7 @@
     <section class="product-tabs section-padding position-relative wow fadeIn animated">
         <div class="bg-square"></div>
         <div class="container">
-            <div class="tab-header">
+            <!-- <div class="tab-header">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="nav-tab-one" data-bs-toggle="tab" data-bs-target="#tab-one" type="button" role="tab" aria-controls="tab-one" aria-selected="true">Featured</button>
@@ -125,55 +127,97 @@
                     </li>
                 </ul>
                 <a href="#" class="view-more d-none d-md-flex">View More<i class="fi-rs-angle-double-small-right"></i></a>
-            </div>
+            </div> -->
             <!--End nav-tabs-->
-
-
-            <div class="tab-content wow fadeIn animated" id="myTabContent">
-                <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one">
-                    <div class="row product-grid-4">
-                       <% ProductData.forEach(product => { %>
-<div class="col-lg-3 col-md-4 col-12 col-sm-6">
-    <div class="product-cart-wrap mb-30">
-        <div class="product-img-action-wrap">
-            <div class="product-img product-img-zoom">
-                <a href="/ProducDetial/<%= product._id %>">
-                    <img class="default-img" src="/uploads/re-image/<%= product.images[0] %>" alt="<%= product.name %>">
-                    <img class="hover-img" src="/uploads/re-image/<%= product.images[1] %>" alt="<%= product.name %>">
-                </a>
-            </div>
-            <div class="product-action-1">
-                <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal"><i class="fi-rs-eye"></i></a>
-                <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html"><i class="fi-rs-heart"></i></a>
-                <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
-            </div>
-            <div class="product-badges product-badges-position product-badges-mrg">
-                <!-- <span class="hot">Hot</span>  -->
-            </div>
-        </div>
-        <div class="product-content-wrap">
-            <div class="product-category">
-                <h2><a href="shop-product-right.html"><%= product.productName %></a></h2> 
-               
-            </div>
-            <div class="rating-result" title="90%">
-                <a href="shop-grid-right.html"><%= product.category.name %></a>
-                <div>
-                    
+            <div class="container">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="text-xl font-bold mb-4">
+                        Featured Brands
+                    </h2>
                 </div>
-            <span>$<%= product.salePrice %> </span>
-            <div class="product-action-1 show">
-                <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
-             
+                
+                <!-- Flex container for logos -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <!-- Adidas -->
+                    <div class="bg-light rounded-circle p-3">
+                        <img alt="Adidas logo" class="w- h-auto" src="https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg" width="64" height="64"/>
+                    </div>
+                    
+                    <!-- Nike -->
+                    <div class="bg-light rounded-circle p-3">
+                        <img alt="Nike logo" class="w-h-auto  " src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcdb44IezbCN13vEU7fG3sx7G-viDk5t1CUQ&s" width="64" height="64"/>
+                    </div>
+                    
+                    <!-- Jordan -->
+                    <div class="bg-light rounded-circle p-3">
+                        <img alt="Jordan logo" class="w h-auto " src="https://i.pinimg.com/736x/98/e5/a4/98e5a4811e32177795897d60231a016f.jpg" width="64" height="64"/>
+                    </div>
+                    
+                    <!-- New Balance -->
+                    <div class="bg-light rounded-circle p-3">
+                        <img alt="New Balance logo" class="w h-auto  " src="https://logowik.com/content/uploads/images/new-balance.jpg" width="79" height="66"/>
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
-<% }) %>
-</div>
+            
 
+                
 
-
+             <!-- <div class="tab-content wow fadeIn animated" id="myTabContent">
+                <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one"> -->
+                    <div class="row product-grid-4">
+                        <% ProductData.forEach(product => { %>
+                        <div class="col-lg-3 col-md-4 col-12 col-sm-6 mt-5">
+                            <div class="product-cart-wrap mb-30">
+                                <div class="product-img-action-wrap">
+                                    <div class="product-img product-img-zoom">
+                                        <a href="/ProducDetial/<%= product._id %>">
+                                            <img class="default-img" src="/uploads/re-image/<%= product.images[0] %>" alt="<%= product.name %>">
+                                            <img class="hover-img" src="/uploads/re-image/<%= product.images[1] %>" alt="<%= product.name %>">
+                                        </a>
+                                    </div>
+                                    <div class="product-action-1">
+                                        <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal">
+                                            <i class="fi-rs-eye"></i></a>
+                                        <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html">
+                                            <i class="fi-rs-heart"></i></a>
+                                        <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html">
+                                            <i class="fi-rs-shuffle"></i></a>
+                                    </div>
+                                    <div class="product-badges product-badges-position product-badges-mrg">
+                                        <!-- <span class="hot">Hot</span>  -->
+                                    </div>
+                                </div>
+                                <div class="product-content-wrap">
+                                    <div class="product-category">
+                                        <a href="shop-grid-right.html" style="color: grey; font-size: 12px; display: block; margin-bottom: 5px;">
+                                            <%= product.category.name %>
+                                        </a>
+                                        <h2 style="font-size: 16px; font-weight: bold; margin: 0;">
+                                            <a href="shop-product-right.html" style="color: black; text-decoration: none;">
+                                                <%= product.productName %>
+                                            </a>
+                                        </h2>
+                                    </div>
+                                    <div style="display: flex; align-items: center; margin: 8px 0;">
+                                        <div class="rating-result" title="90%" style="color: orange; font-size: 14px; margin-right: 10px;">
+                                        </div>
+                                        <span style="color: grey; font-size: 14px;">70%</span>
+                                    </div>
+                                    <div style="font-size: 18px; margin: 8px 0;">
+                                        <span style="color: green; font-weight: bold;"><%= product.salePrice %></span>
+                                        <span style="text-decoration: line-through; color: grey; font-size: 14px;">$<%= product.regularPrice %></span>
+                                    </div>
+                                    <div class="product-action-1 show" style="text-align: right; margin-top: 10px;">
+                                        <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html" style="font-size: 20px; color: #007BFF;">
+                                            <i class="fi-rs-shopping-bag-add"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                    </div>
 
 
 
@@ -238,7 +282,12 @@
                                         <span class="best">Best Sell</span>
                                     </div>
                                 </div>
-                                <div class="product-content-wrap">
+                               
+                                </div>
+                            </div>
+                        </div>
+                        
+ <div class="product-content-wrap">
                                     <div class="product-category">
                                         <a href="shop-grid-right.html">Shirts</a>
                                     </div>
@@ -254,11 +303,7 @@
                                     </div>
                                     <div class="product-action-1 show">
                                         <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html"><i class="fi-rs-shopping-bag-add"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                                    </div> 
 
                         <div class="col-lg-3 col-md-4 col-12 col-sm-6">
                             <div class="product-cart-wrap mb-30">
@@ -457,7 +502,7 @@
 
 
                     
-                </div>       <!--bbbb-->
+                <!-- </div>       bbbb -->
 
 
 
@@ -1091,7 +1136,7 @@
 
 
                 <!--En tab three (New added)-->
-            </div>
+            
             <!--End tab-content-->
         </div>
     </section>
@@ -1108,4 +1153,6 @@
         </div>
     </section> -->
 
+    
+<script src="/public/public/evara-frontend/assets/js/zoom.js"></script>
     <%-include('../../views/partial/user/footer')%>

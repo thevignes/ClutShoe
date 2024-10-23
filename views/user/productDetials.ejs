@@ -1,13 +1,13 @@
 
-<%-include('../../views/partial/user/header')%>
-
+<%-include('../../views/partial/user/header',{user:user})%>
+<!-- <link rel="stylesheet" href="/path/to/css/easyzoom.css" /> -->
 <main class="main">
     <div class="page-header breadcrumb-wrap">
         <div class="container">
             <div class="breadcrumb">
-                <a href="index.html" rel="nofollow">Home</a>
-                <span></span> Fashion
-                <span></span> Abstract Print Patchwork Dress
+                <a href="/" rel="nofollow">Home</a>
+                <span></span>shoes
+                <span></span> 
             </div>
         </div>
     </div>
@@ -17,66 +17,67 @@
         <div class="container">
            
             <div class="row flex-row-reverse">
-                <% ProductData.forEach(product=>{%>
-              
-                <div class="col-lg-9">
-                    <div class="product-detail accordion-detail">
-                        <div class="row mb-50">
-                            <div class="col-md-6 col-sm-12 col-xs-12">
-                                <div class="detail-gallery">
-                                    <span class="zoom-icon"><i class="fi-rs-search"></i></span>
-                                    <!-- MAIN SLIDES -->
-                                    <div class="product-image-slider">
-                                        <figure class="border-radius-10">
-                                            <img src="/uploads/re-image/<%= product.images[0] %>" alt="product image">
-                                        </figure>
-                                     
+
+
+                    <div class="col-lg-9">
+                        <div class="product-detail accordion-detail">
+                            <div class="row mb-50">
+                                <!-- Product Images Section -->
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="detail-gallery">
+                                        <div class="product-image-slider rounded-sm">
+                                
+                                                <img src="/uploads/re-image/<%= ProductData.images[0] %>" alt="product image" >
+                                                <img src="/uploads/re-image/<%= ProductData.images[1] %>" alt="product image" >
+                                                <img src="/uploads/re-image/<%= ProductData.images[2] %>" alt="product image" >
+                                                <img src="/uploads/re-image/<%= ProductData.images[3] %>" alt="product image" >
+                                        
+                            
                                     </div>
-                                    <!-- THUMBNAILS -->
-                                    <div class="slider-nav-thumbnails pl-15 pr-15">
-                                        <div><img src="/uploads/re-image/<%= product.images[1] %>" alt=""></div>
-                                        <div><img src="/uploads/re-image/<%= product.images[1] %>" alt=""></div>
-                                        <div><img src="/uploads/re-image/<%= product.images[2] %>" alt=""></div>
-                                        <div><img src="/uploads/re-image/<%= product.images[3] %>" alt=""></div>
-                                  
+                                    <!-- Thumbnails -->
+                                    <div class="slider-nav-thumbnails pl-3 pr-3">
+                                        <div><img src="/uploads/re-image/<%= ProductData.images[0] %>" alt=""></div>
+                                        <div><img src="/uploads/re-image/<%= ProductData.images[1] %>" alt=""></div>
+                                        <div><img src="/uploads/re-image/<%= ProductData.images[2] %>" alt=""></div>
+                                        <div><img src="/uploads/re-image/<%= ProductData.images[3] %>" alt=""></div>
                                     </div>
                                 </div>
-                                <!-- End Gallery -->
+                                <!-- Social Share Icons --> 
                                 <div class="social-icons single-share">
                                     <ul class="text-grey-5 d-inline-block">
                                         <li><strong class="mr-10">Share this:</strong></li>
                                         <li class="social-facebook"><a href="#"><img src="assets/imgs/theme/icons/icon-facebook.svg" alt=""></a></li>
-                                        <li class="social-twitter"> <a href="#"><img src="assets/imgs/theme/icons/icon-twitter.svg" alt=""></a></li>
+                                        <li class="social-twitter"><a href="#"><img src="assets/imgs/theme/icons/icon-twitter.svg" alt=""></a></li>
                                         <li class="social-instagram"><a href="#"><img src="assets/imgs/theme/icons/icon-instagram.svg" alt=""></a></li>
                                         <li class="social-linkedin"><a href="#"><img src="assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a></li>
                                     </ul>
                                 </div>
                             </div>
+                            <!-- Product Details Section -->
                             <div class="col-md-6 col-sm-12 col-xs-12">
                                 <div class="detail-info">
-                                    <h2 class="title-detail">Colorful Pattern Shirts HD450</h2>
+                                    <h2 class="title-detail"><%= ProductData.productName %></h2>
                                     <div class="product-detail-rating">
                                         <div class="pro-details-brand">
-                                            <span> Brands: <a href="shop-grid-right.html">Bootstrap</a></span>
+                                            <span>Category: <a href="shop-grid-right.html"><%= ProductData.category.name %></a></span>
                                         </div>
                                         <div class="product-rate-cover text-end">
                                             <div class="product-rate d-inline-block">
-                                                <div class="product-rating" style="width:90%">
-                                                </div>
+                                                <div class="product-rating" style="width:90%"></div>
                                             </div>
-                                            <span class="font-small ml-5 text-muted"> (25 reviews)</span>
+                                            <span class="font-small ml-5 text-muted">(25 reviews)</span>
                                         </div>
                                     </div>
                                     <div class="clearfix product-price-cover">
                                         <div class="product-price primary-color float-left">
-                                            <ins><span class="text-brand">$120.00</span></ins>
-                                            <ins><span class="old-price font-md ml-15">$200.00</span></ins>
-                                            <span class="save-price  font-md color3 ml-15">25% Off</span>
+                                            <ins><span class="text-brand">$<%= ProductData.salePrice %></span></ins>
+                                            <ins><span class="old-price font-md ml-15">$<%= ProductData.regularPrice %></span></ins>
+                                            <span class="save-price font-md color3 ml-15">25% Off</span>
                                         </div>
                                     </div>
                                     <div class="bt-1 border-color-1 mt-15 mb-15"></div>
                                     <div class="short-desc mb-30">
-                                        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aliquam rem officia, corrupti reiciendis minima nisi modi, quasi, odio minus dolore impedit fuga eum eligendi? Officia doloremque facere quia. Voluptatum, accusantium!</p>
+                                        <p><%= ProductData.description %></p>
                                     </div>
                                     <div class="product_sort_info font-xs mb-30">
                                         <ul>
@@ -85,7 +86,6 @@
                                             <li><i class="fi-rs-credit-card mr-5"></i> Cash on Delivery available</li>
                                         </ul>
                                     </div>
-                            
                                     <div class="bt-1 border-color-1 mt-30 mb-30"></div>
                                     <div class="detail-extralink">
                                         <div class="detail-qty border radius">
@@ -100,14 +100,12 @@
                                         </div>
                                     </div>
                                     <ul class="product-meta font-xs color-grey mt-50">
-                                        <li class="mb-5">SKU: <a href="#">FWM15VKT</a></li>
-                                        <li class="mb-5">Tags: <a href="#" rel="tag">Cloth</a>, <a href="#" rel="tag">Women</a>, <a href="#" rel="tag">Dress</a> </li>
-                                        <li>Availability:<span class="in-stock text-success ml-5">8 Items In Stock</span></li>
+                                        <li><%= ProductData.status %>:<span class="in-stock text-success ml-5"><%= ProductData.quantity %></span></li>
                                     </ul>
                                 </div>
-                                <!-- Detail Info -->
+                            </div>
                         
-                        </div>
+                       
                         <div class="tab-style3">
                             <ul class="nav nav-tabs text-uppercase">
                                 <li class="nav-item">
@@ -274,10 +272,27 @@
                                 </div>
                             </div>
                         </div>
-                       
-            <%})%>
+                    </div>
+       
         </div>
-  
+            </div>  
     </section>
+    <script src="/evara-frontend/assets/js/zoom.js"></script>
+    <script>
+        $(function() {
+            // Initialize EasyZoom for all elements with the class "easyzoom"
+            var $easyzoom = $('.easyzoom').easyZoom();
+        });
+      </script>
+      <!-- <script src="/path/to/cdn/jquery.min.js"></script>
+      <script src="/path/to/dist/easyzoom.js"></script> -->
+      <script>
+        $(document).ready(function() {
+            // Initialize EasyZoom for all elements with the class "easyzoom"
+            var $easyzoom = $('.easyzoom').easyZoom();
+        });
+      </script>
+      
+      
 </main>
 <%-include('../../views/partial/user/footer')%>

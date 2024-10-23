@@ -1,37 +1,96 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clutch Shoe Signup</title>
-    <link rel="stylesheet" href="/public/public/evara-frontend/assets/css/plugins/signup.css">
-    
-    
+    <title>ClutchShoe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        .navbar {
+            background-color: #004aad;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .navbar .logo {
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+        }
+        .navbar .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        .navbar .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .navbar .icons {
+            display: flex;
+            gap: 15px;
+        }
+        .navbar .icons i {
+            color: white;
+            font-size: 20px;
+        }
+        .main-content {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: #f9f9f9;
+        }
+        .main-content p {
+            font-size: 18px;
+            color: #333;
+        }
+        .search-bar {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .search-bar input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px 0 0 20px;
+            outline: none;
+        }
+        .search-bar button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #004aad;
+            color: white;
+            border-radius: 0 20px 20px 0;
+            cursor: pointer;
+        }
+        .search-bar button:hover {
+            background-color: #003a8c;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <img src="/public/public/evara-frontend/assets/imgs/shop/clutchshoe.jpg" alt="Clutch Shoe Logo" class="logo">
-        <h2>Sign Up</h2>
-        <form action="/signup" method="POST">
-            <div class="form-group">
-                <input type="text" id="fullname" name="fullname" placeholder="Full Name">
-            </div>
-            <div class="form-group">
-                <input type="email" id="email" name="email" placeholder="Email">
-            </div>
-            <div class="form-group">
-                <input type="password" id="password" name="password" placeholder="Password" >
-            </div>
-            <div class="form-group">
-                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" >
-            </div>
-            <div class="form-group">
-                <input type="tel" id="phone" name="phone" placeholder="Phone Number" >
-            </div>
-            <button type="submit">Sign Up</button>
-        </form>
-        <button class="google-button">Sign up with Google</button>
-        <p>Already have an account? <a href="/login">Log in</a></p>
+    <div class="navbar">
+        <div class="logo">ClutchShoe</div>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">shoes</a>
+            <a href="#">contact</a>
+            <a href="#">about us</a>
+        </div>
+        <div class="icons">
+            <i class="fas fa-heart"></i>
+            <i class="fas fa-shopping-cart"></i>
+            <i class="fas fa-user"></i>
+        </div>
+    </div>
+    <div class="main-content">
+        <p>Elevate every step with shoes designed for comfort, style, and durability</p>
+        <div class="search-bar">
+            <input type="text" placeholder="Search">
+            <button>Search</button>
+        </div>
     </div>
 </body>
 </html>

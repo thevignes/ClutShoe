@@ -15,7 +15,7 @@
                 <h2 class="text-center">Login</h2>
                 
                 <!-- Login Form -->
-                <form action="/login" method="POST">
+                <form action="/userLogin" method="POST">
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email" >
@@ -30,8 +30,9 @@
                         <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
                         <label class="form-check-label" for="rememberMe">Remember Me</label>
                     </div>
-
-                    <button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
+                 
+                        <button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
+                    
                     
                     <!-- Google Login -->
                     <a href="/auth/google" class="btn btn-danger btn-block mt-2">  <i class="fa-brands fa-google"></i>   Login with Google</a>

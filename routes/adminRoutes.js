@@ -26,6 +26,7 @@ router.post('/unblockUser/:id', AdminController.UnblockUser)
 
 //category routes 
 
+
 router.get('/category',CategoryController.CategoryDet)
 
 router.post('/addCategory',CategoryController.addCategory)
@@ -62,8 +63,10 @@ router.post('/listProduct/:id', (req, res, next) => {
 
 router.post('/unListProduct/:id',ProductController.unListProduct)
 
-router.post('/admin/updateProduct/:id', uploads.single('image'), ProductController.UpdateProduct);
+router.post('/updateProduct/:id',uploads.array('image'), ProductController.UpdateProduct);
 
-router.post('/deleteSingleImage' , ProductController.deleteSingleImage)
+// router.post('/deleteSingleImage' , ProductController.deleteSingleImage)
+
+
 
 module.exports = router 
