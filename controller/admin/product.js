@@ -113,7 +113,7 @@ const AddProductPage = async (req,res) => {
                     
                 // Save product to the database
                 await newProduct.save();
-                console.log("Product added successfully:", newProduct);
+                // console.log("Product added successfully:", newProduct);
                 return res.redirect('/admin/addProduct');  // Redirect after success
             } catch (error) {
                 console.log('Error saving product:', error);

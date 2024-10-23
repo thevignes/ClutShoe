@@ -1,0 +1,161 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    display: flex;
+    flex-wrap: wrap; /* Allow flex items to wrap */
+}
+.sidebar {
+    width: 250px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: auto; /* Allow height to adjust */
+}
+.sidebar .profile {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.sidebar .profile img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #007bff;
+    display: block;
+    margin: 0 auto;
+}
+.sidebar .profile h2 {
+    margin: 10px 0;
+    color: #fff;
+    background-color: #6a0dad;
+    padding: 10px;
+    border-radius: 5px;
+}
+.sidebar .menu {
+    list-style: none;
+    padding: 0;
+}
+.sidebar .menu li {
+    margin: 10px 0;
+}
+.sidebar .menu li a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+.sidebar .menu li a:hover,
+.sidebar .menu li a.active {
+    background-color: #f5f5f5;
+}
+.sidebar .menu li a i {
+    margin-right: 10px;
+}
+.sidebar .logout {
+    text-align: center;
+    margin-top: 20px;
+}
+.sidebar .logout button {
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.content {
+    flex: 1;
+    padding: 40px;
+    min-width: 300px; /* Ensure minimum width for smaller screens */
+}
+.content h1 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+.form-container {
+    background-color: #fff;
+    padding: 40px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+.form-container h2 {
+    color: red;
+    margin-bottom: 20px;
+}
+.form-container form {
+    display: flex;
+    flex-wrap: wrap;
+}
+.form-container form .form-group {
+    width: 48%;
+    margin: 1%;
+}
+.form-container form .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+.form-container form .form-group.full-width {
+    width: 98%;
+}
+.form-container form .form-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.form-container form .form-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.form-container form .form-actions .cancel {
+    background-color: #ccc;
+}
+.form-container form .form-actions .save {
+    background-color: #00ff00;
+    color: #fff;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Stack sidebar and content vertically */
+    }
+    .sidebar {
+        width: 100%; /* Full width for mobile */
+        height: auto; /* Let height adjust */
+    }
+    .content {
+        padding: 20px; /* Reduce padding */
+    }
+    .form-container {
+        padding: 20px; /* Reduce padding */
+    }
+    .form-container form .form-group {
+        width: 100%; /* Full width for mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .sidebar {
+        padding: 10px; /* Reduce padding for mobile */
+    }
+    .content {
+        padding: 10px; /* Reduce padding for mobile */
+    }
+    .form-container {
+        padding: 10px; /* Reduce padding for mobile */
+    }
+}

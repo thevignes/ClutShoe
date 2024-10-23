@@ -21,7 +21,7 @@ router.post('/verify-otp', userControler.verifyOtp);
 
 router.get('/login',userControler.GetLogin)
 
-router.post('/userLogin',userControler.userLogin)
+router.post('/login',userControler.userLogin)
 
 router.get('/auth/google',passport.authenticate('google',{scope:['profile','email']}))
 
@@ -32,5 +32,14 @@ router.post('/resend-otp',userControler.resendOtp)
 router.get('/ProducDetial/:id',userControler.ProducDetial)
 
 router.get('/userLogout' , userControler.userLogout )
+
+// profile routes//
+router.get('/profile',userControler.profile)
+
+router.post('/profile/edit',userControler.editProfile)
+
+router.get('/manageAddress',userControler.ManageAddress)
+
+router.post('/address/addAddress', userControler.addAddress)
 
 module.exports = router

@@ -27,13 +27,13 @@
                                     <div class="detail-gallery">
                                         <div class="product-image-slider rounded-sm">
                                 
-                                                <img src="/uploads/re-image/<%= ProductData.images[0] %>" alt="product image" >
-                                                <img src="/uploads/re-image/<%= ProductData.images[1] %>" alt="product image" >
-                                                <img src="/uploads/re-image/<%= ProductData.images[2] %>" alt="product image" >
-                                                <img src="/uploads/re-image/<%= ProductData.images[3] %>" alt="product image" >
-                                        
-                            
-                                    </div>
+                                            <img src="/uploads/re-image/<%= ProductData.images[0] %>" alt="product image" >
+                                            <img src="/uploads/re-image/<%= ProductData.images[1] %>" alt="product image" >
+                                            <img src="/uploads/re-image/<%= ProductData.images[2] %>" alt="product image" >
+                                            <img src="/uploads/re-image/<%= ProductData.images[3] %>" alt="product image" >
+                                    
+                        
+                                </div>
                                     <!-- Thumbnails -->
                                     <div class="slider-nav-thumbnails pl-3 pr-3">
                                         <div><img src="/uploads/re-image/<%= ProductData.images[0] %>" alt=""></div>
@@ -278,21 +278,8 @@
             </div>  
     </section>
     <script src="/evara-frontend/assets/js/zoom.js"></script>
-    <script>
-        $(function() {
-            // Initialize EasyZoom for all elements with the class "easyzoom"
-            var $easyzoom = $('.easyzoom').easyZoom();
-        });
-      </script>
-      <!-- <script src="/path/to/cdn/jquery.min.js"></script>
-      <script src="/path/to/dist/easyzoom.js"></script> -->
-      <script>
-        $(document).ready(function() {
-            // Initialize EasyZoom for all elements with the class "easyzoom"
-            var $easyzoom = $('.easyzoom').easyZoom();
-        });
-      </script>
-      
+
+
       
 </main>
 <%-include('../../views/partial/user/footer')%>

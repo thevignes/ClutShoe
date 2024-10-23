@@ -1,0 +1,191 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.profile {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+}
+
+.profile h2 {
+    font-size: 18px;
+    color: #fff;
+    background-color: #6200ea;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+}
+
+.menu li {
+    margin: 15px 0;
+}
+
+.menu li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.menu li a i {
+    margin-right: 10px;
+}
+
+.menu li a.active {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.logout {
+    background-color: #ff3b3b;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: block;
+    margin-top: 20px;
+}
+
+.content {
+    margin-left: 270px; /* Space for sidebar */
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    height: 100vh;
+}
+
+.form-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 600px;
+}
+
+.form-container h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.form-container .form-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.form-container .form-group input {
+    width: 48%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-container .form-group input.full-width {
+    width: 100%;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.form-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.form-actions .cancel {
+    background-color: #ccc;
+}
+
+.form-actions .save {
+    background-color: #00ff00;
+    color: #fff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .content {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+        box-shadow: none;
+    }
+
+    .form-container {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .form-container .form-group input {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .menu li {
+        text-align: center;
+    }
+
+    .menu li a {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile h2 {
+        font-size: 16px;
+        padding: 8px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .form-actions button {
+        margin: 5px 0;
+        width: 100%;
+    }
+}

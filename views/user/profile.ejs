@@ -1,0 +1,83 @@
+
+<%-include('../../views/partial/user/header',{user:user})%>
+
+<html>
+<head>
+    <title>My Account</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/evara-frontend/assets/css/profle.css">
+
+</head>
+<body>
+    <% if (user) { %> 
+    <div class="container">
+        <div class="sidebar">
+            <div class="profile">
+                <img alt="Profile Picture" height="100" src="https://storage.googleapis.com/a1aa/image/XV3rOkyxHFpSNJQOmSh0krDmBMAHB0Qej1Xq3AmnRTRw900JA.jpg" width="100" />
+                <h2><%=user.name%></h2>
+            </div>
+            <ul class="menu">
+                <li>
+                    <a class="active" href="#">
+                        <i class="fas fa-user"></i>
+                        Account Overview
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-box"></i>
+                        My Orders
+                    </a>
+                </li>
+                <li>
+                    <a href="/manageAddress">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Manage Addresses
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-wallet"></i>
+                        Wallet
+                    </a>
+                </li>
+            </ul>
+            <div class="logout">
+                <button>LOGOUT</button>
+            </div>
+        </div>
+        <div class="content">
+            <h1>My Account</h1>
+            <div class="form-container">
+                <h2 class="text-primary">Edit Your Profile</h2>
+                <form action="/profile/edit" method="POST">
+                    <div class="form-group">
+                        <label for="name" class="text-dark">Name</label>
+                        <input id="name" type="text" name="name" value="<%= user.name %>" >
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="email">Email</label>
+                        <input id="email" type="email" name="email" value="<%= user.email %>">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="current-password">Current Password</label>
+                        <input id="current-password" type="password" name="currentPassword" >
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="new-password">New Password</label>
+                        <input id="new-password" type="password" name="newPassword">
+                    </div>
+                    <div class="form-actions">
+                        <button class="cancel" type="button">Cancel</button>
+               
+                        <button class="save" type="submit">Save Changes</button>
+                    </div>
+                </form>
+                
+            </div>
+            <%}%>   
+        </div>
+    </div>
+</body>
+</html>
+<%-include('../../views/partial/user/footer')%>

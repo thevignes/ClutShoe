@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%-include('../../views/partial/user/header')%>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Address</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/evara-frontend/assets/css/address.css">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="profile">
+            <img alt="Profile Picture" src="https://storage.googleapis.com/a1aa/image/1qJGdvH1JB6cOFHWMNrVluGJRJYp152igdTI4RNouO1kNb6E.jpg"/>
+            <h2><%= user ? user.name : 'Guest' %></h2>
+        </div>
+        <ul class="menu">
+            <li><a href="/profile"><i class="fas fa-user"></i> Account Overview</a></li>
+            <li><a href="#"><i class="fas fa-box"></i> My Orders</a></li>
+            <li><a class="active" href=""><i class="fas fa-address-book"></i> Manage Addresses</a></li>
+            <li><a href="#"><i class="fas fa-wallet"></i> Wallet</a></li>
+        </ul>
+        <a class="logout" href="#">LOGOUT</a>
+    </div>
+    
+    <div class="content">
+        <div class="form-container">
+            <h3>Add Address</h3>
+            <form action="/address/addAddress" method="POST" id="addressForm">
+                <div class="form-group">
+                    <input name="Firstname" placeholder="First Name" type="text" required/>
+                    <input name="Lastname" placeholder="Last Name" type="text" required/>
+                </div>
+                <div class="form-group">
+                    <input name="place" placeholder="Place" type="text" required/>
+                    <input name="city" placeholder="City" type="text" required/>
+                </div>
+                <div class="form-group">
+                    <input name="district" placeholder="District" type="text" required/>
+                    <input name="state" placeholder="State" type="text" required/>
+                </div>
+                <div class="form-group">
+                    <input name="country" placeholder="Country" type="text" required/>
+                    <input name="pin" placeholder="Pin Code" type="number" required/>
+                </div>
+                <div class="form-group">
+                    <input name="type" placeholder="Type" type="text" required/>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="cancel">Cancel</button>
+                    <button type="submit" class="save">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.save').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('addressForm').submit(); // Submit the form
+        });
+    </script>
+</body>
+</html>
+<%-include('../../views/partial/user/footer')%>

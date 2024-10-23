@@ -1,10 +1,10 @@
 const app = require("../../app");
 const User = require("../../models/userModel");
 const nodemailer = require("nodemailer");
+const Address = require ('../../models/address')
+console.log(Address)
 require("dotenv").config();
 const bcrypt = require("bcrypt");
-// const product = require ('../../models/product');
-// const category = require ('../../models/category');
 const Category = require("../../models/category");
 const Product = require("../../models/product");
 
@@ -52,11 +52,11 @@ const homePage = async (req, res) => {
       "category"
     );
     console.log(ProductData);
-    const user = req.session.user ||  null;
+    const user = req.session.user || null;
     if (!user) {
       return res.render("home", { user: "", ProductData });
     } else {
-      return res.render("home",{user, ProductData});
+      return res.render("home", { user, ProductData });
     }
 
     // console.log(req.session.user);
@@ -105,7 +105,6 @@ const transport = nodemailer.createTransport({
     pass: process.env.NODEMAILER_PASSWORD,
   },
 });
-
 
 //transport for email service
 
@@ -227,26 +226,30 @@ const userLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // console.log("email ,password :  ", email, password);
     const user = await User.findOne({ email });
+    
     if (!user) {
       return res
         .status(404)
         .send({ message: "User not found, please enter a valid email" });
     }
-
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       return res
         .status(401)
         .send({ message: "Incorrect password, please try again" });
     }
-    console.log(user);
+    if (user.IsBlocked) {
+      return res.status(403).send({ message: "User were blocked" });
+    }
+    // console.log(user);
 
     req.session.user = {
       name: user.name,
       email: user.email,
     };
-    return res.redirect("/");
+    return res.status(200).redirect("/");
   } catch (err) {
     console.error(err);
     return res
@@ -322,20 +325,22 @@ const GetLogin = async (req, res) => {
 
 const ProducDetial = async (req, res) => {
   try {
-    const user = req.session.user
+    const user = req.session.user;
     const ProductId = req.params.id;
-    let ProductData = await Product.findOne({ _id: ProductId, isListed: true }).populate("category");
+    let ProductData = await Product.findOne({
+      _id: ProductId,
+      isListed: true,
+    }).populate("category");
     if (!ProductData) {
       return res.status(404).send({ message: "Product not found" });
     }
 
-    res.render("productDetials", {user, ProductData });
+    res.render("productDetials", { user, ProductData });
   } catch (error) {
     console.error(error);
     return res.status(500).send("Server Error");
   }
 };
-
 
 const userLogout = async (req, res) => {
   req.session.destroy((err) => {
@@ -343,13 +348,120 @@ const userLogout = async (req, res) => {
       console.log(err);
       return res.status(500).send("Logout failed. Please try again.");
     } else {
-   
-      res.clearCookie('connect.sid');
-      return res.redirect('/');
+      res.clearCookie("connect.sid");
+      return res.redirect("/");
     }
   });
+  };
+  const profile = async (req, res) => {
+    try {
+      const userId = req.session.user.email
+      console.log('hello',userId)
+
+      const user = await User.findOne({email:userId});
+      console.log(user);
+      
+      
+      if (!user) {
+        return res.status(404).send('User not found');
+      }else{
+        res.render('profile', { user });
+      }
+
+    } catch (err) {
+      console.error(err);
+      return res.status(500).send('Internal server error');
+    }
+  };
+
+  const editProfile = async (req, res) => {
+    try {
+      const userId = req.session.user.email; 
+  
+      const { name, email, currentPassword, newPassword } = req.body;  
+  
+      // Find user by email
+      const user = await User.findOne({ email: userId });
+      if (!user) {
+        return res.status(404).send('User not found');
+      }
+  
+      // Update name and email
+      user.name = name || user.name;
+      user.email = email || user.email;
+  
+      
+      if (currentPassword && newPassword && newPassword.trim() !== "") {
+
+        const isMatch = await bcrypt.compare(currentPassword, user.password);
+        if (!isMatch) {
+          return res.status(400).send('Current password is incorrect');
+        }
+  
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(newPassword, salt);
+      }
+  
+    
+      await user.save();
+  
+      // console.log("Account successfully updated", user);
+  
+
+      return res.redirect('/profile')
+  
+    } catch (err) {
+      console.error(err);
+      return res.status(500).send('Internal server error');
+    }
+  };
+
+  const ManageAddress = async (req, res) => {
+    try {
+      const userId = req.session.user.email;
+        const user = await User.findOne({ email: userId });
+        // console.log('hello  mr' , user)
+        if (!user) {
+            return res.status(404).send('User not found'); // Handle user not found
+        }
+
+        return res.render('manageAddress', { user }); // Make sure the path is correct
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        return res.status(500).send('Internal server error');
+    }
 };
 
+const addAddress = async (req,res)=>{
+  try{
+    const userId = req.session.user
+    console.log(userId)
+    const user = await User.findOne({user:userId });
+    console.log(user)
+
+    const {address,state,pin,district,city,Firstname,Lastname,country,type,} = req.body;
+
+    const newAddress = new Address({
+      address,
+      state,
+      pin,
+      district,
+      city,
+      Firstname,
+      Lastname,
+      country,
+      type
+  });
+  // user.addresses.push(newAddress); 
+        await newAddress.save();
+
+        console.log('the adress is',newAddress)
+        res.render('manageAddress',{user})
+  }catch(err){
+    console.log(err)
+    return res.status(500).send('actually its server error')
+  }
+}
 
 module.exports = {
   HomePage,
@@ -364,5 +476,9 @@ module.exports = {
   VerifyResOtp,
   ProducDetial,
   userLogin,
-  userLogout
+  userLogout,
+  profile,
+  editProfile,
+  ManageAddress,
+  addAddress
 };

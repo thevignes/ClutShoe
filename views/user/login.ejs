@@ -1,42 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <h2 class="text-center">Login</h2>
-                
+
                 <!-- Login Form -->
-                <form action="/userLogin" method="POST">
+                <form id="loginForm"> <!-- Added id here -->
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email" >
+                        <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email">
                     </div>
-                    
+
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" name="password" class="form-control" id="password" placeholder="Enter your password" >
+                        <input type="password" name="password" class="form-control" id="password"
+                            placeholder="Enter your password">
                     </div>
-                    
+
                     <div class="form-check">
                         <input type="checkbox" class="form-check-input" id="rememberMe" name="rememberMe">
                         <label class="form-check-label" for="rememberMe">Remember Me</label>
                     </div>
-                 
-                        <button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
-                    
-                    
+
+                    <button type="submit" class="btn btn-primary btn-block mt-3">Login</button>
+
                     <!-- Google Login -->
-                    <a href="/auth/google" class="btn btn-danger btn-block mt-2">  <i class="fa-brands fa-google"></i>   Login with Google</a>
-                    
+                    <a href="/auth/google" class="btn btn-danger btn-block mt-2">
+                        <i class="fa-brands fa-google"></i> Login with Google
+                    </a>
+
                     <!-- Link to Sign Up Page -->
                     <p class="text-center mt-3">Don't have an account? <a href="/register">Sign up</a></p>
                 </form>
@@ -44,7 +49,65 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+
+            console.log("Email: ", email);
+            console.log("Password: ", password);
+            console.log("Remember Me: ", rememberMe);
+
+            const loginForm = document.getElementById('loginForm');
+
+            // const formData = new FormData(loginForm);
+
+            try {
+                const response = await axios.post('http://localhost:3100/login', { email, password })
+                console.log("back data:", response.data);
+                // Check if the user is blocked
+                if (response?.status === 200) {
+                    window.location.href = "http://localhost:3100"
+                }
+
+            } catch (error) {
+                console.error('Error during login:', error);
+                if (error?.response && error.response?.status === 403) {
+                    Swal.fire({
+                        title: 'Blocked!',
+                        text: error?.response?.data?.message || 'Your account has been blocked. Please contact support.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+                if (error?.response && error.response?.status === 401) {
+                    Swal.fire({
+                        title: 'passsword incorrect!',
+                        text: error?.response?.data?.message || 'invalid',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+                if (error?.response && error.response?.status === 404) {
+                    Swal.fire({
+                        title: 'user not found!',
+                        text: error?.response?.data?.message || ' Please contact support.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                }
+
+            }
+
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
 </body>
+
 </html>
