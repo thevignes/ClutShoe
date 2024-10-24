@@ -43,9 +43,12 @@ const {Schema} = mongoose
     type:{
         type:String,
     },
+isDeleted:{
+    type:Boolean,
+    default:false
+}
 
-
-    })
+    },{timestamps:true}) 
 
     const Address = mongoose.model('Address',AddressSchema)
 

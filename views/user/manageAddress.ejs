@@ -27,26 +27,33 @@
     
     <div class="content">
         <div class="form-container">
-            <h3>Add Address</h3>
+            <div class="d-flex justify-content-between align-items-center text-right     mb-3">
+                <h3 class="mb-0">Add Address</h3>
+    
+                <button class="btn btn-primary">
+                    <a href="/viewAddress" class="text-white text-decoration-none">View Address</a>
+                </button>
+            </div>
+            
             <form action="/address/addAddress" method="POST" id="addressForm">
                 <div class="form-group">
-                    <input name="Firstname" placeholder="First Name" type="text" required/>
-                    <input name="Lastname" placeholder="Last Name" type="text" required/>
+                    <input name="Firstname" placeholder="First Name" type="text" >
+                    <input name="Lastname" placeholder="Last Name" type="text" >
                 </div>
                 <div class="form-group">
-                    <input name="place" placeholder="Place" type="text" required/>
-                    <input name="city" placeholder="City" type="text" required/>
+                    <input name="place" placeholder="Place" type="text" >
+                    <input name="city" placeholder="City" type="text">
                 </div>
                 <div class="form-group">
-                    <input name="district" placeholder="District" type="text" required/>
-                    <input name="state" placeholder="State" type="text" required/>
+                    <input name="district" placeholder="District" type="text" >
+                    <input name="state" placeholder="State" type="text">
                 </div>
                 <div class="form-group">
-                    <input name="country" placeholder="Country" type="text" required/>
-                    <input name="pin" placeholder="Pin Code" type="number" required/>
+                    <input name="country" placeholder="Country" type="text">
+                    <input name="pin" placeholder="Pin Code" type="number" >
                 </div>
                 <div class="form-group">
-                    <input name="type" placeholder="Type" type="text" required/>
+                    <input name="type" placeholder="Type" type="text" >
                 </div>
                 <div class="form-actions">
                     <button type="button" class="cancel">Cancel</button>
@@ -55,6 +62,7 @@
             </form>
         </div>
     </div>
+
 
     <script>
         document.querySelector('.save').addEventListener('click', (e) => {

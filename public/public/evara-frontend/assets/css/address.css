@@ -12,10 +12,11 @@ body {
     background-color: #fff;
     padding: 20px;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    height: 100vh;
-    position: fixed;
+    height: 55vh;
+   
     top: 0;
     left: 0;
+    bottom: 15%;
 }
 
 .profile {
@@ -84,7 +85,7 @@ body {
     justify-content: center;
     align-items: center;
     flex-grow: 1;
-    height: 100vh;
+    height: 50vh;
 }
 
 .form-container {
@@ -93,6 +94,8 @@ body {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 600px;
+    bottom: 25%;
+    position: absolute  ;
 }
 
 .form-container h3 {
@@ -121,7 +124,7 @@ body {
 .form-actions {
     display: flex;
     justify-content: flex-end;
-    align-items: center;
+    align-items:center;
 }
 
 .form-actions button {

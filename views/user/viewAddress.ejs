@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Addresses</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<style>
+    /* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.profile-pic {
+    width: 80px;
+    height: 80px;
+    background-color: #ddd;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.username {
+    margin-top: 10px;
+    font-weight: bold;
+    color: #4e4e4e;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    margin-bottom: 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #4e4e4e;
+    font-weight: bold;
+    display: block;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+nav ul li a.active,
+nav ul li a:hover {
+    background-color: #ececec;
+}
+
+.logout-btn {
+    background-color: #e50914;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 40px;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+.address-card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.address-card p {
+    margin: 5px 0;
+}
+
+.actions {
+    margin-top: 10px;
+}
+
+.edit-btn,
+.delete-btn {
+    background-color: #00c853;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.delete-btn {
+    background-color: #e50914;
+}
+
+.add-address-btn {
+    background-color: #00c853;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        padding: 10px;
+        box-shadow: none;
+    }
+    
+    .main-content {
+        padding: 20px;
+    }
+}
+
+</style>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="profile-section">
+                <div class="profile-pic"></div>
+                <p class="username"><%=user.name%></p>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/profile">Account Overview</a></li>
+                    <li><a href="#">My Orders</a></li>
+                    <li><a href="#" class="active">Manage Addresses</a></li>
+                    <li><a href="#">Wallet</a></li>
+                </ul>
+            </nav>
+            <button class="logout-btn">Logout</button>
+        </div>
+
+        <div class="main-content ">
+            <h2>Saved Addresses</h2>
+        
+            <a href="/manageAddress" class="add-address-btn">Add New Address</a>
+                <% if (addresses.length > 0) { %>
+                    <% addresses.forEach(function(address) { %>
+                        <div class="address-card w-50">
+                            <p><strong><%= address.Firstname %> <%= address.Lastname %></strong></p>
+                            <p><%= address.address %></p>
+                            <p><%= address.city %>, <%= address.state %>, <%= address.country %> - <%= address.pin %></p>
+                            <p>Type: <%= address.type %></p>
+                            <div class="actions d-flex">
+                                <form action="" method="POST">
+                                    
+                                        <button class="edit-btn">
+                                            <a href="/editAddressPage/<%= address._id %>" class="text-white">Edit</a>
+                                    </button>
+                                </form>
+                                <form action="/delete-address/<%= address._id %>" method="POST">
+                                    <button class="delete-btn">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p>No addresses saved.</p>
+                <% } %>
+            
+                <!-- Add New Address Button -->
+
+            </div>
+                  
+    </div>
+</body>
+</html>
+<%-include('../../views/partial/user/footer')%> 

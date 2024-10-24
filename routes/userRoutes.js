@@ -42,4 +42,15 @@ router.get('/manageAddress',userControler.ManageAddress)
 
 router.post('/address/addAddress', userControler.addAddress)
 
+router.get('/ViewAddress',userControler.ViewAddress)
+
+router.get('/editAddressPage/:id',userControler.EditAddress)
+
+router.post('/delete-address/:id',userControler.deletingAddress)
+
+
+///cart routes ///
+
+router.get('/cart',userControler.cartPage)
+
 module.exports = router

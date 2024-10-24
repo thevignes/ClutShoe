@@ -1,12 +1,17 @@
 const app = require("../../app");
 const User = require("../../models/userModel");
 const nodemailer = require("nodemailer");
-const Address = require ('../../models/address')
-console.log(Address)
+const Address = require("../../models/address");
+console.log(Address);
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const Category = require("../../models/category");
 const Product = require("../../models/product");
+const Cart  = require ('../../models/cart')
+
+
+
+
 
 const HomePage = async (req, res) => {
   try {
@@ -228,7 +233,7 @@ const userLogin = async (req, res) => {
 
     // console.log("email ,password :  ", email, password);
     const user = await User.findOne({ email });
-    
+
     if (!user) {
       return res
         .status(404)
@@ -352,94 +357,99 @@ const userLogout = async (req, res) => {
       return res.redirect("/");
     }
   });
-  };
-  const profile = async (req, res) => {
-    try {
-      const userId = req.session.user.email
-      console.log('hello',userId)
+};
+const profile = async (req, res) => {
+  try {
+    const userId = req.session.user.email;
+    console.log("hello", userId);
 
-      const user = await User.findOne({email:userId});
-      console.log(user);
-      
-      
-      if (!user) {
-        return res.status(404).send('User not found');
-      }else{
-        res.render('profile', { user });
-      }
+    const user = await User.findOne({ email: userId });
+    console.log(user);
 
-    } catch (err) {
-      console.error(err);
-      return res.status(500).send('Internal server error');
+    if (!user) {
+      return res.status(404).send("User not found");
+    } else {
+      res.render("profile", { user });
     }
-  };
-
-  const editProfile = async (req, res) => {
-    try {
-      const userId = req.session.user.email; 
-  
-      const { name, email, currentPassword, newPassword } = req.body;  
-  
-      // Find user by email
-      const user = await User.findOne({ email: userId });
-      if (!user) {
-        return res.status(404).send('User not found');
-      }
-  
-      // Update name and email
-      user.name = name || user.name;
-      user.email = email || user.email;
-  
-      
-      if (currentPassword && newPassword && newPassword.trim() !== "") {
-
-        const isMatch = await bcrypt.compare(currentPassword, user.password);
-        if (!isMatch) {
-          return res.status(400).send('Current password is incorrect');
-        }
-  
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(newPassword, salt);
-      }
-  
-    
-      await user.save();
-  
-      // console.log("Account successfully updated", user);
-  
-
-      return res.redirect('/profile')
-  
-    } catch (err) {
-      console.error(err);
-      return res.status(500).send('Internal server error');
-    }
-  };
-
-  const ManageAddress = async (req, res) => {
-    try {
-      const userId = req.session.user.email;
-        const user = await User.findOne({ email: userId });
-        // console.log('hello  mr' , user)
-        if (!user) {
-            return res.status(404).send('User not found'); // Handle user not found
-        }
-
-        return res.render('manageAddress', { user }); // Make sure the path is correct
-    } catch (error) {
-        console.error('Error fetching user:', error);
-        return res.status(500).send('Internal server error');
-    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Internal server error");
+  }
 };
 
-const addAddress = async (req,res)=>{
-  try{
-    const userId = req.session.user
-    console.log(userId)
-    const user = await User.findOne({user:userId });
-    console.log(user)
+const editProfile = async (req, res) => {
+  try {
+    const userId = req.session.user.email;
 
-    const {address,state,pin,district,city,Firstname,Lastname,country,type,} = req.body;
+    const { name, email, currentPassword, newPassword } = req.body;
+
+    const user = await User.findOne({ email: userId });
+    if (!user) {
+      return res.status(404).send("User not found     ");
+    }
+
+    user.name = name || user.name;
+    user.email = email || user.email;
+
+    if (currentPassword && newPassword && newPassword.trim() !== "") {
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).send("Current password is incorrect");
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(newPassword, salt);
+    }
+
+    await user.save();
+
+    // console.log("Account successfully updated", user);
+    if (email) {
+      req.session.user.email = email;
+      // console.log('the new email is' , email);
+    }
+
+    return res.redirect("/profile");
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Internal server error");
+  }
+};
+
+const ManageAddress = async (req, res) => {
+  try {
+    const userId = req.session.user.email;
+    const user = await User.findOne({ email: userId });
+    // console.log('hello  mr' , user)
+    if (!user) {
+      return res.status(404).send("User not found ");
+    }
+
+    return res.render("manageAddress", { user });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return res.status(500).send("Internal server error");
+  }
+};
+
+const addAddress = async (req, res) => {
+  try {
+    const userId = req.session.user;
+    console.log(userId);
+    const user = await User.findOne({ user: userId });
+    console.log(user);
+
+    const {
+      address,
+      state,
+      pin,
+      district,
+      city,
+      Firstname,
+      Lastname,
+      country,
+      type,
+    } = req.body;
 
     const newAddress = new Address({
       address,
@@ -450,19 +460,163 @@ const addAddress = async (req,res)=>{
       Firstname,
       Lastname,
       country,
-      type
-  });
-  // user.addresses.push(newAddress); 
-        await newAddress.save();
+      type,
+    });
+    // user.addresses.push(newAddress);
+    await newAddress.save();
 
-        console.log('the adress is',newAddress)
-        res.render('manageAddress',{user})
-  }catch(err){
-    console.log(err)
-    return res.status(500).send('actually its server error')
+    console.log("the adress is", newAddress);
+    res.render("manageAddress", { user });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send("actually its server error");
+  }
+};
+
+const ViewAddress = async (req, res) => {
+  try {
+    // const userId = req.session.user
+    const userId = req.session.user._id;
+    const addresses = await Address.find({ UserId: userId });
+    const user = await User.find();
+
+    res.render("viewAddress", { user, addresses });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return res.status(500).send("Internal server error");
   }
 }
 
+const EditAddressPage = async (req, res) => {
+  try {
+    const userEmail = req.session.email; 
+    console.log(userEmail)
+    const { id } = req.params;  
+
+    console.log("User email from session: ", userEmail);
+    console.log("Address ID from params: ", id);
+
+    const addresses = await Address.findById({ _id: id, email: userEmail });
+
+    console.log("Found address: ", addresses);
+
+    if (!addresses) {
+      return res.status(404).send('Address not found');
+    }
+
+ 
+    const user = await User.findOne({ email: userEmail }); 
+    console.log("Found user: ", user);
+
+   res.render('editAddress', { addresses, user });
+    
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send('Internal Server Error');
+  }
+};
+
+
+const EditAddress = async (req, res) => {
+  try {
+    const {
+      address,
+      state,
+      pin,
+      district,
+      city,
+      Firstname,
+      Lastname,
+      country,
+      type,
+    } = req.body;
+    const { id } = req.params;
+    const userId = req.session.email;
+    const addresses = await Address.find({ UserId: userId });
+    const user = await User.find();
+    const UpdateAddress = await Address.findByIdAndUpdate(
+      id,
+      {
+        address,
+        state,
+        pin,
+        district,
+        city,
+        Firstname,
+        Lastname,
+        country,
+        type,
+      },
+      { new: true }
+    );
+    if (!UpdateAddress) {
+      return res.status(404).send("Address not found");
+    }
+    res.render("editAddress", { user, addresses });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send("oops server error !");
+  }
+  };
+
+
+
+  
+const deletingAddress = async (req, res) => {
+    try {
+      const userEmail = req.session.email; 
+      const { id } = req.params;
+  
+      const updatedAddress = await Address.findOneAndUpdate(
+        { _id: id, email: userEmail },
+        { isDeleted: true }, 
+      );
+  
+
+      if (!updatedAddress) {
+        return res.status(404).send('Address not found');
+      }
+
+      
+    } catch (err) {
+      console.log(err);
+      return res.status(500).send('Oops, server error!');
+    }
+  };
+
+ const cartPage = async (req,res)=>{
+  try{
+
+    ///storing user session 
+
+    const user = req.session.email;
+
+    /// storing user cart item 
+
+    const cart = await Cart.findOne({email:user}).populate('products.productId')
+
+    if(!cart){
+      return res.status(404).send('Cart not found')
+    }
+
+    /// calculating current product price 
+
+    const cartTotals = cart.products.reduce((acc, product) => {
+      acc.total += product.quantity * product.productId.price;
+      return acc;
+    }, { total: 0 });
+
+    res.render('cart', {products:cart.products, cartTotals});
+
+  }catch(err){
+    console.log(err);
+    return res.status(500).send('Oops, server error!');
+  }
+ }
+
+
+
+  
 module.exports = {
   HomePage,
   PageNotFound,
@@ -480,5 +634,10 @@ module.exports = {
   profile,
   editProfile,
   ManageAddress,
-  addAddress
+  addAddress,
+  ViewAddress,
+  EditAddress,
+  EditAddressPage,
+  deletingAddress,
+  cartPage,
 };
