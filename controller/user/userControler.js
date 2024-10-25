@@ -7,11 +7,7 @@ require("dotenv").config();
 const bcrypt = require("bcrypt");
 const Category = require("../../models/category");
 const Product = require("../../models/product");
-const Cart  = require ('../../models/cart')
-
-
-
-
+const Cart = require("../../models/cart");
 
 const HomePage = async (req, res) => {
   try {
@@ -248,7 +244,13 @@ const userLogin = async (req, res) => {
     if (user.IsBlocked) {
       return res.status(403).send({ message: "User were blocked" });
     }
+
     // console.log(user);
+    // if(user){
+    //   req.session.email = user.email
+    //   return res.redirect('/')
+
+    // }
 
     req.session.user = {
       name: user.name,
@@ -485,13 +487,14 @@ const ViewAddress = async (req, res) => {
     console.error("Error fetching user:", error);
     return res.status(500).send("Internal server error");
   }
-}
+};
 
 const EditAddressPage = async (req, res) => {
   try {
-    const userEmail = req.session.email; 
-    console.log(userEmail)
-    const { id } = req.params;  
+    const userEmail = req.session.email;
+    console.log('heloooo ' , userEmail)
+    console.log(userEmail);
+    const { id } = req.params;
 
     console.log("User email from session: ", userEmail);
     console.log("Address ID from params: ", id);
@@ -501,21 +504,18 @@ const EditAddressPage = async (req, res) => {
     console.log("Found address: ", addresses);
 
     if (!addresses) {
-      return res.status(404).send('Address not found');
+      return res.status(404).send("Address not found");
     }
 
- 
-    const user = await User.findOne({ email: userEmail }); 
+    const user = await User.findOne({ email: userEmail });
     console.log("Found user: ", user);
 
-   res.render('editAddress', { addresses, user });
-    
+    res.render("editAddress", { addresses, user });
   } catch (err) {
     console.log(err);
-    return res.status(500).send('Internal Server Error');
+    return res.status(500).send("Internal Server Error");
   }
 };
-
 
 const EditAddress = async (req, res) => {
   try {
@@ -557,66 +557,130 @@ const EditAddress = async (req, res) => {
     console.log(err);
     return res.status(500).send("oops server error !");
   }
-  };
+};
 
-
-
-  
 const deletingAddress = async (req, res) => {
-    try {
-      const userEmail = req.session.email; 
-      const { id } = req.params;
-  
-      const updatedAddress = await Address.findOneAndUpdate(
-        { _id: id, email: userEmail },
-        { isDeleted: true }, 
-      );
-  
+  try {
+    const userEmail = req.session.email;
+    const { id } = req.params;
 
-      if (!updatedAddress) {
-        return res.status(404).send('Address not found');
-      }
+    const updatedAddress = await Address.findOneAndUpdate(
+      { _id: id, email: userEmail },
+      { isDeleted: true }
+    );
 
+    if (!updatedAddress) {
+      return res.status(404).send("Address not found");
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send("Oops, server error!");
+  }
+};
+
+const cartPage = async (req, res) => {
+  try {
+    console.log("Session data:", req.session);
+
+    const user = req.session.user;
+    console.log("hello heyy ", user);
+
+    if (!user) {
+      return res.redirect("/login");
+    }
+
+    const cart = await Cart.find({userId: user._id }).populate(
+      "products.productId"
+    );
+    console.log("vart: ",cart);
+    
+
+    if (!cart || cart.length === 0) {
+      return res.render("cart", {
+        message: "Your cart is empty",
+        products: [],
+        user,
+        cartTotals: { total: 0 },
+      });
+    }
+
+    const cartTotals = cart.reduce((acc, item) => {
+      item.products.forEach((productEntry) => {
+        const product = productEntry.productId;
+        const productPrice = product.salePrice;
+        const quantity = productEntry.quantity;
+        
       
-    } catch (err) {
-      console.log(err);
-      return res.status(500).send('Oops, server error!');
-    }
-  };
-
- const cartPage = async (req,res)=>{
-  try{
-
-    ///storing user session 
-
-    const user = req.session.email;
-
-    /// storing user cart item 
-
-    const cart = await Cart.findOne({email:user}).populate('products.productId')
-
-    if(!cart){
-      return res.status(404).send('Cart not found')
-    }
-
-    /// calculating current product price 
-
-    const cartTotals = cart.products.reduce((acc, product) => {
-      acc.total += product.quantity * product.productId.price;
+        productEntry.subtotal = quantity * productPrice;
+        acc.total += productEntry.subtotal;
+      });
       return acc;
     }, { total: 0 });
+    
+    console.log("tot: ",cartTotals);
+    
 
-    res.render('cart', {products:cart.products, cartTotals});
-
-  }catch(err){
-    console.log(err);
-    return res.status(500).send('Oops, server error!');
+    res.render("cart", {
+      products: cart,
+      cartTotals,
+      message: null,
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Oops, server error!");
   }
- }
+};
 
 
+const AddToCart = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    console.log('the product is', productId)
+    const user = req.session.user;
+    console.log('hello ' ,user)
+ 
+    if (!user) {
+      return res.redirect('/login')
+    }
 
   
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ success: false, message: "Product not found." });
+    }
+
+    let cart = await Cart.findOne({ userId: user._id }).populate("products.productId");
+
+  
+    if (!cart) {
+      cart = new Cart({ userId: user._id, products: [] });
+    }
+
+
+    const existingProduct = cart.products.find((item) => item.productId._id.toString() === productId);
+
+    if (existingProduct) {
+
+      // existingProduct.quantity += parseInt(quantity, 10);
+    } else {
+
+      cart.products.push({
+        productId: product._id,
+      });
+    }
+
+    // Save the cart
+    await cart.save();
+      console.log('product added succesfully', cart)
+    return  res.redirect('/productDetials')
+  } catch (error) {
+    console.error("Error in AddToCart:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+
 module.exports = {
   HomePage,
   PageNotFound,
@@ -640,4 +704,5 @@ module.exports = {
   EditAddressPage,
   deletingAddress,
   cartPage,
+  AddToCart,
 };

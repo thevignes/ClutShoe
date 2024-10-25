@@ -48,9 +48,11 @@ router.get('/editAddressPage/:id',userControler.EditAddress)
 
 router.post('/delete-address/:id',userControler.deletingAddress)
 
-
+ 
 ///cart routes ///
 
 router.get('/cart',userControler.cartPage)
+
+router.post('/add-to-cart/:productId',userControler.AddToCart)
 
 module.exports = router

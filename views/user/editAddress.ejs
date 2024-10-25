@@ -1,4 +1,4 @@
-<%-include('../../views/partial/user/header')%>
+<%-include('../../views/partial/user/header',{user:user})%>
 <html>
 
 <head>
@@ -211,37 +211,36 @@
     <div class="content">
         <div class="form-container">
             <h2>Edit Address</h2>
-
-  <div class="form-group">
-      <label><%=addresses.Firstname%></label>
-      <input type="text" name="firstname" value="<%=addresses.Firstname%>">
-  </div>
-  <div class="form-group">
-      <label>Last Name</label>
-      <input type="text" name="lastname" value="<%=addresses.Lastname%>" >
-  </div>
-  <div class="form-group">
-      <label>Address</label>
-      <input type="text" name="address" value="<%=addresses.address%>">
-  </div>
-  <div class="form-group">
-      <label>City</label>
-      <input type="text" name="city" value="<%=addresses.city%>">
-  </div>
-  <div class="form-group">
-      <label>State</label>
-      <input type="text" name="state" value="<%=addresses.state%>">
-  </div>
-  <div class="form-group">
-      <label>Country</label>
-      <input type="text" name="country" value="<%=addresses.country%>">
-  </div>
-  <div class="form-group">
-      <label>Pin Code</label>
-      <input type="text" name="pin" value="<%=addresses.pin%>">
-  </div>
-  <button type="submit">Save Changes</button>
-
+            <div class="form-group">
+                <label>Firstname </label>
+                <input type="text" name="firstname" value="<%= addresses.Firstname %>">
+            </div>
+            <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" name="lastname" value="<%= addresses.Lastname %>">
+            </div>
+            <div class="form-group">
+                <label>Address</label>
+                <input type="text" name="address" value="<%= addresses.address %>">
+            </div>
+            <div class="form-group">
+                <label>City</label>
+                <input type="text" name="city" value="<%= addresses.city %>">
+            </div>
+            <div class="form-group">
+                <label>State</label>
+                <input type="text" name="state" value="<%= addresses.state %>">
+            </div>
+            <div class="form-group">
+                <label>Country</label>
+                <input type="text" name="country" value="<%= addresses.country %>">
+            </div>
+            <div class="form-group">
+                <label>Pin Code</label>
+                <input type="text" name="pin" value="<%= addresses.pin %>">
+            </div>
+            <button type="submit">Save Changes</button>
+            
 
     </div>
 </body>

@@ -1,54 +1,122 @@
-
-
-
-<%-include('../../views/partial/user/header')%>
-
-<main class="main">
-    <div class="page-header breadcrumb-wrap">
-        <div class="container">
-            <div class="breadcrumb">
-                <a href="index.html" rel="nofollow">Home</a>
-                <span></span> Shop
-                <span></span> Your Cart
+<%-include('../../views/partial/user/header',{user:user})%>
+    <main class="main">
+        <div class="page-header breadcrumb-wrap">
+            <div class="container">
+                <div class="breadcrumb">
+                    <a href="index.html" rel="nofollow">Home</a>
+                    <span></span> Shop
+                    <span></span> Your Cart
+                </div>
             </div>
         </div>
-    </div>
-    <section class="mt-50 mb-50">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="table-responsive">
-                        <table class="table shopping-summery text-center clean">
-                            <thead>
-                                <tr class="main-heading">
-                                    <th scope="col">Image</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Quantity</th>
-                                    <th scope="col">Subtotal</th>
-                                    <th scope="col">Remove</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td class="image product-thumbnail"><img src="assets/imgs/shop/product-1-2.jpg" alt="#"></td>
-                                    <td class="product-des product-name">
-                                        <h5 class="product-name"><a href="shop-product-right.html">J.Crew Mercantile Women's Short-Sleeve</a></h5>
-                                        <p class="font-xs">Maboriosam in a tonto nesciung eget<br> distingy magndapibus.
-                                        </p>
-                                    </td>
-                                    <td class="price" data-title="Price"><span>$65.00 </span></td>
-                                    <td class="text-center" data-title="Stock">
-                                        <div class="detail-qty border radius  m-auto">
-                                            <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                            <span class="qty-val">1</span>
-                                            <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-                                        </div>
-                                    </td>
-                                    <td class="text-right" data-title="Cart">
-                                        <span>$65.00 </span>
-                                    </td>
-                                    <td class="action" data-title="Remove"><a href="#" class="text-muted"><i class="fi-rs-trash"></i></a></td>
-                                </tr>
-                                <tr>
-                                    <%-include('../../views/partial/user/footer')%>
+        <section class="mt-50 mb-50">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="table-responsive">
+                            <table class="table shopping-summery text-center clean">
+                                <thead>
+                                    <tr class="main-heading">
+                                        <th scope="col">Image</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">subtotal</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Remove from cart</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Loop through products -->
+                                    <% products.forEach(product => { %>
+                                        <% product.products.forEach((item) => { %> 
+                                        <tr>
+                                            <td>
+                                                <img src="/uploads/re-image/<%= item.productId.images[0]%>" alt="" width="50">
+                                            </td>
+                                            <td><%=item.productId.productName%></td>
+                                            <td><%=item.productId.salePrice%></td>
+                                            <td><%=item.subtotal%></td>
+                                            <td>
+                                                <form class="add-to-cart-form">
+                                                    <input type="hidden" name="productId" value="">
+                                                    <input type="number" name="quantity" min="1" value="1" required>
+                                                </form>
+                                            </td>
+                                            <td> <button type="button" class="add-to-cart-btn">Remove</button></td> 
+                                            <td>
+                                               
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                    <% }); %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
+
+
+        <!-- Including the footer outside of the table -->
+
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+
+        console.log('out')
+        document.getElementById("form").addEventListener("submit", async (event) => {
+            //   event.preventDefault();
+
+            //   const form = event.target;
+
+
+            //   const data = {
+            //     productId: form.querySelector('input[name="productId"]').value,
+            //     quantity: form.querySelector('input[name="quantity"]').value
+            //   };
+            const ProductId = document.getElementById('proId').value;
+            console.log("Pro: ", ProductId);
+
+
+            //     fetch("/add-to-cart", {
+            //       method: "post",
+            //       headers: {
+            //         "Content-Type": "application/json",
+            //       },
+            //       body: JSON.stringify({ProductId:ProductId}),
+            //     })
+            //     .then(response => response.json())
+            //     .then((data) => {
+            //         if(data.success){
+            //             Swal.fire({
+            //         icon: "success",
+            //         title: result.message,
+            //         showConfirmButton: false,
+            //         timer: 1500
+            //       });
+            //          } else {
+            //       Swal.fire({
+            //         icon: "error",
+            //         title: result.message || "An error occurred",
+            //         showConfirmButton: true,
+            //       })
+            //     }
+            //     })
+            //    .catch ((error) => {
+            //     console.error("Error adding product to cart:", error);
+            //     Swal.fire({
+            //       icon: "error",
+            //       title: "An error occurred",
+            //       text: error.message,
+            //       showConfirmButton: true,
+            //     });
+            //    }) 
+
+
+        });
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
