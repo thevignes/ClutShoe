@@ -44,7 +44,9 @@ const AdminVerify = async (req, res) => {
     
         req.session.LoggedIn = true;
         req.session.admin = admin
-        return res.redirect('/admin/dashboard');
+
+        const searchQuery = req.query.search || '';
+        return res.render('admin/dashboard',{ searchQuery: searchQuery});
       } else {
         console.log('Invalid password');
         
@@ -90,7 +92,7 @@ const getUSers = async(req,res)=>{
 
         const blockUser = async(req,res)=>{
           try {
-            const UserId = req.params .id
+            const UserId = req.query.id
 
             await User.findByIdAndUpdate(UserId,{IsBlocked:true})
             res.redirect('/admin/user',)
@@ -107,7 +109,7 @@ const getUSers = async(req,res)=>{
 
         const UnblockUser = async(req,res)=>{
           try {
-            const UserId = req.params.id
+            const UserId = req.query.id
 
             await User.findByIdAndUpdate(UserId,{IsBlocked:false})
             res.redirect('/admin/user',)
@@ -121,38 +123,52 @@ const getUSers = async(req,res)=>{
           }
         }
 
-        //user side pagination
-        const Userlist = async (req, res) => {
-          const page = Math.max(1, parseInt(req.query.page)) || 1;
-          const limit = Math.max(1, parseInt(req.query.limit)) || 5;
+        //user side pagination// User side pagination with search
 
-          
-          try {
-            const users = await User.find()
-              .skip((page - 1) * limit)
-              .limit(limit);
-        
-            const totalUsers = await User.countDocuments();
-            const totalPages = Math.ceil(totalUsers / limit);
-        
-            console.log("Current Page:", page);
-            console.log("Total Pages:", totalPages);
-        
-            console.log("Rendering view with currentPage:", page);
-        
-            res.render('adminUsers', {
-              user: users,
-              currentPage: page, 
-              totalPages: totalPages
-            });
-          } catch (err) {
-            console.log('Error fetching users:', err);
-            res.status(500).send('Server Error');
-          }
-        };
-        
-      
-      
+
+const Userlist = async (req, res) => {
+  const page = Math.max(1, parseInt(req.query.page)) || 1;
+  const limit = Math.max(1, parseInt(req.query.limit)) || 5;
+  
+
+
+  const searchQuery = req.query.search || '';
+
+
+  try {
+  
+      const filter = searchQuery
+          ? {
+                $or: [
+                    { name: { $regex: searchQuery, $options: 'i' } },
+                    { email: { $regex: searchQuery, $options: 'i' } }  
+                ]
+            }
+          : {}; 
+
+      const users = await User.find(filter)
+          .skip((page - 1) * limit)
+          .limit(limit);
+
+      const totalUsers = await User.countDocuments(filter);
+      const totalPages = Math.ceil(totalUsers / limit);
+
+      console.log("Current Page:", page);
+      console.log("Total Pages:", totalPages);
+
+      console.log("Rendering view with currentPage:", page);
+
+      res.render('adminUsers', {
+          user: users,
+          currentPage: page,
+          totalPages: totalPages,
+          searchQuery:searchQuery
+      });
+  } catch (err) {
+      console.log('Error fetching users:', err);
+      res.status(500).send('Server Error');
+  }
+};
 
 
 

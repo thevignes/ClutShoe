@@ -184,9 +184,10 @@ h2 {
                                             <a href="/editAddressPage/<%= address._id %>" class="text-white">Edit</a>
                                     </button>
                                 </form>
-                                <form action="/delete-address/<%= address._id %>" method="POST">
-                                    <button class="delete-btn">Delete</button>
-                                </form>
+                                <a id="delete-form" href="/delete-address?id=<%= address._id %>" onclick="confirmDelete(event,this.href)" >
+                                    <button type="button"  class="delete-btn">Delete</button>
+                                </a>
+                                    
                             </div>
                         </div>
                     <% }) %>
@@ -202,3 +203,41 @@ h2 {
 </body>
 </html>
 <%-include('../../views/partial/user/footer')%> 
+
+<!-- Include SweetAlert in your HTML -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Button to trigger delete request -->
+
+
+<script>
+  // Function to confirm deletion
+  function confirmDelete(event,url) {
+  // Show SweetAlert confirmation dialog
+  event.preventDefault()
+  Swal.fire({
+            title: "Are you sure?",
+            text: "are you want delete this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to the blocking URL only if confirmed
+                Swal.fire({
+                title: "deleted!",
+                text: "This address  has been Listed.",
+                icon: "success",
+                timer: 1500, 
+                showConfirmButton: false
+            }).then(() => {
+                // Redirect after success message is shown
+                window.location.href = url;
+            });
+            }
+        });
+}
+
+</script>

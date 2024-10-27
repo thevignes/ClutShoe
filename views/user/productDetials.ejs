@@ -1,5 +1,7 @@
 <%-include('../../views/partial/user/header',{user})%>
     <!-- <link rel="stylesheet" href="/path/to/css/easyzoom.css" /> -->
+    <!-- <link rel="stylesheet" href="/public/public/hover-extended-magnify/hover-extended-magnify/"> -->
+
     <main class="main">
         <div class="page-header breadcrumb-wrap">
             <div class="container">
@@ -10,7 +12,25 @@
                 </div>
             </div>
         </div>
+            <style>
+                .custom-cart-button {
+    width: 150px; /* Adjust width as desired */
+    height: 40px; /* Adjust height as desired */
+    font-size: 16px; /* Control font size */
+    padding: 10px 20px; /* Adjust padding */
+    background-color: #4CAF50; /* Add your preferred background color */
+    color: #fff; /* Text color */
+    border: none;
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
+.custom-cart-button:hover {
+    background-color: #45a049; /* Slightly darker color on hover */
+}
+
+            </style>
 
         <section class="mt-50 mb-50">
             <div class="container">
@@ -23,7 +43,9 @@
                             <div class="row mb-50">
                                 <!-- Product Images Section -->
                                 <div class="col-md-6 col-sm-12 col-xs-12">
+                                    
                                     <div class="detail-gallery">
+                                        
                                         <div class="product-image-slider rounded-sm">
 
                                             <img src="/uploads/re-image/<%= ProductData.images[0] %>"
@@ -36,13 +58,26 @@
                                                 alt="product image">
 
 
-                                        </div>
+                                        </div> 
+                                        <div class="col-md-6 col-xs-12">
+                                           
+
+
+
                                         <!-- Thumbnails -->
-                                        <div class="slider-nav-thumbnails pl-3 pr-3">
-                                            <div><img src="/uploads/re-image/<%= ProductData.images[0] %>" alt=""></div>
+                                  
+
+                                         <div class="slider-nav-thumbnails pl-3 pr-3  d-g">
+
+                                                  <div><img src="/uploads/re-image/<%= ProductData.images[0] %>" alt=""></div>
                                             <div><img src="/uploads/re-image/<%= ProductData.images[1] %>" alt=""></div>
                                             <div><img src="/uploads/re-image/<%= ProductData.images[2] %>" alt=""></div>
                                             <div><img src="/uploads/re-image/<%= ProductData.images[3] %>" alt=""></div>
+                                        
+                                            </div>
+    
+
+                                       
                                         </div>
                                     </div>
                                     <!-- Social Share Icons -->
@@ -114,19 +149,23 @@
                                             </div>
                                             <div class="product-extra-link2">
 
-
-                                                <form action="/add-to-cart/<%= ProductData._id%>" method="POST" id="proId"  id="form">
-                                                    <button type="submit" class="button button-add-to-cart">
+                                                <!-- <a href="/add-to-cart?id=<%= ProductData._id %>" >
+                                                    <button type="button" class="button button-add-to-cart" >
                                                         Add to cart
                                                     </button>
-                                                </form>
-
-
-                                                <a aria-label="Add To Wishlist" class="action-btn hover-up" href=""><i
-                                                        class="fi-rs-heart"></i></a>
-                                                <a aria-label="Compare" class="action-btn hover-up"
-                                                    href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                                </a> -->
+                                                <a href="/add-to-cart?id=<%= ProductData._id %>">
+                                                    <button type="button" class="button button-add-to-cart custom-cart-button ">
+                                                        Add to cart
+                                                    </button>
+                                                </a>
+                                                
+                                                
                                             </div>
+                                            <a aria-label="Add To Wishlist" class="action-btn hover-up" href=""><i
+                                                    class="fi-rs-heart"></i></a>
+                                            <a aria-label="Compare" class="action-btn hover-up"
+                                                href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
                                         </div>
                                         <ul class="product-meta font-xs color-grey mt-50">
                                             <li>
@@ -368,8 +407,42 @@
                             </div>
                         </div>
         </section>
-        <script src="/evara-frontend/assets/js/zoom.js"></script>
+    
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="/zoom/extm.min.js"></script>
+
+        <script>
+
+            function changeMainImage(imageUrl) {
+  console.log("Image clicked:", imageUrl);
+        const mainProductImage = document.getElementById('mainProductImage');
+        mainProductImage.src = imageUrl;
+
+        mainProductImage.onload = function() {
+        $('.pd_img img').extmDestroy(); 
+        $('.pd_img img').extm({
+          zoomLevel:2,
+          position:'right',
+          offset:{x:0,y:0},
+          rightPad:20,
+          height:'auto'
+        }); 
+    }
+  }
+
+    
+    $(document).ready(function() {
+        $('.pd_img img').extm({
+            zoomLevel: 2, 
+            position:'right',
+            offset: { x: 0, y: 0 },
+            rightPad: 20,
+            height:'auto',
+        });
+    });
+        </script>
+
         <script>
     
             console.log('out')

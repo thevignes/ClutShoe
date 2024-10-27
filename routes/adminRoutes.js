@@ -19,9 +19,9 @@ router.get('signin',AdminController.adminLogout)
 
 router.get('/user',AdminController.getUSers)
 
-router.post('/blockUser/:id', AdminController.blockUser)
+router.get('/blockUser', AdminController.blockUser)
 
-router.post('/unblockUser/:id', AdminController.UnblockUser)
+router.get('/unblockUser', AdminController.UnblockUser)
 
 
 //category routes 

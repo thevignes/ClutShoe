@@ -67,10 +67,7 @@
         <input type="number" class="form-control" id="quantity" name="quantity" value="<%= product.quantity %>" required>
       </div>
 
-      <div class="mb-3">
-        <label for="color" class="form-label">Color</label>
-        <input type="text" class="form-control" id="color" name="color" value="<%= product.color %>" required>
-      </div>
+
 
       <div class="mb-3">
         <label for="category" class="form-label">Category</label>
@@ -81,8 +78,7 @@
         </select>
       </div>
 
-<!-- Display current product images if available -->
-<!-- Display current product images if available -->
+
 <% if (product.images && product.images.length > 0) { %>
     <div class="mb-3">
       <label class="form-label">Current Product Images</label>

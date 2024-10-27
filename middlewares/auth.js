@@ -50,9 +50,14 @@ if(req.session.user){
 //         res.redirect('/admin/signin');
 //     }
 // };
+// middleware/checkBlockedStatus.js
+
+
+
 
 
 module.exports = {
     UserAuth,
+
    
 }

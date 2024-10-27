@@ -15,7 +15,7 @@
         <div class="timer" id="timer">01:00</div>
         <form id="otpForm" action="/verify-otp" method="POST">
             <input type="text" name="otp" id="otpInput" placeholder="Enter OTP">
-            <button type="submit">Submit OTP</button>
+            <button type="submit" id="butt">Submit OTP</button>
         </form>
 
         <form action="/resend-otp" id="resendForm" method="POST">
@@ -30,5 +30,30 @@
 
 
 </body>
+<script>
+    document.getElementById("otpForm").addEventListener("submit", function(event) {
+    event.preventDefault(); 
+
+    const butt = document.getElementById("butt").value;
+    const errorMessage = document.getElementById("errorMessage");
+    const resendOtp = document.getElementById('resendOtp')
+   
+    if (!/^\d{6}$/.test(butt)) {
+        errorMessage.textContent = "Please enter a valid 6-digit OTP.";
+        errorMessage.style.display = "block";
+    } else {
+        errorMessage.style.display = "none"; 
+        this.submit(); 
+    }
+    if(!/^\d{6}$/.test(resendOtp)){
+        errorMessage.textContent = 'please enter a valid otp or check your email';
+        errorMessage.style.display = 'block';
+    }else{
+        errorMessage.style.display = 'none';
+        this.submit();
+    }
+});
+
+</script>
 
 </html>
