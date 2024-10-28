@@ -1,4 +1,5 @@
 <%-include('../../views/partial/user/header',{user:user})%>
+
 <main class="main">
     <div class="page-header breadcrumb-wrap">
         <div class="container">
@@ -53,7 +54,7 @@
                                                 <span><%= item.subtotal %></span>
                                             </td>
                                             <td class="action" data-title="Remove">
-                                                <a href="/remove-from-cart/<%= product._id %>" class="text-muted" onclick="return confirmRemove(event, this.href);">
+                                                <a href="/remove-from-cart/<%=item._id %>" class="text-muted" onclick="return confirmRemove(event, this.href);">
                                                     <i class="fi-rs-trash"></i>
                                                 </a>
                                             </td>
@@ -67,7 +68,7 @@
             </div>
 
             <div class="cart-action text-end">
-                <a href="/" class="btn"><i class="fi-rs-shopping-bag mr-10"  ></i>Continue Shopping</a>
+                <a href="/shop" class="btn"><i class="fi-rs-shopping-bag mr-10"  ></i>Continue Shopping</a>
             </div>
         </div>
     </section>
@@ -97,7 +98,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <a href="#" class="btn"><i class="fi-rs-box-alt mr-10"></i> Proceed To Checkout</a>
+                        <a href="/checkOut" class="btn"><i class="fi-rs-box-alt mr-10"></i> Proceed To Checkout</a>
                     </div>
                 </div>
             </div>

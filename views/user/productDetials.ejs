@@ -1,7 +1,7 @@
 <%-include('../../views/partial/user/header',{user})%>
     <!-- <link rel="stylesheet" href="/path/to/css/easyzoom.css" /> -->
     <!-- <link rel="stylesheet" href="/public/public/hover-extended-magnify/hover-extended-magnify/"> -->
-
+    
     <main class="main">
         <div class="page-header breadcrumb-wrap">
             <div class="container">
@@ -406,7 +406,62 @@
 
                             </div>
                         </div>
+
+
+
+
+                        <div class="col-12">
+                            <h3 class="section-title style-1 mb-30">Related products</h3>
+                        </div>  
+                        <div class="row related-products">
+                            <% relatedProducts.forEach(product => { %>
+                                <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+                                    <div class="product-cart-wrap small hover-up">  
+                                        <div class="product-img-action-wrap">
+                                            <div class="product-img product-img-zoom">
+                                                <a href="/products/<%= product._id %>" tabindex="0">
+                                                    <img class="default-img" src="/uploads/re-image/<%= product.images[0] %>" alt="">
+                                            
+                                                        <img class="hover-img" src="/public/public/uploads/re-image/ product.images[1] %>" alt="">
+                                                 
+                
+                                                </a>
+                                            </div>
+                                            <div class="product-action-1">
+                                                <a aria-label="Quick view" class="action-btn small hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal">
+                                                    <i class="fi-rs-search"></i>
+                                                </a>
+                                                <a aria-label="Add To Wishlist" class="action-btn small hover-up" href="/wishlist/add/<%= product._id %>" tabindex="0">
+                                                    <i class="fi-rs-heart"></i>
+                                                </a>
+                                                <a aria-label="Compare" class="action-btn small hover-up" href="/compare/add/<%= product._id %>" tabindex="0">
+                                                    <i class="fi-rs-shuffle"></i>
+                                                </a>
+                                            </div>
+                                       
+                                        </div>
+                                        <div class="product-content-wrap">
+                                            <h2><a href="/products/<%= product._id %>" tabindex="0"><%= product.productName  %></a></h2>
+                                            <div class="rating-result" title="<%= product.rating * 20 %>%">
+                  
+                                            </div>
+                                            <div class="product-price">
+                                                <span>$<%= product.salePrice %> </span>
+                                    
+                                                    <span class="old-price">$<%= product.regularPrice %></span>
+                                          
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        </div>
+
         </section>
+
+       
+
+
     
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

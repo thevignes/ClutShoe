@@ -10,24 +10,49 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-
+<style>
+    body {
+        /* background-image: url('/evara-frontend/assets/imgs/shop/clutchshoe.jpg');  */
+        background-size: cover;
+        background-position: center;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+    .login-container {
+        background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background for the form */
+        padding: 2rem;
+        border-radius: 8px;
+    }
+    .btn-primary {
+        background-color: #00878a; /* Custom primary button color */
+        border: none;
+    }
+    .btn-danger {
+        background-color: #dc3545; /* Custom Google login button color */
+        border: none;
+    }
+</style>
 <body>
-    <div class="container mt-5">
+        
+      
+    <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-6 login-container">
                 <h2 class="text-center">Login</h2>
 
                 <!-- Login Form -->
-                <form id="loginForm"> <!-- Added id here -->
+                <form id="loginForm">
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email">
+                        <input type="email" name="email" class="form-control" id="email" placeholder="Enter your email" required>
                     </div>
 
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" name="password" class="form-control" id="password"
-                            placeholder="Enter your password">
+                        <input type="password" name="password" class="form-control" id="password" placeholder="Enter your password" required>
                     </div>
 
                     <div class="form-check">
@@ -39,7 +64,7 @@
 
                     <!-- Google Login -->
                     <a href="/auth/google" class="btn btn-danger btn-block mt-2">
-                        <i class="fa-brands fa-google"></i> Login with Google
+                        <i class="fab fa-google"></i> Login with Google
                     </a>
 
                     <!-- Link to Sign Up Page -->
@@ -47,9 +72,7 @@
                 </form>
             </div>
         </div>
-    </div>
-
-
+    </div>  
     <script>
 
         loginForm.addEventListener('submit', async (e) => {
@@ -104,6 +127,30 @@
             }
 
         });
+          // JavaScript validation function
+    function validateForm() {
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+
+        // Clear previous validation errors
+        email.classList.remove('is-invalid');
+        password.classList.remove('is-invalid');
+
+        // Validate email format using regex
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(email.value)) {
+            email.classList.add('is-invalid');
+            return false;
+        }
+
+        // Validate password length (at least 8 characters)
+        if (password.value.length < 8) {
+            password.classList.add('is-invalid');
+            return false;
+        }
+
+        return true; // Form is valid
+    }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 

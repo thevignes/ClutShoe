@@ -34,8 +34,8 @@ const CategoryDet = async (req, res) => {
 
 const addCategory = async (req,res) =>{
     const {name,description} = req.body;
-    // console.log('hehheheheh catewf')
-    try {
+   
+    try {                                                    
         const exisitngCate = await Category.find({name})
         if(exisitngCate.length > 0){
             return res.status(400).json({error:'Category already exists'})
@@ -49,6 +49,7 @@ const addCategory = async (req,res) =>{
         return res.status(500).json({error:"internal server error"})
     }
 }
+
 const editCatePage = async (req, res) => {
   try {
     const id = req.params.id;

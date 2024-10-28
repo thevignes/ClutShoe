@@ -1,0 +1,109 @@
+
+<%-include('../../views/partial/user/header')%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Completed</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #003399;
+            color: white;
+            padding: 20px;
+            border-radius: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            text-align: center;
+        }
+        .header .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .header .view-order {
+            background-color: #e0e0e0;
+            color: #003399;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        .content .icon {
+            font-size: 50px;
+            color: #28a745;
+            margin-top: 20px;
+        }
+        .content .message {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .content .description {
+            font-size: 16px;
+            color: #666;
+        }
+        .content .continue-shopping {
+            background-color: #28a745;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            text-decoration: none;
+            margin-top: 30px;
+        }
+        @media (max-width: 576px) {
+            .header {
+                flex-direction: column;
+                padding: 15px;
+            }
+            .header .title, .header .view-order {
+                margin-bottom: 10px;
+            }
+            .content .message {
+                font-size: 20px;
+            }
+            .content .description {
+                font-size: 14px;
+            }
+            .content .continue-shopping {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">Order Completed</div>
+            <a href="#" class="view-order">View order</a>
+        </div>
+        <div class="content text-center">
+            <div class="icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="message">Your order is completed</div>
+            <div class="description">
+                Thank you for your order! We are processing it and will update you via email.
+            </div>
+            <a href="#" class="continue-shopping btn mt-4">Continue Shopping</a>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+<%-include('../../views/partial/user/footer')%>

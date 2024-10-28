@@ -8,6 +8,7 @@ const bcrypt = require("bcrypt");
 const Category = require("../../models/category");
 const Product = require("../../models/product");
 const Cart = require("../../models/cart");
+const Order = require('../../models/order')
 
 const HomePage = async (req, res) => {
   try {
@@ -334,15 +335,25 @@ const ProducDetial = async (req, res) => {
   try {
     const user = req.session.user;
     const ProductId = req.params.id;
+    
     let ProductData = await Product.findOne({
       _id: ProductId,
       isListed: true,
     }).populate("category");
+
     if (!ProductData) {
       return res.status(404).send({ message: "Product not found" });
     }
+    
+    const category = ProductData.category;
+    
+    const relatedProducts = await Product.find({
+      category: category,
+      _id: { $ne: ProductId }
+    }).limit(4);
 
-    res.render("productDetials", { user, ProductData });
+
+    res.render("productDetials", { user, ProductData,relatedProducts });
   } catch (error) {
     console.error(error);
     return res.status(500).send("Server Error");
@@ -688,20 +699,23 @@ const removeFromCart = async (req, res) => {
       return res.redirect('/login'); 
     }
 
-    // Find the user's cart
-    const cart = await Cart.findOne({ userId: user._id });
-    if (!cart) {
-      return res.status(404).json({ success: false, message: "Cart not found." });
-    }
+    const fd =  await Cart.findById(productId)
+    console.log('the fd ', fd)
+    const product = await Cart.findByIdAndDelete(productId)
+    
 
-    // Find the product in the cart
-    const productIndex = cart.products.findIndex(item => item.productId.toString() === productId);
-    if (productIndex === -1) {
-      return res.status(404).json({ success: false, message: "Product not found in cart." });
-    }
+    // const cart = await Cart.findOne({ userId: user._id });
+    // if (!cart) {
+    //   return res.status(404).json({ success: false, message: "Cart not found." });
+    // }
 
-    // Soft delete the product
-    cart.products[productIndex].isDeleted = true;
+
+    // const productIndex = cart.products.find(item => item.productId.toString() === productId);
+    // if (productIndex === -1) {
+    //   return res.status(404).json({ success: false, message: "Product not found in cart." });
+    // }
+    // cart.products.splice(productIndex, 1);
+
 
 
     console.log("Product marked as deleted from cart");
@@ -725,6 +739,133 @@ const checkBlockedStatus = async (req, res, next) => {
       }
   } else {
       res.redirect('/login');
+  }
+};
+
+const checkout = async (req, res) => {
+  try {
+    const user = req.session.user;
+    if (!user) {
+      return res.redirect("/login");
+    }
+
+    const cart = await Cart.findOne({ userId: user._id }).populate("products.productId");
+    console.log("Cart Data:", cart);
+
+    const addresses = await Address.find({ UserId: user._Id });
+      console.log('th eadds', addresses)
+    if (!cart || cart.products.length === 0) {
+      return res.render("checkout", {  
+        message: "Your cart is empty",
+        products: [],
+        user,
+        cartTotals: { total: 0 },
+      });
+    }
+
+
+    const cartTotals = cart.products.reduce(
+      (acc, productEntry) => {
+        const product = productEntry.productId;
+        const productPrice = product.salePrice;
+        const quantity = productEntry.quantity;
+
+
+        productEntry.subtotal = quantity * productPrice;
+        acc.total += productEntry.subtotal;
+        return acc;
+      },
+      { total: 0 }
+    );
+
+    console.log("Cart Totals:", cartTotals);
+
+    res.render("checkOut", {
+      products: cart.products,
+      cartTotals,
+      message: null,
+      user,
+      addresses
+    });
+  } catch (error) {
+    console.error("Error in checkout function:", error);
+    res.status(500).send("Oops, server error!");
+  }
+};
+
+
+const shopPage = async (req,res)=>{
+  try {
+    let ProductData = await Product.find({ isListed: true }).populate(
+      "category"
+    );
+    console.log(ProductData);
+    const user = req.session.user || null;
+    if (!user) {
+      return res.render("shop", { user: "", ProductData });
+    } else {
+      return res.render("shop", { user, ProductData });
+    }
+
+    
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('server error please try again')
+    
+  }
+}
+const PlaceOrder = async (req, res) => {
+  try {
+    // Retrieve the user information from session
+    const user = req.session.user;
+    console.log('user is ' , user)
+    if (!user) {
+      return res.redirect("/login");
+    }
+
+    console.log('Request body:', req.body);
+    const { PaymentOption, selected_address, products } = req.body;
+
+    // Retrieve the selected address from user session data
+    const address = user?.addresses?.find(addr => addr._id.toString() === selected_address);
+
+    console.log("User addresses:", user.addresses);
+
+    console.log('Selected address:', address);
+
+    if (!address) {
+      return res.status(400).send('Invalid Address');
+    }
+
+    // Calculate total order amount
+    let total = 0;
+    const productDetails = await Promise.all(products.map(async (item) => {
+      const product = await Product.findById(item.productId);
+      if (!product) {
+        throw new Error(`Product not found for ID: ${item.productId}`);
+      }
+      const subtotal = product.salePrice * item.quantity;
+      total += subtotal;
+
+      return { productId: product._id, quantity: item.quantity, subtotal };
+    }));
+
+    // Create and save the order
+    const order = new Order({
+      userId: user._id, // Use user._id from session
+      products: productDetails,
+      total: total,
+      paymentMethod: PaymentOption,
+      address: address._id,
+    });
+
+    await order.save();
+    console.log('Order placed successfully:', order);
+
+    return res.redirect('/success');
+  } catch (error) {
+    console.error('Error placing order:', error);
+    res.status(500).send('Oops! Server error, please try again later.');
   }
 };
 
@@ -753,5 +894,9 @@ module.exports = {
   cartPage,
   AddToCart,
   removeFromCart,
-  checkBlockedStatus
+  checkBlockedStatus,
+  // relatedProduct
+  shopPage,
+  checkout,
+  PlaceOrder
 };

@@ -58,6 +58,8 @@ router.post('/edit-address/:id',userControler.EditAddress)
 // router.use(checkBlockedStatus);
 ///cart routes ///
 
+///related product //
+
 
 router.get('/cart',userControler.cartPage)
 
@@ -66,7 +68,13 @@ router.get('/add-to-cart',userControler.AddToCart)
 // Assuming your route is defined as follows:
 router.get('/remove-from-cart/:id',  userControler.removeFromCart);
 
+//shop route 
+router.get('/shop',userControler.shopPage)
 
+//checkout page 
+router.get('/checkOut',userControler.checkout)  
 
+//order placing //
+router.post('/order',userControler.PlaceOrder)
 
 module.exports = router
