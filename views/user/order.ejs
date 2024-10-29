@@ -1,0 +1,50 @@
+
+<%-include('../../views/partial/user/header')%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Summary</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/evara-frontend/assets/css/myorder.css">
+
+</head>
+<body><div class="container">
+    <% if (Orders && Orders.length > 0) { %> 
+        <% Orders.forEach(order => { %>
+            <div class="product">
+                <% if (order.products.length > 0 && order.products[0].productId) { %>
+                    <img src="<%= order.products[0].productId.images && order.products[0].productId.images.length > 0 ? '/uploads/re-image/' + order.products[0].productId.images[0] : 'default_image.jpg' %>" alt="<%= order.products[0].productId.productName || 'Product Name' %>"/>
+                    <div class="product-details">
+                        <h2><%= order.products[0].productId.productName || 'Product Name' %></h2>
+                        <p>₹ <%= order.products[0].price %></p>
+                    </div>
+                    <div class="buttons">
+                        <button class="view">View</button>
+                        <button class="cancel">Cancel Order</button>
+                    </div>
+                <% } else { %>
+                    <p>No product details available.</p>
+                <% } %>
+            </div>
+            <div class="address">
+                <h3>Delivery Address</h3>
+                <p><%= order.address.Firstname %> <%= order.address.Lastname %></p>
+                <p><%= order.address.street %>, <%= order.address.city %>, <%= order.address.state %> - <%= order.address.pin %></p>
+            </div>
+            <div class="total">
+                <h3>Total</h3>
+                <p>Subtotal: ₹ <%= order.total %></p>
+                <p>Shipping: Free</p>
+                <p>Total: ₹ <%= order.total %></p>
+            </div>
+        <% }) %>
+    <% } else { %>
+        <p>No orders found.</p>
+    <% } %>
+</div>
+
+</body>
+</html>
+<%-include('../../views/partial/user/footer')%>

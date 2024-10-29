@@ -77,4 +77,10 @@ router.get('/checkOut',userControler.checkout)
 //order placing //
 router.post('/order',userControler.PlaceOrder)
 
+router.get('/success',userControler.successpage)
+///order route
+
+router.get('/order',userControler.myOrders)
+
+
 module.exports = router

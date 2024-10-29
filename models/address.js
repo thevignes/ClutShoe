@@ -3,14 +3,12 @@ const mongoose = require('mongoose')
 const {Schema} = mongoose
 
     const AddressSchema = new Schema({
-    UserId:{
+    userId:{
         type: Schema.Types.ObjectId,
         ref:'User',
-        required: false
+        required: true
     },
-    address:{
-    type:[String]
-    },
+ 
         state:{
         type: String,
         required: true

@@ -12,11 +12,7 @@ const categorySchema = new mongoose.Schema({
     required: false,
     trim: true
   },
-  parentCategory: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
-    required: false 
-  },
+  
   isListed:{
     type: Boolean,
     default: true

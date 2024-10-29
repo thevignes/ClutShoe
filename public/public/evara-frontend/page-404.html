@@ -1,0 +1,54 @@
+<html>
+<head>
+    <title>My Orders</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="/public/public/evara-frontend/assets/css/order.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>Filters</h3>
+            <ul>
+                <li><strong>ORDER STATUS</strong></li>
+                <li><input type="checkbox"/> On the way</li>
+                <li><input type="checkbox"/> Delivered</li>
+                <li><input type="checkbox"/> Cancelled</li>
+                <li><input type="checkbox"/> Returned</li>
+            </ul>
+            <ul>
+                <li><strong>ORDER TIME</strong></li>
+                <li><input type="checkbox"/> Last 30 days</li>
+                <li><input type="checkbox"/> 2023</li>
+                <li><input type="checkbox"/> 2022</li>
+                <li><input type="checkbox"/> 2021</li>
+                <li><input type="checkbox"/> 2020</li>
+                <li><input type="checkbox"/> Older</li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="breadcrumb">
+                <a href="#">Home</a> &gt; <a href="#">My Account</a> &gt; My Orders
+            </div>
+            <div class="search-bar">
+                <input placeholder="Search your orders here" type="text"/>
+                <button><i class="fas fa-search"></i> Search Orders</button>
+            </div>
+            <div class="order-item">
+                <img src="https://storage.googleapis.com/a1aa/image/8LxL3X9tf60ySiYMvBQ6lO9a3ffItMYilvOcjkYgLunSgXXnA.jpg" alt="SHUANG YOU Plastic ID Badge Holder" />
+                <div class="order-details">
+                    <h4>SHUANG YOU Plastic ID Badge Holder</h4>
+                    <p>Color: Black</p>
+                </div>
+                <div class="order-status">
+                    <p>₹315</p>
+                    <div class="status cancelled">
+                        <i class="fas fa-circle"></i> Cancelled on Jul 19
+                    </div>
+                    <p>You requested a cancellation because of issues with the delivery date.</p>
+                </div>
+            </div>
+            <!-- Repeat other order items here... -->
+        </div>
+    </div>
+</body>
+</html>

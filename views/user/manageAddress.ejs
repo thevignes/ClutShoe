@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,9 +26,8 @@
     
     <div class="content">
         <div class="form-container">
-            <div class="d-flex justify-content-between align-items-center text-right     mb-3">
+            <div class="d-flex justify-content-between align-items-center text-right mb-3">
                 <h3 class="mb-0">Add Address</h3>
-    
                 <button class="btn btn-primary">
                     <a href="/viewAddress" class="text-white text-decoration-none">View Address</a>
                 </button>
@@ -37,39 +35,85 @@
             
             <form action="/address/addAddress" method="POST" id="addressForm">
                 <div class="form-group">
-                    <input name="Firstname" placeholder="First Name" type="text" >
-                    <input name="Lastname" placeholder="Last Name" type="text" >
+                    <input name="Firstname" id="Firstname" placeholder="First Name" type="text">
+                    <small class="error-message text-danger" id="FirstnameError"></small>
+                    <input name="Lastname" id="Lastname" placeholder="Last Name" type="text">
+                    <small class="error-message text-danger" id="LastnameError"></small>
                 </div>
                 <div class="form-group">
-                    <input name="place" placeholder="Place" type="text" >
-                    <input name="city" placeholder="City" type="text">
+                    <input name="place" id="place" placeholder="Place" type="text">
+                    <small class="error-message text-danger" id="PlaceError"></small>
+                    <input name="city" id="city" placeholder="City" type="text">
+                    <small class="error-message text-danger" id="CityError"></small>
                 </div>
                 <div class="form-group">
-                    <input name="district" placeholder="District" type="text" >
-                    <input name="state" placeholder="State" type="text">
+                    <input name="district" id="district" placeholder="District" type="text">
+                    <small class="error-message text-danger" id="DistrictError"></small>
+                    <input name="state" id="state" placeholder="State" type="text">
+                    <small class="error-message text-danger" id="StateError"></small>
                 </div>
                 <div class="form-group">
-                    <input name="country" placeholder="Country" type="text">
-                    <input name="pin" placeholder="Pin Code" type="number" >
+                    <input name="country" id="country" placeholder="Country" type="text">
+                    <small class="error-message text-danger" id="CountryError"></small>
+                    <input name="pin" id="pin" placeholder="Pin Code" type="number">
+                    <small class="error-message text-danger" id="PinError"></small>
                 </div>
                 <div class="form-group">
-                    <input name="type" placeholder="Type" type="text" >
+                    <input name="type" id="type" placeholder="Type" type="text">
+                    <small class="error-message text-danger" id="TypeError"></small>
                 </div>
                 <div class="form-actions">
                     <button type="button" class="cancel">Cancel</button>
-                    <button type="submit" class="save">Save</button>
+                    <button type="button" class="save">Save</button>
                 </div>
             </form>
         </div>
     </div>
 
-
     <script>
-        document.querySelector('.save').addEventListener('click', (e) => {
+        document.querySelector('.save').addEventListener('click', function(e) {
             e.preventDefault();
-            document.getElementById('addressForm').submit(); // Submit the form
+            let isValid = true;
+
+            // Clear previous error messages
+            // document.querySelectorAll('.error-message').forEach(el => el.innerText = '');
+
+            // Validation rules
+            // function validateField(field, minLength, maxLength, errorMessage) {
+            //     const value = field.value.trim();
+            //     const errorElement = document.getElementById(field.id + 'Error');
+                
+            //     if (value.length < minLength || value.length > maxLength) {
+            //         errorElement.innerText = errorMessage;
+            //         isValid = false;
+            //     }
+            // }
+
+            // // Individual field validations
+            // validateField(document.getElementById('Firstname'), 2, 8, 'First Name must be 2-50 characters.');
+            // validateField(document.getElementById('Lastname'), 2, 8, 'Last Name must be 2-50 characters.');
+            // validateField(document.getElementById('place'), 2, 8, 'Place must be 2-100 characters.');
+            // validateField(document.getElementById('city'), 2, 8, 'City must be 2-50 characters.');
+            // validateField(document.getElementById('district'), 2, 8, 'District must be 2-50 characters.');
+            // validateField(document.getElementById('state'), 2, 8, 'State must be 2-50 characters.');
+            // validateField(document.getElementById('country'), 2, 8, 'Country must be 2-50 characters.');
+            // validateField(document.getElementById('pin'), 5, 8, 'Pin Code must be 5-10 digits.');
+
+            // Check 'type' for specific values
+            // const typeField = document.getElementById('type');
+            // const typeError = document.getElementById('TypeError');
+            // if (!['Home', 'Office', 'Other'].includes(typeField.value.trim())) {
+            //     typeError.innerText = 'Type must be "Home", "Office", or "Other".';
+            //     isValid = false;
+            // }
+
+            // Submit form if all fields are valid
+            if (isValid) {
+                document.getElementById('addressForm').submit();
+            }
         });
     </script>
+
 </body>
 </html>
 <%-include('../../views/partial/user/footer')%>

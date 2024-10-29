@@ -33,10 +33,10 @@ const UserSchema = new Schema({
         type:Boolean,
         default: false
     },
-    cart:[{
-        type:Schema.Types.ObjectId,
-        ref:'Product'
-    }],
+    // cart:[{
+    //     type:Schema.Types.ObjectId,
+    //     ref:'Product'
+    // }],
     orders:[{
         type:Schema.Types.ObjectId,
         ref:'Product'
@@ -64,6 +64,11 @@ const UserSchema = new Schema({
       isVerified: {
         type: Boolean,
         default: false,
+      },
+      address:{
+        type:Schema.Types.ObjectId,
+        ref:"Address"
+
       }
 
 
