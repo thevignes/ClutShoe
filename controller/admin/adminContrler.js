@@ -1,5 +1,6 @@
 const Admin = require('../../models/adminModel');
 const User = require('../../models/userModel');
+const Order = require('../../models/order')
 
 
 // Dashboard rendering function
@@ -171,7 +172,40 @@ const Userlist = async (req, res) => {
 };
 
 
+const orderList = async (req,res)=>{
+  try {
 
+    const   Orders = await Order.find().populate('userId', 'name').sort({ orderDate: -1 });
+
+    
+    console.log('the admin view', Orders)
+    res.render('orderList', { Orders });
+
+
+    
+  } catch (error) {
+    console.log('Error fetching orders:', error);
+    res.status(500).send('Server Error');
+    
+  }
+}
+
+
+const OrderDetails = async (req,res)=>{
+  try {
+    const id = req.params.id;
+    console.log(id)
+    const order = await Order.findById(id).populate('userId', 'name')
+    console.log('the order details', order)
+    res.render('orderDetials', { order });
+    
+  } catch (error) {
+    console.log('Error fetching order details:', error);
+    res.status(500).send('Server Error');
+
+    
+  }
+}
 module.exports = {
   Dashboard,
   AdminLogin,
@@ -180,7 +214,9 @@ module.exports = {
   getUSers,
   blockUser,
   UnblockUser,
-  Userlist
+  Userlist,
+  orderList,
+  OrderDetails
  
 };
 

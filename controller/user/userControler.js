@@ -975,6 +975,8 @@ res. redirect('/order')
       return res.status(500).send('Oops! Server error');
   }
 };
+
+
   
 module.exports = {
   HomePage,

@@ -67,6 +67,13 @@ router.post('/updateProduct/:id',uploads.array('image'), ProductController.Updat
 
 // router.post('/deleteSingleImage' , ProductController.deleteSingleImage)
 
+//route for order list//
+router.get('/orderList',AdminController.orderList)
+
+//orderDetails page//
+
+router.get('/OrderDetails/:id',AdminController.OrderDetails)
+
 
 
 module.exports = router 

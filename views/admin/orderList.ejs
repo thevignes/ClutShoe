@@ -1,0 +1,50 @@
+
+
+<%- include("../../views/partial/admin/header") %>
+<div class="card-body">
+  <div class="table-responsive">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Customer name</th>
+          <th>Total Price</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th class="text-end">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% Orders.forEach(order => { %>
+          <tr>
+            <td><%= order.oid %></td>
+            <td><b><%= order.userId.name+ ' ' + order.address.Lastname %></b></td>
+            <td>$<%= order.total.toFixed(2) %></td>
+            <td>
+              <span class="badge rounded-pill <%= order.status === 'Completed' ? 'alert-success' : 'alert-warning' %>">
+                <%= order.status %>
+              </span>
+            </td>
+            <td><%= order.orderDate ? order.orderDate.toLocaleDateString() : 'N/A' %></td>
+            <td class="text-end">
+              <a href="/admin/orderDetails/<%= order._id %>" class="btn btn-md rounded font-sm">Detail</a>
+              <div class="dropdown">
+                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm">
+                  <i class="material-icons md-more_horiz"></i>
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href=">View detail</a>
+                  <a class="dropdown-item" href="#">Edit info</a>
+                  <a class="dropdown-item text-danger" href="#">Delete</a>
+                </div>
+              </div>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+  
+<%- include("../../views/partial/admin/footer") %>
