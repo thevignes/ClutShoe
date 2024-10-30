@@ -125,3 +125,57 @@ body {
         width: 100%;
     }
 }
+
+/* Container styling */
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Order item styling */
+.order-item {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.product, .address, .total {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-details, .buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Footer Styling */
+footer {
+    width: 100%;
+    background-color: #2d3e50; /* Adjust based on your design */
+    color: #ffffff;
+    padding: 20px 0;
+    margin-top: 40px;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: auto;
+    text-align: center;
+}
+
+.footer-container div {
+    flex: 1;
+    padding: 10px;
+    min-width: 200px;
+}

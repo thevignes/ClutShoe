@@ -82,5 +82,15 @@ router.get('/success',userControler.successpage)
 
 router.get('/order',userControler.myOrders)
 
+//cancelOrder//
+
+
+
+// Route to handle order cancellation
+// router.post('/order/cancel', userControler.cancelOrder);
+router.post('/order/cancel',userControler.cancelOrder);
+
+
+
 
 module.exports = router

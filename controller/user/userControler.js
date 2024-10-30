@@ -827,7 +827,7 @@ const PlaceOrder = async (req, res) => {
     const products = await Cart.findOne({ userId: user._id }).populate(
       "products.productId"
     );
-    console.log("the product user have ", products);
+;
 
     //
     //   const user = req.session.user;
@@ -844,12 +844,10 @@ const PlaceOrder = async (req, res) => {
 
     console.log("Selected address ID:", addressId);
 
-    const oid = `ORD-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+    const oid = `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     console.log("Your order ID is:", oid);
 
-    // let addressIndex = findIndex(
-    //   (addr) => addr._id.toString() === addressId
-    // );
+
 
     if (!address) {
       return res.status(400).send("Invalid Address");
@@ -861,10 +859,7 @@ const PlaceOrder = async (req, res) => {
 
     const productDetails = await Promise.all(
       products.products.map(async (item) => {
-        console.log(
-          "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<item>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",
-          item
-        );
+  
         const product = await Product.findById(item.productId._id);
         console.log("the item is", item.productId);
         if (!product) {
@@ -872,12 +867,13 @@ const PlaceOrder = async (req, res) => {
         }
 
         const subtotal = item.productId.salePrice * item.quantity;
-        console.log("product is nooo>>>>>>>>>>>>>>>>>>", item.quantity);
-        console.log("the price is ", item.productId.salePrice);
+
+        // console.log("product is nooo>>>>>>>>>>>>>>>>>>", item.quantity);
+        // console.log("the price is ", item.productId.salePrice);
 
         console.log("the subtotal is", subtotal);
         total += subtotal;
-        console.log("the total was", total);
+        // console.log("the total was", total);
         return {
           productId: item.productId._id,
           quantity: item.quantity,
@@ -938,15 +934,16 @@ const  successpage = async (req,res) =>{
 const myOrders = async (req,res)=>{
   try {
     const userEmail = req.session.user.email
-    console.log('uuuuuuu',userEmail);
+    // console.log('uuuuuuu',userEmail);
     
     const user = await User.findOne({ email: userEmail });
-    console.log('machane',user)
+    // console.log('machane',user)
     if(!user){
       return res.status(401).send('!you are not logged in')
     }
-    const Orders = await Order.findOne({ userId: user._id }).populate('products.productId');
-    console.log('your order ', Orders )
+    const Orders = await Order.find({ userId: user._id }).populate('products.productId');
+    // console.log('u id', user._id)
+    // console.log('your order ', Orders )
 
     res.render('order',{Orders,user})
 
@@ -958,6 +955,27 @@ const myOrders = async (req,res)=>{
   }
 }
 
+const cancelOrder = async (req, res) => {
+  try {
+      const orderId = req.body.orderId;
+
+      const order = await Order.findOne({ oid: orderId });
+      console.log('Attempting to cancel order:', orderId);
+
+      if (!order) {
+          return res.status(404).json({ message: 'Order not found' });
+      }
+
+      order.status = 'cancelled';
+      await order.save();
+
+res. redirect('/order')
+  } catch (error) {
+      console.log(error);
+      return res.status(500).send('Oops! Server error');
+  }
+};
+  
 module.exports = {
   HomePage,
   PageNotFound,
@@ -989,6 +1007,7 @@ module.exports = {
   checkout,
   PlaceOrder,
   successpage,
-  myOrders
+  myOrders,
+  cancelOrder
 
 };
