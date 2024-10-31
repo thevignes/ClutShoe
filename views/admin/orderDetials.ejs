@@ -1,12 +1,27 @@
 
 
 <%- include("../../views/partial/admin/header") %>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<div>
+    <form action="/admin/orders/<%= order._id %>/status" method="POST" id="statusForm">
+        <label for="status " class="text-dark text-4">Change Order Status:</label>
+        <select name="status" id="status" class=" btn btn-primary" >
+            <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+            <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+            <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+            <option value="Return Processed" <%= order.status === 'Return Processed' ? 'selected' : '' %>>Return Processed</option>
+            <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+        </select>
+        <button type="submit" class="btn btn-success">Update Status</button>
+
+    </form>
+</div>
 
 <section   class="content-main">
     <div class="content-header">
         <div>
             <h2 class="content-title card-title">Order detail</h2>
-            <p>Details for Order ID: 3453012</p>
+            <p>Details for Order ID: <%=order.oid%></p>
         </div>
     </div>
     <div class="card">
@@ -14,9 +29,9 @@
             <div class="row align-items-center">
                 <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
                     <span>
-                        <i class="material-icons md-calendar_today"></i> <b>Wed, Aug 13, 2022, 4:34PM</b>
+                        <i class="material-icons md-calendar_today"></i> <b><%= order.orderDate ? order.orderDate.toLocaleDateString() : 'N/A' %></b>
                     </span> <br>
-                    <small class="text-muted">Order ID: 3453012</small>
+                    <small class="text-muted">Order ID:  <%=order.oid%></small>
                 </div>
                 <div class="col-lg-6 col-md-6 ms-auto text-md-end">
   
@@ -32,7 +47,7 @@
                         <div class="text">
                             <h6 class="mb-1">Customer</h6>
                             <p class="mb-1">
-                                John Alexander <br> alex@example.com <br> +998 99 22123456
+                                <%=order.userId.name%> <br>  <%=order.userId.email%><br>
                             </p>
                             <a href="#">View profile</a>
                         </div>
@@ -46,7 +61,7 @@
                         <div class="text">
                             <h6 class="mb-1">Order info</h6>
                             <p class="mb-1">
-                                Shipping: Fargo express <br> Pay method: card <br> Status: new
+                                Shipping: Clutch express <br> Pay method: <%= order.paymentMethod%> <br> Status: new
                             </p>
                             <a href="#">Download info</a>
                         </div>
@@ -60,14 +75,16 @@
                         <div class="text">
                             <h6 class="mb-1">Deliver to</h6>
                             <p class="mb-1">
-                                City: Tashkent, Uzbekistan <br>Block A, House 123, Floor 2 <br> Po Box 10000
+                                City: <%=order.address.city%> <br>State:<%=order.address.state%><br> Pin:<%=order.address.pin%>
                             </p>
                             <a href="#">View profile</a>
                         </div>
                     </article>
                 </div> <!-- col// -->
-            </div> <!-- row // -->
-            <div class="row">
+            </div>
+             <!-- row // -->
+              
+             <div class="row">
                 <div class="col-lg-7">
                     <div class="table-responsive">
                         <table class="table">
@@ -80,23 +97,109 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                <% order.products.forEach(product => { %>
+                                    <tr>
+                                        <td>
+                                            <a class="itemside" href="#">
+                                                <div class="left">
+                                                    <img src="<%= product.productId.images && product.productId.images.length > 0 ? '/uploads/re-image/' + product.productId.images[0] : 'default_image.jpg' %>" width="40" height="40" class="img-xs" alt="Item">
+                                                <div class="info"> <%= product.productId.productName || 'Product Name' %> </div>
+                                            </a>
+                                        </td>
+                                        <td> <%= product.price %> </td>
+                                        <td> <%= product.quantity %> </td>
+                                        <td class="text-end"> <%= (product.price * product.quantity).toFixed(2) %> </td>
+                                    </tr>
+                                <% }); %>
+
+
+                                 
                                 <tr>
-                                    <td>
-                                        <a class="itemside" href="#">
-                                            <div class="left">
-                                                <img src="assets/imgs/items/1.jpg" width="40" height="40" class="img-xs" alt="Item">
-                                            </div>
-                                            <div class="info"> T-shirt blue, XXL size </div>
-                                        </a>
+                                    <td colspan="4">
+                                        <article class="float-end">
+                                            <dl class="dlist">
+                                                <dt>Subtotal:</dt>
+                                                <dd><%=order.total%></dd>
+                                            </dl>
+                                         
+                                            <dl class="dlist">
+                                                <dt>Grand total:</dt>
+                                                <dd> <b class="h5"><%=order.total%></b> </dd>
+                                            </dl>
+                                            <dl class="dlist text-dark">
+                                                <dt class="text-muted " style="color: rgb(32, 31, 31);">Status:</dt>
+                                                <dd>
+                                                    <span class="badge rounded-pill alert-success text-success">Payment done</span>
+                                                </dd>
+                                            </dl>
+                                        </article>
                                     </td>
-                                    <td> $44.25 </td>
-                                    <td> 2 </td>
-                                    <td class="text-end"> $99.50 </td>
                                 </tr>
-                            </div>
-                        </div>
+
+                            </tbody>
+
+                        </table>
                     </div>
+                </div>
+            </div>
+            
                 </div>
             </div> 
                 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+                <script>
+                   document.getElementById('statusForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const orderId = '<%= order._id %>';
+    const status = document.getElementById('status').value;
+
+    try {
+        const response = await fetch(`/admin/order/${orderId}/status`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            Toastify({
+                text: data.message,
+                duration: 3000,
+                gravity: "top", 
+                position: "right",
+                backgroundColor: "green",
+                stopOnFocus: true,
+            }).showToast();
+        } else {
+            Toastify({
+                text: "Error updating order status",
+                duration: 3000,
+                gravity: "top", 
+                position: "right",
+                backgroundColor: "red",
+                stopOnFocus: true,
+            }).showToast();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        Toastify({
+            text: "Something went wrong!",
+            duration: 3000,
+            gravity: "top", 
+            position: "right",
+            backgroundColor: "red",
+            stopOnFocus: true,
+        }).showToast();
+    }
+});
+
+                    </script>
+                    
+                
+
+
                 <%- include("../../views/partial/admin/footer") %>

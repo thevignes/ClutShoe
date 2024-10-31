@@ -1,6 +1,7 @@
 const Admin = require('../../models/adminModel');
 const User = require('../../models/userModel');
-const Order = require('../../models/order')
+const Order = require('../../models/order');
+const { use } = require('passport');
 
 
 // Dashboard rendering function
@@ -195,7 +196,7 @@ const OrderDetails = async (req,res)=>{
   try {
     const id = req.params.id;
     console.log(id)
-    const order = await Order.findById(id).populate('userId', 'name')
+    const order = await Order.findById(id).populate('userId', 'name email')  .populate('products.productId', 'productName price images');
     console.log('the order details', order)
     res.render('orderDetials', { order });
     
@@ -206,6 +207,30 @@ const OrderDetails = async (req,res)=>{
     
   }
 }
+
+const updateOrder = async (req,res)=>{
+  try {
+    const{orderId} = req.params;
+    const {status} =req.body;
+
+    const order = await Order.findByIdAndUpdate(orderId,{status},
+      {new: true}
+    );
+    if(!order){
+      return res.status(404).json({message:'Order not found'});
+    }
+    res.json({message:'Order updated successfully',order});
+    console.log('order update successfully')
+    
+  } catch (error) {
+    
+      console.log('error updating order status', error)
+      res.status(500).send('Server Error');
+    
+  }
+}
+
+
 module.exports = {
   Dashboard,
   AdminLogin,
@@ -216,7 +241,8 @@ module.exports = {
   UnblockUser,
   Userlist,
   orderList,
-  OrderDetails
+  OrderDetails,
+  updateOrder
  
 };
 

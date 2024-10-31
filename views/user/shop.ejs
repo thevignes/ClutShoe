@@ -1,6 +1,28 @@
 <%-include('../../views/partial/user/header')%>     
 
 <div class="container mt-4">
+<!-- 
+    <form method="GET" action="/shop">
+        <label for="sort">Sort by:</label>
+        <select name="sort" id="sort" onchange="this.form.submit()">
+            <option value="">Select</option>
+            <option value="lowToHigh">Price: Low to High</option>
+            <option value="highToLow">Price: High to Low</option>
+            <option value="aToZ">Name: A-Z</option>
+            <option value="zToA">Name: Z-A</option>
+        </select>
+    </form> -->
+    
+    <!-- <div>
+        <% ProductData.forEach(product => { %>
+            <div class="product">
+                <h3><%= product.productName %></h3>
+                <p>Price: $<%= product.salePrice %></p>
+                <img src="<%= product.images %>" alt="<%= product.name %>">
+            </div>
+        <% }) %>
+    </div> -->
+    
     <div class="row">
         <!-- Sidebar Section -->
         <aside class="col-lg-3 col-md-4 primary-sidebar sticky-sidebar mb-4">
@@ -97,15 +119,18 @@
                                     <span> Featured <i class="fi-rs-angle-small-down"></i></span>
                                 </div>
                             </div>
-                            <div class="sort-by-dropdown">
-                                <ul>
-                                    <li><a class="active" href="#">Featured</a></li>
-                                    <li><a href="#">Price: Low to High</a></li>
-                                    <li><a href="#">Price: High to Low</a></li>
-                                    <li><a href="#">Release Date</a></li>
-                                    <li><a href="#">Avg. Rating</a></li>
-                                </ul>
-                            </div>
+                      
+                                    <div class="sort-by-dropdown">
+                                        <ul>
+                                          <li><a class="<%= sortOption === 'aToZ' ? 'active' : '' %>" href="/shop?sort=aToZ">A to Z</a></li>
+                                          <li><a class="<%= sortOption === 'lowToHigh' ? 'active' : '' %>" href="/shop?sort=lowToHigh">Price: Low to High</a></li>
+                                          <li><a class="<%= sortOption === 'highToLow' ? 'active' : '' %>" href="/shop?sort=highToLow">Price: High to Low</a></li>
+                                          <li><a class="<%= sortOption === 'zToA' ? 'active' : '' %>" href="/shop?sort=zToA">Z to A</a></li>
+                                        </ul>
+                                      </div>
+                             
+                              
+                            
                         </div>
                     </div>
                 </div>

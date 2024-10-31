@@ -74,6 +74,8 @@ router.get('/orderList',AdminController.orderList)
 
 router.get('/OrderDetails/:id',AdminController.OrderDetails)
 
+//update order status//
+router.put('/order/:orderId/status',AdminController.updateOrder)
 
 
 module.exports = router 

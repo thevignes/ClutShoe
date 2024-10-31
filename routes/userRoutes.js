@@ -90,7 +90,8 @@ router.get('/order',userControler.myOrders)
 // router.post('/order/cancel', userControler.cancelOrder);
 router.post('/order/cancel',userControler.cancelOrder);
 
-
+///filtering route 
+router.get('/shop',userControler.Filtering)
 
 
 module.exports = router

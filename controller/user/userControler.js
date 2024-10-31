@@ -53,7 +53,7 @@ const homePage = async (req, res) => {
     let ProductData = await Product.find({ isListed: true }).populate(
       "category"
     );
-    console.log(ProductData);
+
     const user = req.session.user || null;
     if (!user) {
       return res.render("home", { user: "", ProductData });
@@ -793,24 +793,44 @@ const checkout = async (req, res) => {
     res.status(500).send("Oops, server error!");
   }
 };
-
 const shopPage = async (req, res) => {
   try {
-    let ProductData = await Product.find({ isListed: true }).populate(
-      "category"
-    );
-    console.log(ProductData);
-    const user = req.session.user || null;
-    if (!user) {
-      return res.render("shop", { user: "", ProductData });
-    } else {
-      return res.render("shop", { user, ProductData });
+    const sortOption = req.query.sort || 'featured';
+    console.log('Sort option selected:', sortOption);
+
+    let sortQuery = {};
+
+    switch (sortOption) {
+      case 'lowToHigh':
+        sortQuery = { salePrice: 1 };
+        break;
+      case 'highToLow':
+        sortQuery = { salePrice: -1 };
+        break;
+      case 'aToZ':
+        sortQuery = { productName: 1 };
+        break;
+      case 'zToA':
+        sortQuery = { productName: -1 };
+        break;
+      default:
+        sortQuery = {};
     }
+
+    console.log("Sort Query:", sortQuery);  // Debugging line
+
+    const ProductData = await Product.find({ isListed: true })
+      .populate("category")
+      .sort(sortQuery);
+
+    const user = req.session.user || null;
+    return res.render("shop", { user: user || "", ProductData, sortOption });
   } catch (error) {
-    console.error(error);
-    return res.status(500).send("server error please try again");
+    console.error("Error in shopPage:", error);
+    return res.status(500).send("Server error, please try again");
   }
 };
+
 
 const PlaceOrder = async (req, res) => {
   try {
@@ -977,6 +997,40 @@ res. redirect('/order')
 };
 
 
+const Filtering = async (req, res) => {
+  try {
+    const SortOption = req.query.sort || 'featured'; 
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',sortOption);
+    
+    let sortQuery = {};
+
+    switch (sortOption) {
+      case 'lowToHigh':
+        sortQuery = { price: 1 };
+        break;
+      case 'highToLow':
+        sortQuery = { price: -1 };
+        break;
+      case 'aToZ':
+        sortQuery = { name: 1 };
+        break;
+      case 'zToA':
+        sortQuery = { name: -1 };
+        break;
+      
+      default:
+        sortQuery = {}; 
+    }
+
+    const products= await Product.find().sort(sortQuery); 
+    console.log("Selected sort option:", SortOption)
+    res.render('shop', { products, SortOption   }); 
+  } catch (error) {
+    console.log('Error during filtering:', error);
+    return res.status(500).send('Oops! Server error');
+  }
+};
+
   
 module.exports = {
   HomePage,
@@ -1010,6 +1064,7 @@ module.exports = {
   PlaceOrder,
   successpage,
   myOrders,
-  cancelOrder
+  cancelOrder,
+  Filtering
 
 };
