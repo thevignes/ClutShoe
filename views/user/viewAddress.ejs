@@ -1,3 +1,6 @@
+
+
+<%-include('../../views/partial/user/header')%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -146,6 +149,40 @@ h2 {
         padding: 20px;
     }
 }
+footer {
+    background-color: #007bff; /* Adjust to match your design */
+    color: #ffffff;
+    padding: 10px 0; /* Adjust padding as necessary */
+    text-align: center; /* Center the text */
+    height: auto; /* Only take the needed height */
+}
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background-color: #007bff; /* Make sure this is the color you want */
+    padding: 20px;
+    color: #ffffff; /* Adjust text color for better contrast */
+}
+
+.footer-section {
+    margin: 10px;
+}
+
+.footer-logo img {
+    width: 100px; /* Adjust the size as needed */
+    height: auto;
+}
+
+.footer-links a {
+    color: #ffffff; /* Make sure the links are visible */
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
 
 </style>
 <body>
@@ -153,7 +190,7 @@ h2 {
         <div class="sidebar">
             <div class="profile-section">
                 <div class="profile-pic"></div>
-                <p class="username"><%=user.name%></p>
+              
             </div>
             <nav>
                 <ul>
@@ -202,7 +239,7 @@ h2 {
     </div>
 </body>
 </html>
-<%-include('../../views/partial/user/footer')%> 
+
 
 <!-- Include SweetAlert in your HTML -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -241,3 +278,4 @@ h2 {
 }
 
 </script>
+

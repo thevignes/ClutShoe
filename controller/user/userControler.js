@@ -169,6 +169,7 @@ const getOtp = async (req, res) => {
     res.status(500).send("Server Error");
   }
 };
+
 const verifyOtp = async (req, res) => {
   try {
     const { otp } = req.body;
@@ -205,9 +206,7 @@ const verifyOtp = async (req, res) => {
         });
       }
 
-      // Clear stored session data
-      // req.session.otp = null;
-      // req.session.Tempuser = null;
+
 
       return res.redirect("/login");
     } else {
@@ -372,19 +371,31 @@ const userLogout = async (req, res) => {
 };
 const profile = async (req, res) => {
   try {
-    const userId = req.session.user.email;
-    console.log("hello", userId);
+    const userEmail = req.session.user.email;
+    console.log("Checking user email:", userEmail);
 
-    const user = await User.findOne({ email: userId });
-    console.log(user);
-
-    if (!user) {
-      return res.status(404).send("User not found");
-    } else {
-      res.render("profile", { user });
+    if (!userEmail) {
+      console.error(
+        "userEmail is undefined or null. Check your session configuration."
+      );
+      return res.status(400).send("Email is not defined in session.");
     }
+
+    // Attempt a case-insensitive search for the user by email
+    const user = await User.findOne({
+      email: new RegExp(`^${userEmail}$`, "i"),
+    });
+    if (!user) {
+      console.error(`No user found with email: ${userEmail}`);
+      return res.status(404).send("User not found");
+    }
+
+    console.log("User found:", user);
+
+    // Render the profile if the user is found
+    res.render("profile", { user });
   } catch (err) {
-    console.error(err);
+    console.error("Error occurred:", err);
     return res.status(500).send("Internal server error");
   }
 };
@@ -488,9 +499,11 @@ const addAddress = async (req, res) => {
 const ViewAddress = async (req, res) => {
   try {
     // const userId = req.session.user
+
     const userEmail = req.session.user.email;
-    const addresses = await Address.find({ UserId: userEmail });
-    const user = await User.find();
+    const user = await User.findOne({ email: userEmail });
+    const addresses = await Address.find({ userId: user._id });
+
 
     res.render("viewAddress", { user, addresses });
   } catch (error) {
@@ -528,14 +541,23 @@ const EditAddressPage = async (req, res) => {
 
 const EditAddress = async (req, res) => {
   try {
-    const { id } = req.params;
-    const userId = req.session.email;
+    const { id } = req.params; // Address ID from request parameters
+    const userEmail = req.session.user.email; // User email from session
 
-    const { state, pin, district, city, Firstname, Lastname, country, type } =
-      req.body;
+    console.log('User email from session:', userEmail);
 
+    // Fetch the user by email
+    const user = await User.findOne({ email: userEmail });
+
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+
+    const { state, pin, district, city, Firstname, Lastname, country, type } = req.body;
+
+    // Update the address with the specified ID for the logged-in user
     const updatedAddress = await Address.findOneAndUpdate(
-      { email: userId },
+      { _id: id, userId: user._id }, // Filter by address ID and user ID
       {
         $set: {
           Firstname,
@@ -548,20 +570,24 @@ const EditAddress = async (req, res) => {
           type,
         },
       },
-      { new: true }
+      { new: true } // Return the updated document
     );
 
-    await updatedAddress.save();
+    if (!updatedAddress) {
+      return res.status(404).send("Address not found or not authorized to update");
+    }
 
-    const user = await User.findById(userId);
+    console.log('Updated address:', updatedAddress);
 
+    // Render the view with the updated address
     res.render("editAddress", { user, addresses: updatedAddress });
-  
   } catch (err) {
     console.error("Error updating address:", err);
     return res.status(500).send("Oops, server error!");
   }
 };
+
+
 
 const deletingAddress = async (req, res) => {
   try {
@@ -588,9 +614,7 @@ const cartPage = async (req, res) => {
   try {
     const userEmail = req.session.user.email;
 
-
     const userDoc = await User.findOne({ email: userEmail });
- 
 
     if (!userDoc) {
       return res.redirect("/login");
@@ -598,7 +622,6 @@ const cartPage = async (req, res) => {
     const cart = await Cart.find({ userId: userDoc._id }).populate(
       "products.productId"
     );
- 
 
     if (!cart || cart.length === 0) {
       return res.render("cart", {
@@ -749,13 +772,13 @@ const checkout = async (req, res) => {
       return res.redirect("/login");
     }
 
-    const cart = await Cart.findOne({ userId:user._id }).populate(
+    const cart = await Cart.findOne({ userId: user._id }).populate(
       "products.productId"
     );
     console.log("heyy>>>>>>>>>>>>>", cart);
 
-    const addresses = await Address.find({ userId:user._id });
-    console.log('the user id', userId)
+    const addresses = await Address.find({ userId: user._id });
+    console.log("the user id", userId);
     console.log("your address is ", addresses);
 
     if (!cart || cart.products.length === 0) {
@@ -795,29 +818,29 @@ const checkout = async (req, res) => {
 };
 const shopPage = async (req, res) => {
   try {
-    const sortOption = req.query.sort || 'featured';
-    console.log('Sort option selected:', sortOption);
+    const sortOption = req.query.sort || "featured";
+    console.log("Sort option selected:", sortOption);
 
     let sortQuery = {};
 
     switch (sortOption) {
-      case 'lowToHigh':
+      case "lowToHigh":
         sortQuery = { salePrice: 1 };
         break;
-      case 'highToLow':
+      case "highToLow":
         sortQuery = { salePrice: -1 };
         break;
-      case 'aToZ':
+      case "aToZ":
         sortQuery = { productName: 1 };
         break;
-      case 'zToA':
+      case "zToA":
         sortQuery = { productName: -1 };
         break;
       default:
         sortQuery = {};
     }
 
-    console.log("Sort Query:", sortQuery);  // Debugging line
+    console.log("Sort Query:", sortQuery); // Debugging line
 
     const ProductData = await Product.find({ isListed: true })
       .populate("category")
@@ -830,7 +853,6 @@ const shopPage = async (req, res) => {
     return res.status(500).send("Server error, please try again");
   }
 };
-
 
 const PlaceOrder = async (req, res) => {
   try {
@@ -847,18 +869,7 @@ const PlaceOrder = async (req, res) => {
     const products = await Cart.findOne({ userId: user._id }).populate(
       "products.productId"
     );
-;
 
-    //
-    //   const user = req.session.user;
-    //   const {address} =req.body
-    //   console.log('the address is ', address)
-    //   console.log('User session:', user);
-    //   if (!user) {
-    //     return res.redirect("/login");
-    //   }
-
-    // console.log('User addresses:', user.address);
 
     console.log("the selecyed is", addressId);
 
@@ -866,8 +877,6 @@ const PlaceOrder = async (req, res) => {
 
     const oid = `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     console.log("Your order ID is:", oid);
-
-
 
     if (!address) {
       return res.status(400).send("Invalid Address");
@@ -879,7 +888,6 @@ const PlaceOrder = async (req, res) => {
 
     const productDetails = await Promise.all(
       products.products.map(async (item) => {
-  
         const product = await Product.findById(item.productId._id);
         console.log("the item is", item.productId);
         if (!product) {
@@ -888,12 +896,11 @@ const PlaceOrder = async (req, res) => {
 
         const subtotal = item.productId.salePrice * item.quantity;
 
-        // console.log("product is nooo>>>>>>>>>>>>>>>>>>", item.quantity);
-        // console.log("the price is ", item.productId.salePrice);
+
 
         console.log("the subtotal is", subtotal);
         total += subtotal;
-        // console.log("the total was", total);
+
         return {
           productId: item.productId._id,
           quantity: item.quantity,
@@ -924,114 +931,73 @@ const PlaceOrder = async (req, res) => {
     console.log("Order placed successfully:", order);
     await Cart.findOneAndUpdate(
       { userId: user._id },
-      { $set: { products: [] } } 
+      { $set: { products: [] } }
     );
 
     console.log("Cart cleared successfully");
 
-    return res.status(200).json({ success: true ,message:"order placed successfully"});
-
-
- 
+    return res
+      .status(200)
+      .json({ success: true, message: "order placed successfully" });
   } catch (error) {
     console.error("Error placing order:", error);
     res.status(500).send("Oops! Server error, please try again later.");
   }
 };
 
- 
-const  successpage = async (req,res) =>{
+const successpage = async (req, res) => {
   try {
-    res.render('success')
+    res.render("success");
   } catch (error) {
     console.error("Error redirecting to success page:", error);
-    return res.status(500).send('!oops cannot get this page')
-    
+    return res.status(500).send("!oops cannot get this page");
   }
-}
+};
 
-
-const myOrders = async (req,res)=>{
+const myOrders = async (req, res) => {
   try {
-    const userEmail = req.session.user.email
+    const userEmail = req.session.user.email;
     // console.log('uuuuuuu',userEmail);
-    
+
     const user = await User.findOne({ email: userEmail });
     // console.log('machane',user)
-    if(!user){
-      return res.status(401).send('!you are not logged in')
+    if (!user) {
+      return res.status(401).send("!you are not logged in");
     }
-    const Orders = await Order.find({ userId: user._id }).populate('products.productId');
+    const Orders = await Order.find({ userId: user._id }).populate(
+      "products.productId"
+    );
     // console.log('u id', user._id)
     // console.log('your order ', Orders )
 
-    res.render('order',{Orders,user})
-
-    
+    res.render("order", { Orders, user });
   } catch (error) {
     console.error("Error fetching orders:", error);
-    return res.status(500).send('!oops cannot get this page')
-    
+    return res.status(500).send("!oops cannot get this page");
   }
-}
+};
 
 const cancelOrder = async (req, res) => {
   try {
-      const orderId = req.body.orderId;
+    const orderId = req.body.orderId;
 
-      const order = await Order.findOne({ oid: orderId });
-      console.log('Attempting to cancel order:', orderId);
+    const order = await Order.findOne({ oid: orderId });
+    console.log("Attempting to cancel order:", orderId);
 
-      if (!order) {
-          return res.status(404).json({ message: 'Order not found' });
-      }
-
-      order.status = 'cancelled';
-      await order.save();
-
-res. redirect('/order')
-  } catch (error) {
-      console.log(error);
-      return res.status(500).send('Oops! Server error');
-  }
-};
-
-
-const Filtering = async (req, res) => {
-  try {
-    const SortOption = req.query.sort || 'featured'; 
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',sortOption);
-    
-    let sortQuery = {};
-
-    switch (sortOption) {
-      case 'lowToHigh':
-        sortQuery = { price: 1 };
-        break;
-      case 'highToLow':
-        sortQuery = { price: -1 };
-        break;
-      case 'aToZ':
-        sortQuery = { name: 1 };
-        break;
-      case 'zToA':
-        sortQuery = { name: -1 };
-        break;
-      
-      default:
-        sortQuery = {}; 
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
     }
 
-    const products= await Product.find().sort(sortQuery); 
-    console.log("Selected sort option:", SortOption)
-    res.render('shop', { products, SortOption   }); 
+    order.status = "cancelled";
+    await order.save();
+
+    res.redirect("/order");
   } catch (error) {
-    console.log('Error during filtering:', error);
-    return res.status(500).send('Oops! Server error');
+    console.log(error);
+    return res.status(500).send("Oops! Server error");
   }
 };
 
-  
 module.exports = {
   HomePage,
   PageNotFound,
@@ -1065,6 +1031,4 @@ module.exports = {
   successpage,
   myOrders,
   cancelOrder,
-  Filtering
-
 };

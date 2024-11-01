@@ -26,11 +26,23 @@ router.post('/login',userControler.userLogin)
 
 router.get('/auth/google',passport.authenticate('google',{scope:['profile','email'],prompt:"select_account"}))
 
-router.get('/auth/google/callback', passport.authenticate('google', { successRedirect: '/', failureRedirect: '/register' },userControler.checksession,(req,res)=>{
-
-    res.redirect('/home')
-}));
-
+router.get('/auth/google/callback', passport.authenticate('google', {
+    failureRedirect: '/register',
+  }), (req, res) => {
+ 
+    if (req.user && req.user.email && req.user.email.length > 0) {
+      const userEmail = req.user.email[0].value;
+      req.session.user = {
+        name: req.user.displayName,
+        email: userEmail,
+      };
+      res.redirect('/');
+    } else {
+      console.error("User information is incomplete or undefined");
+      res.redirect('/register');
+    }
+  });
+  
 router.post('/resend-otp',userControler.resendOtp)
 
 router.get('/ProducDetial/:id',userControler.ProducDetial)
@@ -91,7 +103,7 @@ router.get('/order',userControler.myOrders)
 router.post('/order/cancel',userControler.cancelOrder);
 
 ///filtering route 
-router.get('/shop',userControler.Filtering)
+
 
 
 module.exports = router
