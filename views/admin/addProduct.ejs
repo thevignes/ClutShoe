@@ -297,7 +297,47 @@ function viewImage(event, index) {
             }
     
             return isValid;
-        }
+        }function validateForm() {
+    clearErrorMessage();
+
+    const name = document.getElementsByName('productName')[0]?.value || '';
+    const description = document.getElementById('descriptionid')?.value || '';
+    const price = document.getElementsByName('regularPrice')[0]?.value || '';
+    const category = document.getElementsByName('category')[0]?.value || '';
+    const quantity = document.getElementsByName('quantity')[0]?.value || '';
+    let isValid = true;
+
+    if (name.trim() === "") {
+        displayErrorMessage('productName-error', 'Please enter a product name');
+        isValid = false;
+    }
+
+    if (description.trim() === "") {
+        displayErrorMessage('description-error', 'Please enter a description');
+        isValid = false;
+    }
+
+    // Parse price and validate
+    const priceValue = parseFloat(price);
+    if (!price || isNaN(priceValue) || priceValue <= 0) {
+        displayErrorMessage('regularPrice-error', 'Please enter a valid, positive price');
+        isValid = false;
+    }
+
+    if (category.trim() === "") {
+        displayErrorMessage('category-error', 'Please select a category');
+        isValid = false;
+    }
+
+    const quantityValue = parseInt(quantity, 10);
+    if (quantity.trim() === "" || isNaN(quantityValue) || quantityValue <= 0) {
+        displayErrorMessage('quantity-error', 'Please enter a valid quantity');
+        isValid = false;
+    }
+
+    return isValid;
+}
+
     
         function clearErrorMessage() {
             const errorMessages = document.getElementsByClassName('error-message');

@@ -65,6 +65,7 @@
                                            
 
 
+                                            
 
                                         <!-- Thumbnails -->
                                   
@@ -132,6 +133,11 @@
                                                 <%= ProductData.description %>
                                             </p>
                                         </div>
+                                        <% if (ProductData.quantity <= 0) { %>
+                                            <div class="alert alert-danger" role="alert">
+                                              This product is currently out of stock.
+                                            </div>
+                                          <% } %>
                                         <div class="product_sort_info font-xs mb-30">
                                             <ul>
                                                 <li class="mb-10"><i class="fi-rs-crown mr-5"></i> 1 Year AL Jazeera
@@ -156,10 +162,13 @@
                                                         Add to cart
                                                     </button>
                                                 </a> -->
-                                                <a href="/add-to-cart?id=<%= ProductData._id %>">
+                                                <a href="/add-to-cart?id=<%= ProductData._id %>" >
                                                     <button type="button" class="button button-add-to-cart custom-cart-button ">
-                                                        Add to cart
+                                                     
+                                                     
+                                                     add to bag
                                                     </button>
+                                                 
                                                 </a>
                                                 
                                                 
@@ -169,7 +178,7 @@
                                             <a aria-label="Compare" class="action-btn hover-up"
                                                 href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
                                         </div>
-                                        <ul class="product-meta font-xs color-grey mt-50">
+                                        <ul class="product-meta font-xs color-grey mt-50  text-dark">
                                             <li>
                                                 <%= ProductData.status %>:<span class="in-stock text-success ml-5">
                                                         <%= ProductData.quantity %>
@@ -560,6 +569,7 @@
             });
     
         </script>
+        
 
 
     </main>

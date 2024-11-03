@@ -163,6 +163,65 @@ e
 
 </script> -->
 <script>
+
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form');
+    
+    form.addEventListener('submit', function (event) {
+      let isValid = true;
+      const errorMessages = [];
+
+      // Product Name validation
+      const productName = document.getElementById('productName').value.trim();
+      if (productName.length < 3) {
+        isValid = false;
+        errorMessages.push('Product Name should be at least 3 characters long.');
+      }
+
+      // Description validation
+      const description = document.getElementById('description').value.trim();
+      if (description.length < 10) {
+        isValid = false;
+        errorMessages.push('Description should be at least 10 characters long.');
+      }
+
+      // Regular Price validation
+      const regularPrice = document.getElementById('regularPrice').value;
+      if (regularPrice <= 0) {
+        isValid = false;
+        errorMessages.push('Regular Price should be greater than 0.');
+      }
+
+      // Sale Price validation
+      const salePrice = document.getElementById('salePrice').value;
+      if (salePrice < 0) {
+        isValid = false;
+        errorMessages.push('Sale Price cannot be negative.');
+      }
+
+      // Quantity validation
+      const quantity = document.getElementById('quantity').value;
+      if (quantity < 1) {
+        isValid = false;
+        errorMessages.push('Quantity should be at least 1.');
+      }
+
+      // Category validation
+      const category = document.getElementById('category').value;
+      if (!category) {
+        isValid = false;
+        errorMessages.push('Please select a category.');
+      }
+
+      // Display error messages if validation fails
+      if (!isValid) {
+        event.preventDefault();
+        alert(errorMessages.join('\n'));
+      }
+    });
+  });
+
+  
   document.querySelector('form').addEventListener('submit', function (e) {
     e.preventDefault(); // This will prevent the form from submitting
 });

@@ -30,7 +30,31 @@
 
 
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  // Check if alertType and message are available and set them to empty strings if not
+  const alertType = "<%= typeof alertType !== 'undefined' ? alertType : '' %>";
+  const message = "<%= typeof message !== 'undefined' ? message : '' %>";
+  const redirectUrl = "<%= typeof redirectUrl !== 'undefined' ? redirectUrl : '' %>";
+
+  if (alertType && message) {
+    Swal.fire({
+      icon: alertType,
+      title: message,
+      showConfirmButton: false,
+      timer: 2000,
+    }).then(() => {
+      if (redirectUrl) {
+        window.location.href = redirectUrl; // Redirect if a URL is provided
+      }
+    });
+  }
+</script>
+
 <!-- <script>
+    
     document.getElementById("otpForm").addEventListener("submit", function(event) {
     event.preventDefault(); 
 

@@ -35,91 +35,89 @@ const AddProductPage = async (req,res) => {
         }
     
 }
-
-        //adding new product in product page 
-        const addProduct = async (req, res) => {
+const addProduct = async (req, res) => {
             
-            try {
-                console.log("Processing the product addition...");
-                // const product = req.body
-                const {productName,description,price,images,size,category,regularPrice,salePrice,colors,review,quantity,isListed,stock,status} = req.body
-                console.log(req.body)
-                // const { category: categoryName } = req.body;
-                // Check if the product already exists
-                const productExist = await Product.findOne({ productName });
+    try {
+        console.log("Processing the product addition...");
+        // const product = req.body
+        const {productName,description,price,images,size,category,regularPrice,salePrice,colors,review,quantity,isListed,stock,status} = req.body
+        console.log(req.body)
+        // const { category: categoryName } = req.body;
+        // Check if the product already exists
+        const productExist = await Product.findOne({ productName });
 
-                if (productExist) {
-                    return res.status(400).json({ error: 'Product already exists' });
-                }
-        
-                // Array to store image filenames
-                const uploadImages = [];
-        
-                // Handle file uploads using multer
-                if (req.files && req.files.length > 0) {
-                    for (let i = 0; i < req.files.length; i++) {
-                        
-                        const originalImagePath = req.files[i].path;
-                        console.log(originalImagePath,"its wwwww")
-                        const resizedImagesPath = path.join( 'public','public','uploads','re-image', req.files[i].filename);
-                        const resizedFilename = Date.now()+req.files[i].filename 
-                        const rePath =  path.join( 'public','public','uploads','re-image', resizedFilename);
-                        console.log(resizedImagesPath,"its also")
-                        
-                        const supportedFormats = ['image/jpeg', 'image/png', 'image/webp'];
-                        if (!supportedFormats.includes(req.files[i].mimetype)) {
-                            return res.status(400).json({ error: 'Unsupported image format' });
-                        }
-        
-                        
-                        try {
-                            await Sharp(resizedImagesPath)
-                                .resize({ width: 440, height: 440 })
-                                .toFile(rePath); 
-                        } catch (sharpError) {
-                            console.log('Error processing image with Sharp:', sharpError);
-                            return res.status(500).json({ error: 'Error processing image' });
-                        }
-        
-                        uploadImages.push(resizedFilename); 
-                    }
-                }
-        
-                // Find category by name
-                const categoryData = await Category.findOne({ name: category });
-                if (!categoryData) {
-                    return res.status(404).json({ error: 'Category not found' });
-                }
-              
-                // Create a new product with all details
+        if (productExist) {
+            return res.status(400).json({ error: 'Product already exists' });
+        }
 
-                const newProduct = new Product({
-                    productName,
-                    price,
-                    description,
-                    images : uploadImages,
-                    category:categoryData?._id,
-                    regularPrice,
-                    salePrice,
-                    quantity,
-                    size,
-                    colors,
-                    isListed,
-                    stock,
-                    review,
-                    status
-                });
-            
-                    
-                // Save product to the database
-                await newProduct.save();
-                // console.log("Product added successfully:", newProduct);
-                return res.redirect('/admin/addProduct');  // Redirect after success
-            } catch (error) {
-                console.log('Error saving product:', error);
-                return res.status(500).json({ error: 'An error occurred while saving the product' });
+        // Array to store image filenames
+        const uploadImages = [];
+
+        // Handle file uploads using multer
+        if (req.files && req.files.length > 0) {
+            for (let i = 0; i < req.files.length; i++) {
+                
+                const originalImagePath = req.files[i].path;
+                console.log(originalImagePath,"its wwwww")
+                const resizedImagesPath = path.join( 'public','public','uploads','re-image', req.files[i].filename);
+                const resizedFilename = Date.now()+req.files[i].filename 
+                const rePath =  path.join( 'public','public','uploads','re-image', resizedFilename);
+                console.log(resizedImagesPath,"its also")
+                
+                const supportedFormats = ['image/jpeg', 'image/png', 'image/webp'];
+                if (!supportedFormats.includes(req.files[i].mimetype)) {
+                    return res.status(400).json({ error: 'Unsupported image format' });
+                }
+
+                
+                try {
+                    await Sharp(resizedImagesPath)
+                        .resize({ width: 440, height: 440 })
+                        .toFile(rePath); 
+                } catch (sharpError) {
+                    console.log('Error processing image with Sharp:', sharpError);
+                    return res.status(500).json({ error: 'Error processing image' });
+                }
+
+                uploadImages.push(resizedFilename); 
             }
-        };
+        }
+
+        // Find category by name
+        const categoryData = await Category.findOne({ name: category });
+        if (!categoryData) {
+            return res.status(404).json({ error: 'Category not found' });
+        }
+      
+        // Create a new product with all details
+
+        const newProduct = new Product({
+            productName,
+            price,
+            description,
+            images : uploadImages,
+            category:categoryData?._id,
+            regularPrice,
+            salePrice,
+            quantity,
+            size,
+            colors,
+            isListed,
+            stock,
+            review,
+            status
+        });
+    
+            
+        // Save product to the database
+        await newProduct.save();
+        // console.log("Product added successfully:", newProduct);
+        return res.redirect('/admin/addProduct');  // Redirect after success
+    } catch (error) {
+        console.log('Error saving product:', error);
+        return res.status(500).json({ error: 'An error occurred while saving the product' });
+    }
+};  
         
         const editProduct = async (req, res) => {
             try {

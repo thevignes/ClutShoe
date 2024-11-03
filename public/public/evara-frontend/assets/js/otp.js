@@ -40,4 +40,6 @@ resendOtpForm.addEventListener("click", (event) => {
 
   document.body.appendChild(resendForm); // Append the form to the body
   resendForm.submit(); // Submit the form
+
+  
 });
