@@ -40,9 +40,11 @@ function validateForm() {
     isValid = false;
   }
 
-  // Validate password (at least 6 characters)
-  if (password.length < 6) {
-    document.getElementById("passwordError").innerText = "Password must be at least 6 characters long.";
+  // Validate password (at least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character)
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+  if (!passwordRegex.test(password)) {
+    document.getElementById("passwordError").innerText =
+      "Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character.";
     isValid = false;
   }
 

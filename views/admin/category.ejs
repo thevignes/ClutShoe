@@ -12,6 +12,12 @@
   <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css"/> -->
   <%- include("../../views/partial/admin/header") %>
   <link rel="stylesheet" href="/evara-backend/assets/css/vendors/category.css">
+  <!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
 
   <style>
     .col-md-3 {
@@ -77,6 +83,51 @@
     .error-message {
       color: red;
     }
+    .pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.pagination-container a,
+.pagination-container .current-page {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 2px;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination-container a:hover {
+    background-color: #007bff;
+    color: #fff;
+    border-color: #007bff;
+}
+
+.pagination-container .current-page {
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.pagination-container a:disabled,
+.pagination-container a[disabled] {
+    pointer-events: none;
+    color: #bbb;
+    border-color: #ccc;
+    background-color: #e9e9e9;
+}
+
 
     
   </style>
@@ -100,15 +151,15 @@
       <div class="card-body">
         <div class="row">
           <div class="col-md-3">
-            <form method="post" action="/admin/addCategory" onsubmit="return handelFormSubmit(event)">
+            <form method="post" action="/admin/addCategory" onsubmit="return validateForm();">
               <div class="mb-4">
                 <label for="product_name" class="form-label">Name</label>
-                <input type="text" name="name" placeholder="Type here" class="form-control" id="product_name" >
+                <input type="text" name="name" placeholder="Type here" class="form-control" id="product_name">
                 <div id="name-error" class="error-message"></div>
               </div>
               <div class="mb-4">
                 <label class="form-label">Description</label>
-                <textarea placeholder="Type here" name="description" class="form-control" id="descriptionId" ></textarea>
+                <textarea placeholder="Type here" name="description" class="form-control" id="descriptionId"></textarea>
                 <div id="description-error" class="error-message"></div>
               </div>
               <div class="d-grid">
@@ -117,6 +168,7 @@
                 </button>
               </div>
             </form>
+            
           </div>
 
           <!-- Category table -->
@@ -135,45 +187,45 @@
                     <th class="text-start">Edit</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <% cate.forEach(function(Category) { %>
-                  <tr>
-                    <td></td>
-                    <td class="text-start"><%= Category.name %></td>
-                    <td class="text-start"><%= Category.description %></td>
-                    <td><%= Category.offerPrice %></td>
-                    <td class="text-start">
-                      <form action="">
-                        <a href="#" class="btn btn-info text-white mb-2" style="width: 100px; font-size:11px">Add Offer</a>
-                      </form>
-                      
-   <form action="/admin/CategoryDelete/<%=  Category._id %>?_method=PUT" method="POST" class="mt-3">
-                    <button type="submit" class="btn btn-danger " onclick="return confirm('Are you sure you want to delete this category?');" style="font-size: 11px;">Delete Category</button>
-                  </form>
-                    </td>
-                    <td class="text-start">  
-                      <% if (Category.isListed) { %>
-                        <span class="badge rounded-pill alert-success" style="width: 60px">Listed</span>
-                      <% } else { %>
-                        <span class="badge rounded-pill alert-danger" style="width: 60px">Unlisted</span>
-                      <% } %>
-                    </td>
-                    <td class="text-start">
-                      <% if (Category.isListed) { %>
-                        <form action="/admin/UnCategoryList/<%= Category._id %>" method="POST" style="display: inline;">
-                          <button type="submit" class="btn btn-danger text-white" style="width: 70px">Unlist</button>
-                      <% } else { %>
-                        <form action="/admin/CategoryList/<%= Category._id %>" method="POST" style="display: inline;">
-                          <button type="submit" class="btn btn-success text-white" style="width: 70px">List</button>
-                      <% } %>
-                    </td>
-                    <td class="text-start">
-                  
-                      <a href="/admin/editCategory/<%= Category._id %>" class="btn btn-info text-white" >Edit</a>
-                    </td>
-                  </tr>
-                  <% }); %>
-                </tbody>
+                  <tbody>
+                    <% cate.forEach(function(Category) { %>
+                    <tr>
+                      <td></td>
+                      <td class="text-start"><%= Category.name %></td>
+                      <td class="text-start"><%= Category.description %></td>
+                      <td><%= Category.offerPrice %></td>
+                      <td class="text-start">
+                        <form action="">
+                          <a href="#" class="btn btn-info text-white mb-2" style="width: 100px; font-size:11px">Add Offer</a>
+                        </form>
+                        
+    <form action="/admin/CategoryDelete/<%=  Category._id %>?_method=PUT" method="POST" class="mt-3">
+                      <button type="submit" class="btn btn-danger " onclick="return confirm('Are you sure you want to delete this category?');" style="font-size: 11px;">Delete Category</button>
+                    </form>
+                      </td>
+                      <td class="text-start">  
+                        <% if (Category.isListed) { %>
+                          <span class="badge rounded-pill alert-success" style="width: 60px">Listed</span>
+                        <% } else { %>
+                          <span class="badge rounded-pill alert-danger" style="width: 60px">Unlisted</span>
+                        <% } %>
+                      </td>
+                      <td class="text-start">
+                        <% if (Category.isListed) { %>
+                          <form action="/admin/UnCategoryList/<%= Category._id %>" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-danger text-white" style="width: 70px">Unlist</button>
+                        <% } else { %>
+                          <form action="/admin/CategoryList/<%= Category._id %>" method="POST" style="display: inline;">
+                            <button type="submit" class="btn btn-success text-white" style="width: 70px">List</button>
+                        <% } %>
+                      </td>
+                      <td class="text-start">
+                    
+                        <a href="/admin/editCategory/<%= Category._id %>" class="btn btn-info text-white" >Edit</a>
+                      </td>
+                    </tr>
+                    <% }); %>
+                  </tbody>
               </table>
             </div>
           </div>
@@ -204,87 +256,46 @@
 
   </section>
 </body>
+
+
 </html>
 <%- include("../../views/partial/admin/footer") %>
 
+
   <script>
-function handelFormSubmit(event) {
-    event.preventDefault();
-
-    if (!validateForm()) {
-        return; 
-    }
-
-    const name = document.getElementById("product_name").value; 
-    const description = document.getElementById('descriptionId').value;
-
-    fetch('/admin/addCategory', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name, description })
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => {
-                throw new Error(err.error); 
-            });
+const isDuplicateName = async (name) => {
+    try {
+        const response = await fetch(`/admin/checkCategory?name=${encodeURIComponent(name)}`);
+        if (response.ok) {
+            const result = await response.json();
+            return result.exists; // Assuming the response contains a property 'exists'
+        } else {
+            console.error("Error checking category name");
+            return false; // Handle error case
         }
-        return response.json();
-    })
-    .then(data => {
-        location.reload();
-    })
-    .catch(error => {
+    } catch (error) {
+        console.error("Fetch error: ", error);
+        return false; // Handle fetch error
+    }
+};
+
+// Update your validateForm to use this
+if (name === "") {
+    // ... existing code ...
+} else if (!/^[a-zA-Z\s]+$/.test(name)) {
+    // ... existing code ...
+} else {
+    console.log("Checking for duplicate name");
+    const isDuplicate = await isDuplicateName(name);
+    if (isDuplicate) {
+        console.log("Duplicate category name found");
         Swal.fire({
-            icon: 'error',
-            title: 'oops Error!',
-            text: error.message || 'Something went wrong, please try again later',
+            icon: 'warning',
+            title: 'Duplicate Category',
+            text: 'Category name already exists. Please choose a different name.',
         });
-    });
-}
-
-
-function validateForm() {
-    clearErrorMessage();
-    const name = document.getElementById('product_name').value;
-    const description = document.getElementById('descriptionId').value;
-    let valid = true;
-
-    // Check for name input
-    if (name === "") {
-        displayErrorMessage('#name-error', "Please enter a name");
-        valid = false;
-    } else if (!/^[a-zA-Z\s]+$/.test(name)) {
-        displayErrorMessage('#name-error', "Please enter a valid name (letters only)");
         valid = false;
     }
-
-    // Check for description input
-    if (description === "") {
-        displayErrorMessage('#description-error', "Please enter a description");
-        valid = false;
-    }
-
-    return valid; 
-}
-
-    function displayErrorMessage(elementId, message) {
-    const errorMessageElement = document.querySelector(elementId);
-    if (errorMessageElement) {
-        errorMessageElement.innerText = message;
-        errorMessageElement.style.display = "block";
-    }
-}
-
-function clearErrorMessage() {
-    const errorMessageElements = document.querySelectorAll('.error-message');
-  
-    Array.from(errorMessageElements).forEach((element) => {
-        element.innerText = "";
-        element.style.display = "none";
-    });
 }
 
 

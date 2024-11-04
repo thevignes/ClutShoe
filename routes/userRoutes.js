@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router();
 const userControler = require('../controller/user/userControler');
 const passport = require('passport');
+
 // const checkBlockedStatus = require('../middlewares/checkBlockedStatus');
 // const { UserAuth} = require('../middlewares/auth')
 // router.get('/',userControler.HomePage)
@@ -72,8 +73,9 @@ router.post('/edit-address/:id',userControler.EditAddress)
 
 ///related product //
 
-
 router.get('/cart',userControler.cartPage)
+
+router.post('/add-to-cart',userControler.shopPage)
 
 router.get('/add-to-cart',userControler.AddToCart)
 
@@ -103,6 +105,8 @@ router.get('/order',userControler.myOrders)
 router.post('/order/cancel',userControler.cancelOrder);
 
 ///filtering route 
+router.get('/search', userControler.searchProducts);
+
 
 
 

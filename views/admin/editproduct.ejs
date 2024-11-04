@@ -45,7 +45,8 @@
       <div class="mb-3">
         <label for="productName" class="form-label">Product Name</label>
         <input type="text" class="form-control" id="productName" name="productName" value="<%= product.productName %>" required>
-      </div>
+ 
+      
 
       <div class="mb-3">
         <label for="description" class="form-label">Description</label>
@@ -78,19 +79,22 @@
         </select>
       </div>
 
-
-<% if (product.images && product.images.length > 0) { %>
-    <div class="mb-3">
-      <label class="form-label">Current Product Images</label>
-      <div class="product-images">
-        <% product.images.map(function(image, index) { %>
-          <img src="/uploads/re-image/<%= image %>" alt="Product Image" class="product-image">
-          <!-- <i onclick="deleteSingleImage('<%= image %>', '<%= product._id %>')" style="position: absolute; margin-left: .5rem; cursor: pointer">✖</i> -->
-        <% }) %>
-      </div>
-    </div>  
-<% } %>
-
+      <% if (product.images && product.images.length > 0) { %>
+        <div class="mb-3 d-felx " style="flex-direction: row;">
+          <label class="form-label">Current Product Images</label>
+          <div class="product-images d-flex flex-wrap">
+            <% product.images.map(function(image, index) { %>
+              <div class="image-container me-3 mb-3">
+                <img src="/uploads/re-image/<%= image %>" alt="Product Image" class="product-image img-thumbnail">
+                <form action="/admin/removeImage/<%= product._id %>?imageName=<%= image %>" method="post" style="display: block;">
+                  <button type="submit" class="btn btn-danger btn-sm mt-2">Remove</button>
+                </form>
+              </div>
+              <% }) %>
+          </div>
+        </div>
+      <% } %>
+      
 <form action="/admin/updateProduct/<%= product._id %>" method="post" enctype="multipart/form-data">
 
   <button type="submit" class="btn btn-primary">Update Product</button>

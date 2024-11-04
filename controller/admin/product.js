@@ -208,6 +208,24 @@ const UpdateProduct = async (req, res) => {
         return res.status(500).send({ message: "Internal Server Error" });
     }
 };
+const removeImage = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { imageName } = req.query;
+
+        // Find the product and remove the specified image
+        const product = await Product.findById(id);
+        product.images = product.images.filter(image => image !== imageName);
+
+        // Save the updated product
+        await product.save();
+
+        res.redirect(`/admin/editProduct/${id}`);
+    } catch (error) {
+        console.error('Error removing image:', error);
+        res.status(500).send({ message: "Internal Server Error" });
+    }
+};
 
 
 const productList = async (req, res) => {
@@ -280,6 +298,7 @@ module.exports = {
     productList,
     UpdateProduct,
     // deleteSingleImage
+    removeImage
     
 
     

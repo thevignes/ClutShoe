@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const app = require("../../app");
 const User = require("../../models/userModel");
 const nodemailer = require("nodemailer");
@@ -47,43 +48,32 @@ const PageNotFound = async (req, res) => {
 //     console.error(error);
 //     res.status(500).send("Server Error");
 //   }
-// };
 const homePage = async (req, res) => {
   try {
-    let ProductData = await Product.find({ isListed: true }).populate(
-      "category"
-    );
+    let ProductData = await Product.find({ isListed: true }).populate("category");
 
     const user = req.session.user || null;
+    console.log('hello use', user)
+
+    if (user && user.IsBlocked) {
+      req.session.user = null;
+      req.session.destroy(err => {
+        if (err) {
+          console.error("Failed to destroy session:", err);
+          return res.status(500).send("Server Error");
+        }
+        return res.redirect('/login');
+      });
+      return; 
+    }
+
     if (!user) {
       return res.render("home", { user: "", ProductData });
     } else {
       return res.render("home", { user, ProductData });
     }
-
-    // console.log(req.session.user);
-    // const name = req.session.user.name;
-
-    // const user = await User.findOne({ name });
-    // console.log(id);
-
-    // const categories = await Category.find({ isListed: true });
-    // console.log(categories);
-
-    // let ProductData = await Product.find({
-
-    //   isListed: true,
-    //   category: { $in: categories.map(category => category._id) },
-    //   quantity: { $gt: 8 }
-    // }).sort({ createdAt: -1 }).limit(4);
-    if (user) {
-      const userData = await User.findById(id);
-
-      return res.render("home", { user, ProductData });
-    } else {
-      return res.render("home", { user, ProductData });
-    }
   } catch (error) {
+
     console.error(error);
     res.status(500).send("Server Error");
   }
@@ -131,6 +121,7 @@ const Registration = async (req, res) => {
   const otp = Math.floor(100000 + Math.random() * 900000);
   console.log("otpppppp:", otp);
   req.session.otp = otp;
+  req.session.expireOtp = Date.now() + 5 * 60 * 1000
   console.log("session otpppppp:", req.session.otp);
 
   try {
@@ -174,7 +165,8 @@ const verifyOtp = async (req, res) => {
   try {
     const { otp } = req.body;
 
-    if (!req.session.otp || !req.session.Tempuser) {
+    // Check if OTP session has expired
+    if (!req.session.otp || !req.session.Tempuser || req.session.expireOtp < Date.now()) {
       return res.status(400).render("verify-otp", {
         message: "Session expired, please try again.",
         alertType: "error",
@@ -184,6 +176,7 @@ const verifyOtp = async (req, res) => {
     console.log("Entered OTP:", otp);
     console.log("Stored OTP:", req.session.otp);
 
+    // Compare entered OTP with stored OTP
     if (String(otp).trim() === String(req.session.otp).trim()) {
       const { email, password, name } = req.session.Tempuser;
 
@@ -229,7 +222,6 @@ const verifyOtp = async (req, res) => {
     });
   }
 };
-
 
 ///resend otp
 
@@ -714,12 +706,10 @@ const AddToCart = async (req, res) => {
     }
 
     await cart.save();
-    console.log(
-      "Product added successfully heyehyeyey?>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",
-      cart
-    );
+ 
+  
 
-    res.redirect(`/ProducDetial/${productId}`);
+    res.redirect(`/ProducDetial/${productId}`).json({success:true, message:'product added to cart '});
   } catch (error) {
     console.error("Error in AddToCart:", error);
     return res.status(500).json({ success: false, message: "Server error" });
@@ -727,7 +717,6 @@ const AddToCart = async (req, res) => {
   
   
 };
-const mongoose = require("mongoose");
 
 const removeFromCart = async (req, res) => {
   try {
@@ -756,7 +745,7 @@ const removeFromCart = async (req, res) => {
     console.log("Cart products before removal:", cart.products.map(product => product.productId.toString()));
 
     cart.products = cart.products.filter(
-      (product) => product.productId.toString() !== productId
+      (product) => product._id.toString() !== productId
     );
 
     console.log("Cart products after removal:", cart.products.map(product => product.productId.toString()));
@@ -827,11 +816,19 @@ const checkout = async (req, res) => {
     res.status(500).send("Oops, server error!");
   }
 };
+
+
 const shopPage = async (req, res) => {
   try {
     const sortOption = req.query.sort || "featured";
-    console.log("Sort option selected:", sortOption);
+    const currentPage = parseInt(req.query.page) || 1;
+    const itemsPerPage = parseInt(req.query.limit) || 5; 
 
+    console.log("Sort option selected:", sortOption);
+    console.log("Current page:", currentPage);
+    console.log("Items per page:", itemsPerPage);
+
+///sorting
     let sortQuery = {};
 
     switch (sortOption) {
@@ -851,19 +848,39 @@ const shopPage = async (req, res) => {
         sortQuery = {};
     }
 
-    console.log("Sort Query:", sortQuery); // Debugging line
+    console.log("Sort Query:", sortQuery);
+
+    // Getting the total number of products
+    const totalProducts = await Product.countDocuments({ isListed: true });
+
+    // Calculating total pages
+    const totalPages = Math.ceil(totalProducts / itemsPerPage);
+    const skip = (currentPage - 1) * itemsPerPage;
 
     const ProductData = await Product.find({ isListed: true })
       .populate("category")
-      .sort(sortQuery);
+      .sort(sortQuery)
+      .skip(skip) 
+      .limit(itemsPerPage);
 
     const user = req.session.user || null;
-    return res.render("shop", { user: user || "", ProductData, sortOption });
+
+    return res.render("shop", {
+      user: user || "",
+      ProductData,
+      sortOption,
+      currentPage,
+      totalPages,
+      itemsPerPage,
+    });
   } catch (error) {
     console.error("Error in shopPage:", error);
     return res.status(500).send("Server error, please try again");
   }
 };
+
+
+
 const PlaceOrder = async (req, res) => {
   try {
     const { paymentOption, addressId } = req.body;
@@ -1005,6 +1022,42 @@ const cancelOrder = async (req, res) => {
   }
 };
 
+const searchProducts = async (req, res) => {
+  try {
+    const user = req.session.user || null;
+    const searchQuery = req.query.q;
+    const sortOption = req.query.sort || "featured";
+    const currentPage = parseInt(req.query.page) || 1; 
+    const itemsPerPage = parseInt(req.query.limit) || 5;
+    const totalProducts = await Product.countDocuments({ isListed: true });
+
+    const totalPages = Math.ceil(totalProducts / itemsPerPage);
+    const skip = (currentPage - 1) * itemsPerPage;
+
+    if (!searchQuery) {
+      return res.status(400).json({ message: "Search query is required" });
+    }
+
+
+    const regex = new RegExp(searchQuery, 'i');
+
+
+    const ProductData = await Product.find({
+      isListed: true,
+      productName: regex 
+    }).populate("category");
+
+
+    res.render('shop', { user, ProductData, sortOption,currentPage,itemsPerPage,totalPages });
+    console.log('Searched Products:', ProductData);
+  } catch (error) {
+    console.error("Error searching for products:", error);
+    res.status(500).send("Server Error");
+  }
+};
+
+
+
 module.exports = {
   HomePage,
   PageNotFound,
@@ -1038,4 +1091,5 @@ module.exports = {
   successpage,
   myOrders,
   cancelOrder,
+  searchProducts
 };

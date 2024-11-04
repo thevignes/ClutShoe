@@ -7,7 +7,7 @@ const Admin = require ("../models/adminModel")
 const UserAuth = async (req,res)=>{
 if(req.session.user){
     User.findById(req.session.user).then(data =>{
-        if(data && !data.IsBlocked){
+        if(data && data.IsBlocked){
             req.user = data;
             next();
         }else{

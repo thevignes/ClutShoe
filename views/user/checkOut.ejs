@@ -12,6 +12,8 @@
 
                 <!-- List of Addresses with Radio Buttons to Choose an Address -->
                 <% addresses.forEach(function(address, index) { %>
+
+                    
                     <div class="mb-2 small-radio">
 
 
@@ -24,11 +26,14 @@
                                     <%= address.city %>, <%= address.state %>
                                             <%= address.pin %> <span> To: <%=address.type%></span>
                             </p>
+
                         </label>
 
 
 
                     </div>
+
+                    
                     <% }) %>
 
                         <!-- Button to Add New Address -->
@@ -51,6 +56,7 @@
                                     onclick="hideAddressForm()">Cancel</button>
                             </form>
                         </div>
+                   >
             </div>
         </div>
 

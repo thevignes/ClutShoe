@@ -77,5 +77,8 @@ router.get('/OrderDetails/:id',AdminController.OrderDetails)
 //update order status//
 router.put('/order/:orderId/status',AdminController.updateOrder)
 
+router.post('/removeImage/:id',ProductController.removeImage)
+
+
 
 module.exports = router 

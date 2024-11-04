@@ -1,28 +1,40 @@
-let timeLeft = 60;
-const timerDisplay = document.getElementById("timer");
-const resendOtpButton = document.getElementById("resendOtp");
-const otpForm = document.getElementById("otpForm");
+document.getElementById("otpInput").focus();
 
-// Countdown function
-const countdown = () => {
-  const timer = setInterval(() => {
-    if (timeLeft <= 0) {
-      clearInterval(timer);
-      timerDisplay.innerHTML = "Time's up!";
-      resendOtpButton.style.display = "block"; // Show the resend button
+let timer;
+let timerInterval;
+
+
+function startTimer() {
+    const currentTime = Date.now();
+    const expirationTime = parseInt(localStorage.getItem("otpExpirationTime"), 10);
+    
+    
+    if (!expirationTime || currentTime >= expirationTime) {
+        const newExpirationTime = currentTime + 60 * 1000; 
+        localStorage.setItem("otpExpirationTime", newExpirationTime);
+        timer = 60;
     } else {
-      const minutes = Math.floor(timeLeft / 60);
-      const seconds = timeLeft % 60;
-      timerDisplay.innerHTML = `${String(minutes).padStart(2, "0")}:${String(
-        seconds
-      ).padStart(2, "0")}`;
-      timeLeft -= 1;
+        timer = Math.floor((expirationTime - currentTime) / 1000);
     }
-  }, 1000); // Update every second
-};
 
-// Start the initial countdown
-countdown();
+    document.getElementById("timer").textContent = timer;
+
+    
+    timerInterval = setInterval(() => {
+        if (timer > 0) {
+            timer--;
+            document.getElementById("timer").textContent = timer;
+        } else {
+            clearInterval(timerInterval);
+            document.getElementById("timer").classList.add("expired");
+            document.getElementById("timer").textContent = "Expired";
+            document.getElementById("otpInput").disabled = true;
+        }
+    }, 1000);
+}
+
+startTimer();
+
 
 // Handle OTP form submission
 otpForm.addEventListener("submit", (event) => {

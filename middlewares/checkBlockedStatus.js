@@ -1,8 +1,8 @@
 const User =  require('../models/userModel')
 
 const checkBlockedStatus = async (req, res, next) => {
-  if (req.session.userId) {
-    const user = await User.findById(req.session.userId);
+  if (req.session.user_id) {
+    const user = await User.findById(req.session.user_id);
 
     if (user && user.IsBlocked) {
       req.session.destroy(() => {

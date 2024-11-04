@@ -7,12 +7,30 @@
     <title>OTP Verification</title>
     <link rel="stylesheet" href="/evara-frontend/assets/css/vendors/otp.css">
 </head>
+<style>
+    .timer {
+  background-color: cadetblue;
+  width: 10%;
+  height: 30px;
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: width 0.3s ease-in-out; /* Smooth transition */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white; /* Text color */
+  font-weight: bold; /* Bold text */
+  font-size: 14px; /* Font size */
+  background: linear-gradient(135deg, #5f9ea0, #4682b4);
 
+}
+
+</style>
 <body>
 
     <div class="container">
         <h1>OTP Verification</h1>
-        <div class="timer" id="timer">01:00</div>
+        <div class="timer" id="timer" style="background-color: cadetblue; width:10%"></div>
         <form id="otpForm" action="/verify-otp" method="POST">
             <input type="text" name="otp" id="otpInput" placeholder="Enter OTP">
             <button type="submit" id="butt">Submit OTP</button>
@@ -47,36 +65,13 @@
       timer: 2000,
     }).then(() => {
       if (redirectUrl) {
-        window.location.href = redirectUrl; // Redirect if a URL is provided
+        window.location.href = redirectUrl; 
       }
     });
   }
 </script>
 
-<!-- <script>
-    
-    document.getElementById("otpForm").addEventListener("submit", function(event) {
-    event.preventDefault(); 
-
-    const butt = document.getElementById("butt").value;
-    const errorMessage = document.getElementById("errorMessage");
-    const resendOtp = document.getElementById('resendOtp')
-   
-    if (!/^\d{6}$/.test(butt)) {
-        errorMessage.textContent = "Please enter a valid 6-digit OTP.";
-        errorMessage.style.display = "block";
-    } else {
-        errorMessage.style.display = "none"; 
-        this.submit(); 
-    }
-    if(!/^\d{6}$/.test(resendOtp)){
-        errorMessage.textContent = 'please enter a valid otp or check your email';
-        errorMessage.style.display = 'block';
-    }else{
-        errorMessage.style.display = 'none';
-        this.submit();
-    }
-}); -->
+<script>
 
 </script>
 

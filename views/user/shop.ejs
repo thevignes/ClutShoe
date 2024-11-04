@@ -22,10 +22,50 @@
             </div>
         <% }) %>
     </div> -->
-    
-    <div class="row">
+    <style>
+        .pagination-wrapper {
+    display: flex;
+    justify-content: center; 
+    margin: 20px 0;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px; 
+    background-color: #f8f9fa; 
+    border: 1px solid #dee2e6; 
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+}
+
+.pagination a {
+    color: #007bff;
+    text-decoration: none;
+    padding: 8px 12px; 
+    margin: 0 5px; 
+    border-radius: 3px;
+    transition: background-color 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #e9ecef;
+}
+
+.pagination a[style*="display:none"] {
+    display: none; 
+}
+
+.pagination a[style*="font-weight: bold"] {
+    font-weight: bold; 
+    background-color: #007bff;
+    color: white; 
+}
+
+    </style>
+    <div class="row     ">
         <!-- Sidebar Section -->
-        <aside class="col-lg-3 col-md-4 primary-sidebar sticky-sidebar mb-4">
+        <aside class="col-lg-3 col-md-4 primary-sidebar sticky-sidebar mb-4 ">
             <div class="widget-category mb-30">
                 <h5 class="section-title style-1 mb-30">Category</h5>
                 <ul class="categories list-unstyled">
@@ -40,7 +80,7 @@
             </div>
 
             <!-- Filter By Price -->
-            <div class="sidebar-widget price_range range mb-30">
+            <div class="sidebar-widget price_range range mb-30 d-none">
                 <div class="widget-header position-relative mb-20 pb-10">
                     <h5 class="widget-title mb-10">Filter by Price</h5>
                     <div class="bt-1 border-color-1"></div>
@@ -154,7 +194,7 @@
 
                                 <div class="product-content-wrap flex-grow-1">
                                     <h5 class="product-category"><%= product.category.name %></h5>
-                                    <h2 class="product-title"><a href="/products/<%= product._id %>"><%= product.name %></a></h2>
+                                    <h2 class="product-title"><a href="/products/<%= product._id %>"><%= product.productName %></a></h2>
                                     <div class="product-price">
                                         <span class="text-success fw-bold">$<%= product.salePrice %></span>
                                         <% if (product.regularPrice && product.salePrice < product.regularPrice) { %>
@@ -162,17 +202,43 @@
                                         <% } %>
                                     </div>
                                     <p class="product-description"><%= product.description %></p>
-                                    <a class="btn btn-success mt-2" href="/cart/add/<%= product._id %>">
-                                        <i class="fi-rs-shopping-bag-add me-2"></i>Add to Cart
-                                    </a>
+                                    
+                                    <form  action="/cart/add/<%= product._id %>" method="post">
+                                        <i class="fi-rs-shopping-bag-add me-2"></i>
+                                        <button  class="btn btn-success mt-2" type="submit">Add to Cart</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     <% }) %>
                 </div>
             </div>
+            <div class="pagination-wrapper">
+                <div class="pagination">
+                    <a href="?sort=<%= sortOption %>&page=<%= currentPage - 1 > 0 ? currentPage - 1 : 1 %>&limit=<%= itemsPerPage %>" 
+                       <% if (currentPage === 1) { %> style="display:none;" <% } %> >
+                
+                    </a>
+                  
+                    <% for (let i = 1; i <= totalPages; i++) { %>
+                      <a href="?sort=<%= sortOption %>&page=<%= i %>&limit=<%= itemsPerPage %>" 
+                         <% if (i === currentPage) { %> style="font-weight: bold;" <% } %> >
+                        <%= i %>
+                      </a>
+                    <% } %>
+                  
+                    <a href="?sort=<%= sortOption %>&page=<%= currentPage + 1 <= totalPages ? currentPage + 1 : totalPages %>&limit=<%= itemsPerPage %>" 
+                       <% if (currentPage === totalPages) { %> style="display:none;" <% } %> >
+                  
+                    </a>
+                </div>
+            </div>
+            
+              
         </main>
     </div>
+    
+
 </div>
   
 
