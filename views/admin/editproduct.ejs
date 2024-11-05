@@ -7,7 +7,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
 <%- include("../../views/partial/admin/header") %>
 
   <style>
@@ -84,24 +84,40 @@
           <label class="form-label">Current Product Images</label>
           <div class="product-images d-flex flex-wrap">
             <% product.images.map(function(image, index) { %>
+           
               <div class="image-container me-3 mb-3">
                 <img src="/uploads/re-image/<%= image %>" alt="Product Image" class="product-image img-thumbnail">
                 <form action="/admin/removeImage/<%= product._id %>?imageName=<%= image %>" method="post" style="display: block;">
                   <button type="submit" class="btn btn-danger btn-sm mt-2">Remove</button>
+
+
                 </form>
+                <div class="row">
+                  <div class="card-body align-items-center" style="margin-bottom: 20px;">
+                      <img src="" alt="product image1" id="imgView1">
+                                                  <input class="form-control" type="file" name="images" id="input1"
+                                                      accept="image/png, image/jpeg, image/jpg"
+                                                      onchange="viewImage(event), viewImage(event, 1)">
+                                                      <div id="images-error" class="error-message"></div>
+                                              </div>
+                                              <div class="image-cropper d-flex align-items-center"
+                                                  style="display:none; width: 300px; height: 200px; margin-bottom: 20px;">
+                                                  <img src="" id="croppedImg1" alt="">
+                                                  <button type="button" id="saveButton1" class="btn-sm btn-primary">Save</button>
+                                              </div>
+                                          </div>
               </div>
               <% }) %>
           </div>
         </div>
       <% } %>
       
-<form action="/admin/updateProduct/<%= product._id %>" method="post" enctype="multipart/form-data">
 
   <button type="submit" class="btn btn-primary">Update Product</button>
   <a href="/admin/product" class="btn btn-secondary">Cancel</a>
 </form>
 
-
+<script src="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <!-- 
@@ -167,6 +183,59 @@ e
 
 </script> -->
 <script>
+
+let cropper; 
+      
+
+      function viewImage(event, index) {
+          let input = event.target;
+          let reader = new FileReader();
+          reader.onload = function () {
+              let dataURL = reader.result;
+              let image = document.getElementById('imgView' + index);
+              image.src = dataURL;
+      
+              if (cropper) {
+                  cropper.destroy();
+              }
+      
+              cropper = new Cropper(image, {
+                  aspectRatio: 1,
+                  viewMode: 1,
+                  background: false,
+                  autoCropArea: 1,
+                  zoomable: true,
+              });
+      
+              let saveButton = document.querySelector('#saveButton' + index);
+              saveButton.addEventListener('click', async function () {
+                  let croppedCanvas = cropper.getCroppedCanvas();
+                  let croppedImage = document.getElementById('croppedImg' + index);
+                  croppedImage.src = croppedCanvas.toDataURL('image/jpeg', 1.0);
+      
+                  let timestamp = new Date().getTime();
+                  let fileName = `cropped-img-${timestamp}-${index}.png`;
+      
+                  await croppedCanvas.toBlob(blob => {
+                      let imgFile = new File([blob], fileName, { type: blob.type });
+                      let fileList = new DataTransfer();
+                      fileList.items.add(imgFile);
+                      input.files = fileList.files;
+                  });
+      
+                  cropper.destroy();
+                  cropper = null;
+              });
+          };
+          reader.readAsDataURL(input.files[0]);
+      }
+
+
+
+
+
+
+
 
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('form');

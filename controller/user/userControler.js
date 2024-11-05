@@ -3,7 +3,6 @@ const app = require("../../app");
 const User = require("../../models/userModel");
 const nodemailer = require("nodemailer");
 const Address = require("../../models/address");
-console.log(Address);
 require("dotenv").config();
 const bcrypt = require("bcrypt");
 const Category = require("../../models/category");
@@ -336,7 +335,7 @@ const ProducDetial = async (req, res) => {
   try {
     const user = req.session.user;
     const ProductId = req.params.id;
-
+    const MAX_QUANTITY_PER_PRODUCT = 5;
     let ProductData = await Product.findOne({
       _id: ProductId,
       isListed: true,
@@ -353,7 +352,7 @@ const ProducDetial = async (req, res) => {
       _id: { $ne: ProductId },
     }).limit(4);
 
-    res.render("productDetials", { user, ProductData, relatedProducts });
+    res.render("productDetials", { user, ProductData, relatedProducts ,MAX_QUANTITY_PER_PRODUCT});
   } catch (error) {
     console.error(error);
     return res.status(500).send("Server Error");
@@ -370,16 +369,14 @@ const userLogout = async (req, res) => {
       return res.redirect("/");
     }
   });
-};
-const profile = async (req, res) => {
+};const profile = async (req, res) => {
   try {
-    const userEmail = req.session.user.email;
+    const userEmail = req.session.user.email; // This should now be correctly set
+
     console.log("Checking user email:", userEmail);
 
     if (!userEmail) {
-      console.error(
-        "userEmail is undefined or null. Check your session configuration."
-      );
+      console.error("userEmail is undefined or null. Check your session configuration.");
       return res.status(400).send("Email is not defined in session.");
     }
 
@@ -401,6 +398,7 @@ const profile = async (req, res) => {
     return res.status(500).send("Internal server error");
   }
 };
+
 
 const editProfile = async (req, res) => {
   try {
@@ -709,7 +707,7 @@ const AddToCart = async (req, res) => {
  
   
 
-    res.redirect(`/ProducDetial/${productId}`).json({success:true, message:'product added to cart '});
+    res.redirect(`/ProducDetial/${productId}`)
   } catch (error) {
     console.error("Error in AddToCart:", error);
     return res.status(500).json({ success: false, message: "Server error" });
@@ -1057,6 +1055,58 @@ const searchProducts = async (req, res) => {
 };
 
 
+// Controller function to update the quantity
+
+
+// const updateQuantity = async (req, res) => {
+//   try {
+//     const { productId, quantity } = req.body;
+//     const userEmail = req.session.email
+//     const user = await User.findOne({email:userEmail})
+//     const MAX_QUANTITY_PER_PRODUCT = 5;
+
+//     if (quantity < 1 || quantity > MAX_QUANTITY_PER_PRODUCT) {
+//       return res.status(400).json({
+//         success: false,
+//         message: `Quantity must be between 1 and ${MAX_QUANTITY_PER_PRODUCT}.`
+//       });
+//     }
+
+//     let cart = await Cart.findOne({ userId:user.  _id });
+//     console.log('heyy cart', cart);
+    
+//     if (!cart) {
+//       return res.status(404).json({ success: false, message: 'Cart not found' });
+//     }
+
+//     const item = cart.products.find(
+//       (product) => product.productId.toString() === productId
+//     );
+
+//     if (item) {
+//       item.quantity = quantity;
+//       await cart.save();
+//       return res.status(200).json({ success: true, message: 'Quantity updated successfully' });
+//     } else {
+//       return res.status(404).json({ success: false, message: 'Product not found in cart' });
+//     }
+//   } catch (error) {
+//     console.error('Error updating quantity:', error);
+//     return res.status(500).json({ success: false, message: 'Server error' });
+//   }
+// };
+
+// Add this route in your routes file
+
+
+const ForgetPas = async (req, res) => {
+  try {
+    res.render('forgetPassword'); // Renders the 'forgetPassword' view
+  } catch (error) {
+    res.status(500).send('Unable to get this page');
+  }
+};
+
 
 module.exports = {
   HomePage,
@@ -1091,5 +1141,7 @@ module.exports = {
   successpage,
   myOrders,
   cancelOrder,
-  searchProducts
+  searchProducts,
+  // updateQuantity
+  ForgetPas
 };

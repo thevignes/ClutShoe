@@ -6,8 +6,8 @@ const mongoose = require("mongoose");
 const passport = require('passport')
 const flash = require('connect-flash');
 require('dotenv').config();
-
-require('./config/passport');~`    `
+// const CheckRouter = require("./middlewares/checkBlockedStatus");
+require('./config/passport');
 
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes")
@@ -62,7 +62,7 @@ app.use(express.static(path.join(__dirname, "public/public")));
 app.use('/uploads', express.static('uploads'));
 
 
-app.use("/", userRoutes);
+app.use("/",userRoutes);
 app.use('/admin',adminRoutes)
 
 

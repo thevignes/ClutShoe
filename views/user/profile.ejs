@@ -3,7 +3,7 @@
 
 <html>
 <head>
-    <title>My Account</title>
+    <title >My Account</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/evara-frontend/assets/css/profle.css">
 
@@ -14,7 +14,7 @@
         <div class="sidebar">
             <div class="profile">
                 <img alt="Profile Picture" height="100" src="https://e7.pngegg.com/pngimages/136/22/png-clipart-user-profile-computer-icons-girl-customer-avatar-angle-heroes-thumbnail.png" width="100" />
-                <h2><%=user.name%></h2>
+                <h4 class="p-1 text-white" style="background-color: #8967B3; border-radius: 5%;  " ><%=user.name%></h4>
             </div>
             <ul class="menu">
                 <li>
@@ -48,10 +48,18 @@
                 </button>
             </div>
         </div>
+        <div class="row justify-content-center">
+            <div class="col-auto">
+                <h3 class="text-center" style="right: 51%;
+                position: absolute;
+                top: 9%;  color: #7C73C0;">My Account</h3>
+            </div>
+        </div>
+        
         <div class="content">
-            <h3>My Account</h3>
-           
+         
             <div class="form-container">
+               
                 <h2 class="text-primary">Edit Your Profile</h2>
                 <form action="/profile/edit" method="POST">
                     <div class="form-group">

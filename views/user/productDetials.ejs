@@ -132,13 +132,13 @@
                                                 <span class="qty-val">1</span>
                                                 <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
                                             </div>
-                                            <div class="product-extra-link2 ms-2">
-                                                <a href="/add-to-cart?id=<%= ProductData._id %>">
-                                                    <button type="button" class="button button-add-to-cart custom-cart-button">
-                                                        Add to Bag
-                                                    </button>
-                                                </a>
-                                            </div>
+                                        <!-- Dropdown to select quantity -->
+<!-- <select id="quantityDropdown" class="form-select" onchange="updateQuantity(this, 'PRODUCT_ID_HERE')">
+    <% for (let i = 1; i <= MAX_QUANTITY_PER_PRODUCT; i++) { %>
+      <option value="<%= i %>"><%= i %></option>
+    <% } %>
+  </select>
+   -->
                                             <a aria-label="Add To Wishlist" class="action-btn hover-up ms-2" href=""><i class="fi-rs-heart"></i></a>
                                             <a aria-label="Compare" class="action-btn hover-up ms-2" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
                                         </div>
@@ -494,75 +494,72 @@
         </section>
     </main>
 
-
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="/zoom/extm.min.js"></script>
-
     <script>
+        function updateQuantity(selectElement, productId) {
+  const newQuantity = selectElement.value;
+
+  // Make a POST request to update the quantity in the cart
+  fetch('/cart/update-quantity', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ productId, quantity: newQuantity }),
+    credentials: 'include'
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Update the cart UI, reload the page, or notify the user
+      location.reload(); // Simple way to reflect changes
+    } else {
+      alert(data.message); // Show an error message
+    }
+  })
+  .catch(error => {
+    console.error('Error updating quantity:', error);
+    alert('Something went wrong. Please try again.');
+  });
+}
 
     </script>
 
-    <script>
-
-        console.log('out')
-        document.getElementById("form").addEventListener("submit", async (event) => {
-            //   event.preventDefault();
-
-            //   const form = event.target;
 
 
-            //   const data = {
-            //     productId: form.querySelector('input[name="productId"]').value,
-            //     quantity: form.querySelector('input[name="quantity"]').value
-            //   };
-            const ProductId = document.getElementById('proId').value;
-            console.log("Pro: ", ProductId);
 
 
-            await fetch(`/add-to-cart?productId=${ProductId}`, {
-                method: "post",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ ProductId: ProductId }),
-            })
-                .then(response => response.json())
-                .then((data) => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: "success",
-                            title: result.message,
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then(() => {
-                            window.location.href = '/productDetails'
-                        });
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/zoom/extm.min.js"></script>
 
 
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: result.message || "An error occurred",
-                            showConfirmButton: true,
-                        })
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error adding product to cart:", error);
-                    Swal.fire({
-                        icon: "error",
-                        title: "An error occurred",
-                        text: error.message,
-                        showConfirmButton: true,
-                    });
-                })
 
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
+<script>
+  async function addToCart(productId) {
+    try {
+      const response = await fetch(`/add-to-cart?id=${productId}`, {
+        method: 'GET', // or 'POST' if you prefer
+        credentials: 'include' // to include cookies (session)
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Show success message using SweetAlert
+        swal("Success!", data.message, "success").then(() => {
+          // Optionally redirect to product detail page
+          window.location.href = `/ProducDetial/${productId}`;
         });
+      } else {
+        // Show error message using SweetAlert
+        swal("Error!", data.message, "error");
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      swal("Error!", "Something went wrong. Please try again.", "error");
+    }
+  }
+</script>
 
     </script>
     <script>

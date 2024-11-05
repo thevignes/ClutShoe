@@ -144,6 +144,7 @@ const addProduct = async (req, res) => {
               return res.status(500).send({ error: "Internal server error" });
             }
           };
+          
 const editProductPage = async (req, res) => {
     try {
         const id = req.params.id;
@@ -168,12 +169,18 @@ const editProductPage = async (req, res) => {
 const UpdateProduct = async (req, res) => {
     try {
         console.log('Product is being processed for editing');
-        
-        const id = req.params.id; 
-        const product = await Product.findOne({ _id: id });
 
-        const data = req.body; 
+        const id = req.params.id;
+        const product = await Product.findById(id);
 
+        if (!product) {
+            return res.status(404).send({ message: "Product not found" });
+        }
+
+        const data = req.body;
+        console.log('Data received for update:', data);
+
+        // Check if another product with the same name exists
         const existingProduct = await Product.findOne({
             productName: data.productName,
             _id: { $ne: id }
@@ -182,31 +189,61 @@ const UpdateProduct = async (req, res) => {
         if (existingProduct) {
             return res.status(400).send({ message: "Product already exists" });
         }
+        const uploadImages = [];
 
-        const images = [];
+        // Handle file uploads using multer
         if (req.files && req.files.length > 0) {
-            req.files.forEach(file => {
-                images.push(file.filename);
-            });
+            for (let i = 0; i < req.files.length; i++) {
+                
+                const originalImagePath = req.files[i].path;
+                console.log(originalImagePath,"its wwwww")
+                const resizedImagesPath = path.join( 'public','public','uploads','re-image', req.files[i].filename);
+                const resizedFilename = Date.now()+req.files[i].filename 
+                const rePath =  path.join( 'public','public','uploads','re-image', resizedFilename);
+                console.log(resizedImagesPath,"its also")
+                
+                const supportedFormats = ['image/jpeg', 'image/png', 'image/webp'];
+                if (!supportedFormats.includes(req.files[i].mimetype)) {
+                    return res.status(400).json({ error: 'Unsupported image format' });
+                }
+
+                
+                try {
+                    await Sharp(resizedImagesPath)
+                        .resize({ width: 440, height: 440 })
+                        .toFile(rePath); 
+                } catch (sharpError) {
+                    console.log('Error processing image with Sharp:', sharpError);
+                    return res.status(500).json({ error: 'Error processing image' });
+                }
+
+                uploadImages.push(resizedFilename); 
+            }
         }
 
+        // Build the update object
         const updateField = {
-            productName: data.productName,
-            description: data.description,
-            category: product.category,
-            regularPrice: data.regularPrice,
-            salePrice: data.salePrice,
-            quantity: data.quantity ,
-            color: data.color,
+            productName: data.productName || product.productName,
+            description: data.description || product.description,
+            category: data.category || product.category,
+            regularPrice: data.regularPrice || product.regularPrice,
+            salePrice: data.salePrice || product.salePrice,
+            quantity: data.quantity || product.quantity,
         };
 
-
-        if (images.length > 0) {
-            updateField.$push = { productImages: { $each: images } };
+        // Update product in the database
+        if (uploadImages.length > 0) {
+            // If there are new images, push them into the existing array
+            await Product.findByIdAndUpdate(id, {
+                $set: updateField,
+                $push: { images: { $each: uploadImages } } // Ensure 'images' matches your model's field name
+            }, { new: true });
+        } else {
+            // If no new images, just update the product details
+            await Product.findByIdAndUpdate(id, { $set: updateField }, { new: true });
         }
 
-        await Product.findByIdAndUpdate(id, updateField, { new: true });
-        console.log('product edited successfully',updateField)
+        console.log('Product edited successfully:', updateField);
         res.redirect('/admin/product');
 
     } catch (error) {
@@ -214,6 +251,7 @@ const UpdateProduct = async (req, res) => {
         return res.status(500).send({ message: "Internal Server Error" });
     }
 };
+
 
 const removeImage = async (req, res) => {
     try {

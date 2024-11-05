@@ -63,7 +63,7 @@ router.post('/listProduct/:id', (req, res, next) => {
 
 router.post('/unListProduct/:id',ProductController.unListProduct)
 
-router.post('/updateProduct/:id',uploads.array('image'), ProductController.UpdateProduct);
+router.post('/updateProduct/:id',uploads.array('images',4), ProductController.UpdateProduct);
 
 // router.post('/deleteSingleImage' , ProductController.deleteSingleImage)
 
