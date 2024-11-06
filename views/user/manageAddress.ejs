@@ -10,6 +10,34 @@
     <link rel="stylesheet" href="/evara-frontend/assets/css/address.css">
 </head>
 <body>
+
+    <style>
+        .form-group {
+    position: relative;
+    margin-bottom: 15px; /* Add spacing between input fields */
+}
+
+input {
+    width: 100%; /* Ensure inputs take up full width */
+    padding: 8px;
+    margin: 5px 0; /* Add space between input fields and error messages */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px; /* Space between input and error message */
+    display: block; /* Ensure error message is displayed as block, below the input */
+}
+
+/* Optional: Change border color when there is an error */
+input.error {
+    border-color: red;
+}
+
+    </style>
     <div class="sidebar">
         <div class="profile">
             <img alt="Profile Picture" src="https://e7.pngegg.com/pngimages/136/22/png-clipart-user-profile-computer-icons-girl-customer-avatar-angle-heroes-thumbnail.png"/>
@@ -17,11 +45,11 @@
         </div>
         <ul class="menu">
             <li><a href="/profile"><i class="fas fa-user"></i> Account Overview</a></li>
-            <li><a href="#"><i class="fas fa-box"></i> My Orders</a></li>
-            <li><a class="active" href=""><i class="fas fa-address-book"></i> Manage Addresses</a></li>
+            <li><a href="/order"><i class="fas fa-box"></i> My Orders</a></li>
+            <li><a class="active" href="/manageAddress"><i class="fas fa-address-book"></i> Manage Addresses</a></li>
             <li><a href="#"><i class="fas fa-wallet"></i> Wallet</a></li>
         </ul>
-        <a class="logout" href="#">LOGOUT</a>
+        <a class="logout" href="/">LOGOUT</a>
     </div>
     
     <div class="content">
@@ -32,88 +60,138 @@
                     <a href="/viewAddress" class="text-white text-decoration-none">View Address</a>
                 </button>
             </div>
-            
-            <form action="/address/addAddress" method="POST" id="addressForm">
-                <div class="form-group">
-                    <input name="Firstname" id="Firstname" placeholder="First Name" type="text">
-                    <small class="error-message text-danger" id="FirstnameError"></small>
-                    <input name="Lastname" id="Lastname" placeholder="Last Name" type="text">
-                    <small class="error-message text-danger" id="LastnameError"></small>
-                </div>
-                <div class="form-group">
-                    <input name="place" id="place" placeholder="Place" type="text">
-                    <small class="error-message text-danger" id="PlaceError"></small>
-                    <input name="city" id="city" placeholder="City" type="text">
-                    <small class="error-message text-danger" id="CityError"></small>
-                </div>
-                <div class="form-group">
-                    <input name="district" id="district" placeholder="District" type="text">
-                    <small class="error-message text-danger" id="DistrictError"></small>
-                    <input name="state" id="state" placeholder="State" type="text">
-                    <small class="error-message text-danger" id="StateError"></small>
-                </div>
-                <div class="form-group">
-                    <input name="country" id="country" placeholder="Country" type="text">
-                    <small class="error-message text-danger" id="CountryError"></small>
-                    <input name="pin" id="pin" placeholder="Pin Code" type="number">
-                    <small class="error-message text-danger" id="PinError"></small>
-                </div>
-                <div class="form-group">
-                    <input name="type" id="type" placeholder="Type" type="text">
-                    <small class="error-message text-danger" id="TypeError"></small>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="cancel">Cancel</button>
-                    <button type="button" class="save">Save</button>
-                </div>
-            </form>
+                <form action="/address/addAddress" method="POST" id="addressForm">
+                    <div class="form-group">
+                        <input name="Firstname" id="Firstname" placeholder="First Name" type="text">
+                        <small class="error-message text-danger" id="FirstnameError"></small>
+                        <input name="Lastname" id="Lastname" placeholder="Last Name" type="text">
+                        <small class="error-message text-danger" id="LastnameError"></small>
+                    </div>
+                    <div class="form-group">
+                        <input name="place" id="place" placeholder="Place" type="text">
+                        <small class="error-message text-danger" id="PlaceError"></small>
+                        <input name="city" id="city" placeholder="City" type="text">
+                        <small class="error-message text-danger" id="CityError"></small>
+                    </div>
+                    <div class="form-group">
+                        <input name="district" id="district" placeholder="District" type="text">
+                        <small class="error-message text-danger" id="DistrictError"></small>
+                        <input name="state" id="state" placeholder="State" type="text">
+                        <small class="error-message text-danger" id="StateError"></small>
+                    </div>
+                    <div class="form-group">
+                        <input name="country" id="country" placeholder="Country" type="text">
+                        <small class="error-message text-danger" id="CountryError"></small>
+                        <input name="pin" id="pin" placeholder="Pin Code" type="number">
+                        <small class="error-message text-danger" id="PinError"></small>
+                    </div>
+                    <div class="form-group">
+                        <input name="type" id="type" placeholder="Type" type="text">
+                        <small class="error-message text-danger" id="TypeError"></small>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="cancel">Cancel</button>
+                        <button type="submit" class="save">Save</button>
+                    </div>
+                </form>
+                
         </div>
     </div>
+<script>
+    document.getElementById("addressForm").addEventListener("submit", function(event) {
+    // Prevent form submission
+    event.preventDefault();
+    
+    // Clear previous error messages
+    const errorElements = document.querySelectorAll(".error-message");
+    errorElements.forEach((error) => {
+        error.textContent = "";
+    });
 
-    <script>
-        document.querySelector('.save').addEventListener('click', function(e) {
-            e.preventDefault();
-            let isValid = true;
+    let isValid = true;
 
-            // Clear previous error messages
-            document.querySelectorAll('.error-message').forEach(el => el.innerText = '');
+    // Validate First Name (Only letters and spaces allowed)
+    const firstname = document.getElementById("Firstname").value;
+    const firstnameRegex = /^[a-zA-Z\s]+$/;
+    if (!firstname.match(firstnameRegex)) {
+        isValid = false;
+        document.getElementById("FirstnameError").textContent = "First Name should contain only letters.";
+    }
 
-            // Validation rules
-            function validateField(field, minLength, maxLength, errorMessage) {
-                const value = field.value.trim();
-                const errorElement = document.getElementById(field.id + 'Error');
-                
-                if (value.length < minLength || value.length > maxLength) {
-                    errorElement.innerText = errorMessage;
-                    isValid = false;
-                }
-            }
+    // Validate Last Name (Only letters and spaces allowed)
+    const lastname = document.getElementById("Lastname").value;
+    const lastnameRegex = /^[a-zA-Z\s]+$/;
+    if (!lastname.match(lastnameRegex)) {
+        isValid = false;
+        document.getElementById("LastnameError").textContent = "Last Name should contain only letters.";
+    }
 
-            // Individual field validations
-            validateField(document.getElementById('Firstname'), 2, 6, 'First Name must be 2-10 characters.');
-            validateField(document.getElementById('Lastname'), 1, 3, 'Last Name must be 2-2 characters.');
-            validateField(document.getElementById('place'), 2, 8, 'Place must be 2-10 characters.');
-            validateField(document.getElementById('city'), 2, 8, 'City must be 2-6 characters.');
-            validateField(document.getElementById('district'), 2, 8, 'District must be 2-8 characters.');
-            validateField(document.getElementById('state'), 2, 8, 'State must be 2-5 characters.');
-            validateField(document.getElementById('country'), 2, 8, 'Country must be 2-10 characters.');
-            validateField(document.getElementById('pin'), 1, 6, 'Pin Code must be 5-6 digits.');
+    // Validate Place (Non-empty)
+    const place = document.getElementById("place").value;
+    if (!place) {
+        isValid = false;
+        document.getElementById("PlaceError").textContent = "Place is required.";
+    }
 
-            // Check 'type' for specific values
-            const typeField = document.getElementById('type');
-            const typeError = document.getElementById('TypeError');
-            if (!['Home', 'Office', 'Other'].includes(typeField.value.trim())) {
-                typeError.innerText = 'Type must be "Home", "Office", or "Other".';
-                isValid = false;
-            }
+    // Validate City (Only letters and spaces allowed)
+    const city = document.getElementById("city").value;
+    const cityRegex = /^[a-zA-Z\s]+$/;
+    if (!city.match(cityRegex)) {
+        isValid = false;
+        document.getElementById("CityError").textContent = "City should contain only letters.";
+    }
 
-            // Submit form if all fields are valid
-            if (isValid) {
-                document.getElementById('addressForm').submit();
-            }
-        });
-    </script>
+    // Validate District (Only letters and spaces allowed)
+    const district = document.getElementById("district").value;
+    const districtRegex = /^[a-zA-Z\s]+$/;
+    if (!district.match(districtRegex)) {
+        isValid = false;
+        document.getElementById("DistrictError").textContent = "District should contain only letters.";
+    }
+
+    // Validate State (Only letters and spaces allowed)
+    const state = document.getElementById("state").value;
+    const stateRegex = /^[a-zA-Z\s]+$/;
+    if (!state.match(stateRegex)) {
+        isValid = false;
+        document.getElementById("StateError").textContent = "State should contain only letters.";
+    }
+
+    // Validate Country (Only letters and spaces allowed)
+    const country = document.getElementById("country").value;
+    const countryRegex = /^[a-zA-Z\s]+$/;
+    if (!country.match(countryRegex)) {
+        isValid = false;
+        document.getElementById("CountryError").textContent = "Country should contain only letters.";
+    }
+
+    // Validate Pin Code (5 digits)
+    const pin = document.getElementById("pin").value;
+    const pinRegex = /^[0-9]{6}$/;
+    if (!pin.match(pinRegex)) {
+        isValid = false;
+        document.getElementById("PinError").textContent = "Pin Code should be exactly 6 digits.";
+    }
+
+    // Validate Address Type (Only letters and spaces allowed)
+    const type = document.getElementById("type").value;
+    const typeRegex = /^[a-zA-Z\s]+$/;
+    if (!type.match(typeRegex)) {
+        isValid = false;
+        document.getElementById("TypeError").textContent = "Type should contain only letters.";
+    }
+
+    // If form is valid, submit it
+    if (isValid) {
+        this.submit();
+    }
+});
+
+</script>
+
 
 </body>
+
+
 </html>
 <%-include('../../views/partial/user/footer')%>

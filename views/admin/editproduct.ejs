@@ -41,10 +41,10 @@
   <div class="container form-container">
     <h2 class="page-header">Edit Product</h2>
     
-    <form action="/admin/updateProduct/<%= product._id %>" method="post" enctype="multipart/form-data">
+    <form action="/admin/updateProduct/<%= product._id %>" method="post" enctype="multipart/form-data"class="formUpdate">
       <div class="mb-3">
         <label for="productName" class="form-label">Product Name</label>
-        <input type="text" class="form-control" id="productName" name="productName" value="<%= product.productName %>" required>
+        <input type="text" class="form-control" id="productName" name="productName" value="<%= product.productName %>" >
  
       
 
@@ -52,22 +52,25 @@
         <label for="description" class="form-label">Description</label>
         <textarea class="form-control" id="description" name="description" rows="3" required><%= product.description %></textarea>
       </div>
+      <p id="description-error" class="text-danger"></p>
 
       <div class="mb-3">
         <label for="regularPrice" class="form-label">Regular Price</label>
-        <input type="number" class="form-control" id="regularPrice" name="regularPrice" value="<%= product.regularPrice %>" required>
+        <input type="number" class="form-control" id="regularPrice" name="regularPrice" value="<%= product.regularPrice %>">
       </div>
+      <p id="regularPrice-error" class="text-danger"></p>
 
       <div class="mb-3">
         <label for="salePrice" class="form-label">Sale Price</label>
-        <input type="number" class="form-control" id="salePrice" name="salePrice" value="<%= product.salePrice %>" required>
+        <input type="number" class="form-control" id="salePrice" name="salePrice" value="<%= product.salePrice %>" >
       </div>
+      <p id="salePrice-error"class="text-danger"></p>
 
       <div class="mb-3">
         <label for="quantity" class="form-label">Quantity</label>
-        <input type="number" class="form-control" id="quantity" name="quantity" value="<%= product.quantity %>" required>
+        <input type="number" class="form-control" id="quantity" name="quantity" value="<%= product.quantity %>">
       </div>
-
+<p id="quantity-error" class="text-danger"></p>
 
 
       <div class="mb-3">
@@ -100,6 +103,7 @@
                                                       onchange="viewImage(event), viewImage(event, 1)">
                                                       <div id="images-error" class="error-message"></div>
                                               </div>
+                                              <p id="images-error" class="text-danger"></p>
                                               <div class="image-cropper d-flex align-items-center"
                                                   style="display:none; width: 300px; height: 200px; margin-bottom: 20px;">
                                                   <img src="" id="croppedImg1" alt="">
@@ -233,71 +237,83 @@ let cropper;
 
 
 
+document.addEventListener('DOMContentLoaded', function() {
+    const formUpdate = document.querySelector('.formUpdate');
 
+    formUpdate.addEventListener('submit', function(event) {
+        clearErrorMessages(); // Clear previous error messages
+        let isValid = true;
 
+        // Get the values from the form
+        const description = document.getElementById('description').value.trim();
+        const regularPrice = document.getElementById('regularPrice').value.trim();
+        const salePrice = document.getElementById('salePrice').value.trim();
+        const quantity = document.getElementById('quantity').value.trim();
+        const category = document.getElementById('category').value.trim();
+        const imageFile = document.getElementById('input1').files[0]; // Image file
 
+        // Validate Description
+        if (description  === "") {
+            displayErrorMessage('description-error', 'Please enter a product description.');
+            isValid = false;
+        }
 
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.querySelector('form');
-    
-    form.addEventListener('submit', function (event) {
-      let isValid = true;
-      const errorMessages = [];
+        // Validate Regular Price
+        const regularPriceValue = parseFloat(regularPrice);
+        if (!regularPrice || isNaN(regularPriceValue) || regularPriceValue <= 0) {
+            displayErrorMessage('regularPrice-error', 'Please enter a valid, positive regular price.');
+            isValid = false;
+        }
 
-      // Product Name validation
-      const productName = document.getElementById('productName').value.trim();
-      if (productName.length < 3) {
-        isValid = false;
-        errorMessages.push('Product Name should be at least 3 characters long.');
-      }
+        // Validate Sale Price
+        const salePriceValue = parseFloat(salePrice);
+        if ( salePriceValue <= 0) {
+            displayErrorMessage('salePrice-error', 'Please enter a valid, positive sale price.');
+            isValid = false;
+        }
 
-      // Description validation
-      const description = document.getElementById('description').value.trim();
-      if (description.length < 10) {
-        isValid = false;
-        errorMessages.push('Description should be at least 10 characters long.');
-      }
+        // Validate Quantity
+        const quantityValue = parseInt(quantity, 10);
+        if (!quantity || isNaN(quantityValue) || quantityValue <= 0) {
+            displayErrorMessage('quantity-error', 'Please enter a valid quantity.');
+            isValid = false;
+        }
 
-      // Regular Price validation
-      const regularPrice = document.getElementById('regularPrice').value;
-      if (regularPrice <= 0) {
-        isValid = false;
-        errorMessages.push('Regular Price should be greater than 0.');
-      }
+        // Validate Category
+        if (category === "") {
+            displayErrorMessage('category-error', 'Please select a category.');
+            isValid = false;
+        }
 
-      // Sale Price validation
-      const salePrice = document.getElementById('salePrice').value;
-      if (salePrice < 0) {
-        isValid = false;
-        errorMessages.push('Sale Price cannot be negative.');
-      }
+        // Validate Image (if provided)
+        if (imageFile && !['image/jpeg', 'image/png', 'image/jpg'].includes(imageFile.type)) {
+            displayErrorMessage('images-error', 'Please select a valid image file (jpg, jpeg, or png).');
+            isValid = false;
+        }
 
-      // Quantity validation
-      const quantity = document.getElementById('quantity').value;
-      if (quantity < 1) {
-        isValid = false;
-        errorMessages.push('Quantity should be at least 1.');
-      }
-
-      // Category validation
-      const category = document.getElementById('category').value;
-      if (!category) {
-        isValid = false;
-        errorMessages.push('Please select a category.');
-      }
-
-      // Display error messages if validation fails
-      if (!isValid) {
-        event.preventDefault();
-        alert(errorMessages.join('\n'));
-      }
+        // Prevent form submission if validation fails
+        if (!isValid) {
+            event.preventDefault();
+        }
     });
-  });
 
-  
-  document.querySelector('form').addEventListener('submit', function (e) {
-    e.preventDefault(); // This will prevent the form from submitting
+    // Function to clear all error messages
+    function clearErrorMessages() {
+        const errorMessages = document.getElementsByClassName('error-message');
+        for (let errorMessage of errorMessages) {
+            errorMessage.innerHTML = ""; // Clear the text content
+        }
+    }
+
+    // Function to display error messages
+    function displayErrorMessage(id, message) {
+        const errorElement = document.getElementById(id);
+        if (errorElement) {
+            errorElement.textContent = message;
+        }
+    }
 });
+
 
 </script>
 

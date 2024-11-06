@@ -128,85 +128,82 @@ const getUSers = async(req,res)=>{
         //user side pagination// User side pagination with search
 
 
-const Userlist = async (req, res) => {
-  const page = Math.max(1, parseInt(req.query.page)) || 1;
-  const limit = Math.max(1, parseInt(req.query.limit)) || 5;
-  
 
+  const Userlist = async (req, res) => {
+    const page = Math.max(1, parseInt(req.query.page)) || 1;
+    const limit = Math.max(1, parseInt(req.query.limit)) ||10 ;
 
-  const searchQuery = req.query.search || '';
+    const searchQuery = req.query.search || '';
 
-
-  try {
-  
-      const filter = searchQuery
-          ? {
+    try {
+     
+        const filter = searchQuery
+            ? {
                 $or: [
                     { name: { $regex: searchQuery, $options: 'i' } },
-                    { email: { $regex: searchQuery, $options: 'i' } }  
+                    { email: { $regex: searchQuery, $options: 'i' } }
                 ]
             }
-          : {}; 
+            : {}; 
 
-      const users = await User.find(filter)
-          .skip((page - 1) * limit)
-          .limit(limit);
+ 
+        const users = await User.find(filter)
+            .skip((page - 1) * limit)
+            .limit(limit);
 
-      const totalUsers = await User.countDocuments(filter);
-      const totalPages = Math.ceil(totalUsers / limit);
+    
+        const totalUsers = await User.countDocuments(filter);
+        const totalPages = Math.ceil(totalUsers / limit);
 
-      console.log("Current Page:", page);
-      console.log("Total Pages:", totalPages);
-
-      console.log("Rendering view with currentPage:", page);
-
-      res.render('adminUsers', {
-          user: users,
-          currentPage: page,
-          totalPages: totalPages,
-          searchQuery:searchQuery
-      });
-  } catch (err) {
-      console.log('Error fetching users:', err);
-      res.status(500).send('Server Error');
-  }
+        
+        res.render('adminUsers', {
+            user:users,           
+            currentPage: page, 
+            totalPages,      
+            searchQuery      
+        });
+    } catch (err) {
+        console.log('Error fetching users:', err);
+        res.status(500).send('Server Error');
+    }
 };
+ 
 
 
-const orderList = async (req,res)=>{
-  try {
+  const orderList = async (req,res)=>{
+    try {
 
-    const   Orders = await Order.find().populate('userId', 'name').sort({ orderDate: -1 });
+      const   Orders = await Order.find().populate('userId', 'name').sort({ orderDate: -1 });
 
-    
-    console.log('the admin view', Orders)
-    res.render('orderList', { Orders });
+      
+      console.log('the admin view', Orders)
+      res.render('orderList', { Orders });
 
 
-    
-  } catch (error) {
-    console.log('Error fetching orders:', error);
-    res.status(500).send('Server Error');
-    
+      
+    } catch (error) {
+      console.log('Error fetching orders:', error);
+      res.status(500).send('Server Error');
+      
+    }
   }
-}
 
 
-const OrderDetails = async (req,res)=>{
-  try {
-    const id = req.params.id;
-    console.log(id)
-    const order = await Order.findById(id).populate('userId', 'name email')  .populate('products.productId', 'productName price images');
-    console.log('the order details', order)
-    res.render('orderDetials', { order });
-    
-  } catch (error) {
-    console.log('Error fetching order details:', error);
-    res.status(500).send('Server Error');
+  const OrderDetails = async (req,res)=>{
+    try {
+      const id = req.params.id;
+      console.log(id)
+      const order = await Order.findById(id).populate('userId', 'name email')  .populate('products.productId', 'productName price images');
+      console.log('the order details', order)
+      res.render('orderDetials', { order });
+      
+    } catch (error) {
+      console.log('Error fetching order details:', error);
+      res.status(500).send('Server Error');
 
-    
+      
+    }
   }
-}
 
 const updateOrder = async (req,res)=>{
   try {

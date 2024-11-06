@@ -4,17 +4,27 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <div>
     <form action="/admin/orders/<%= order._id %>/status" method="POST" id="statusForm">
-        <label for="status " class="text-dark text-4">Change Order Status:</label>
-        <select name="status" id="status" class=" btn btn-primary" >
+        <% if (order.status === 'Cancelled') { %>
+            <p class="text-danger">This order has been cancelled. The status cannot be updated.</p>
+            <% } %>
+        <label for="status" class="text-dark text-4">Change Order Status:</label>
+        
+        <!-- If the order is not cancelled, allow status change -->
+        <select name="status" id="status" class="btn btn-primary" 
+            <%= order.status === 'Cancelled' ? 'disabled' : '' %> >
             <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
             <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
             <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
             <option value="Return Processed" <%= order.status === 'Return Processed' ? 'selected' : '' %>>Return Processed</option>
             <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
         </select>
-        <button type="submit" class="btn btn-success">Update Status</button>
-
+        
+        <!-- Disable the submit button if the order is cancelled -->
+        <button type="submit" class="btn btn-success" 
+            <%= order.status === 'Cancelled' ? 'disabled' : '' %>>Update Status</button>
+            
     </form>
+    
 </div>
 
 <section   class="content-main">

@@ -69,16 +69,14 @@
             <div class="widget-category mb-30">
                 <h5 class="section-title style-1 mb-30">Category</h5>
                 <ul class="categories list-unstyled">
-                    <li><a href="shop-grid-right.html">Shoes & Bags</a></li>
-                    <li><a href="shop-grid-right.html">Blouses & Shirts</a></li>
-                    <li><a href="shop-grid-right.html">Dresses</a></li>
-                    <li><a href="shop-grid-right.html">Swimwear</a></li>
-                    <li><a href="shop-grid-right.html">Beauty</a></li>
-                    <li><a href="shop-grid-right.html">Jewelry & Watch</a></li>
-                    <li><a href="shop-grid-right.html">Accessories</a></li>
+                  <li><a href="/shop?category=mens%20shoes">mens shoes</a></li>
+                  <li><a href="/shop?category=old%20school%20shoe">old school shoe</a></li>
+                  <li><a href="/shop?category=adidas">Adidas</a></li>
+                  <li><a href="/shop?category=samba">Samba</a></li>
+                  <li><a href="/shop?category=jordan">Jordan</a></li>
                 </ul>
-            </div>
-
+              </div>
+              
             <!-- Filter By Price -->
             <div class="sidebar-widget price_range range mb-30 d-none">
                 <div class="widget-header position-relative mb-20 pb-10">
@@ -131,25 +129,7 @@
                         <p> We found <strong class="text-brand">10</strong> items for you!</p>
                     </div>
                     <div class="sort-by-product-area">      
-                        <div class="sort-by-cover mr-10">
-                            <div class="sort-by-product-wrap">
-                                <div class="sort-by">
-                                    <span><i class="fi-rs-apps"></i>Show:</span>
-                                </div>
-                                <div class="sort-by-dropdown-wrap">
-                                    <span> 50 <i class="fi-rs-angle-small-down"></i></span>
-                                </div>
-                            </div>
-                            <div class="sort-by-dropdown">
-                                <ul>
-                                    <li><a class="active" href="#">50</a></li>
-                                    <li><a href="#">100</a></li>
-                                    <li><a href="#">150</a></li>
-                                    <li><a href="#">200</a></li>
-                                    <li><a href="#">All</a></li>
-                                </ul>
-                            </div>
-                        </div>
+                      
                         <div class="sort-by-cover">
                             <div class="sort-by-product-wrap">
                                 <div class="sort-by">
@@ -183,7 +163,7 @@
                             <div class="d-flex product-cart-wrap align-items-start p-3 border rounded">
                                 <div class="product-img-action-wrap me-4">
                                     <div class="product-img product-img-zoom">
-                                        <a href="/products/<%= product._id %>">
+                                        <a href="/ProducDetial/<%= product._id %>">
                                             <img class="default-img" src="/uploads/re-image/<%= product.images[0] %>" alt="<%= product.name %>" style="width: 150px; height: auto;">
                                         </a>
                                     </div>
@@ -203,7 +183,7 @@
                                     </div>
                                     <p class="product-description"><%= product.description %></p>
                                     
-                                    <form  action="/cart/add/<%= product._id %>" method="post">
+                                    <form  action="/add-to-cart/<%= product._id %>" method="post">
                                         <i class="fi-rs-shopping-bag-add me-2"></i>
                                         <button  class="btn btn-success mt-2" type="submit">Add to Cart</button>
                                     </form>
@@ -213,7 +193,7 @@
                     <% }) %>
                 </div>
             </div>
-            <div class="pagination-wrapper">
+            <!-- <div class="pagination-wrapper">
                 <div class="pagination">
                     <a href="?sort=<%= sortOption %>&page=<%= currentPage - 1 > 0 ? currentPage - 1 : 1 %>&limit=<%= itemsPerPage %>" 
                        <% if (currentPage === 1) { %> style="display:none;" <% } %> >
@@ -234,6 +214,30 @@
                 </div>
             </div>
             
+               -->
+               <div class="pagination-wrapper">
+                <div class="pagination">
+                  <!-- Previous Page Link -->
+                  <a href="?sort=<%= sortOption %>&page=<%= (currentPage - 1 > 0 ? currentPage - 1 : 1) %>&limit=<%= itemsPerPage %><% if (searchQuery) { %>&query=<%= searchQuery %><% } %>" 
+                     <% if (currentPage === 1) { %> style="display:none;" <% } %>>
+                    Previous
+                  </a>
+              
+                  <!-- Page Number Links -->
+                  <% for (let i = 1; i <= totalPages; i++) { %>
+                    <a href="?sort=<%= sortOption %>&page=<%= i %>&limit=<%= itemsPerPage %><% if (searchQuery) { %>&query=<%= searchQuery %><% } %>" 
+                       <% if (i === currentPage) { %> style="font-weight: bold;" <% } %>>
+                      <%= i %>
+                    </a>
+                  <% } %>
+              
+                  <!-- Next Page Link -->
+                  <a href="?sort=<%= sortOption %>&page=<%= (currentPage + 1 <= totalPages ? currentPage + 1 : totalPages) %>&limit=<%= itemsPerPage %><% if (searchQuery) { %>&query=<%= searchQuery %><% } %>" 
+                     <% if (currentPage === totalPages) { %> style="display:none;" <% } %>>
+                    Next
+                  </a>
+                </div>
+              </div>
               
         </main>
     </div>

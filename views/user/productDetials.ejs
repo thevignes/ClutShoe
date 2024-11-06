@@ -51,6 +51,11 @@
                 background-color: #45a049;
                 /* Slightly darker color on hover */
             }
+            /* Add this to your CSS file */
+.quantity-input {
+  width: 80px; /* Adjust the width as needed */
+}
+
         </style>
 
         <section class="mt-50 mb-50">
@@ -125,13 +130,14 @@
                                                 <li><i class="fi-rs-credit-card me-2"></i> Cash on Delivery available</li>
                                             </ul>
                                         </div>
-                                        <div class="bt-1 border-color-1 mt-3 mb-3"></div>
+                                     
                                         <div class="detail-extralink">
-                                            <div class="detail-qty border radius">
-                                                <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                                <span class="qty-val">1</span>
-                                                <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-                                            </div>
+                                     
+                                            
+                                            <form action="/add-to-cart/<%= ProductData._id %>" method="post">
+<!-- Quantity input -->
+                                                <button class="btn btn-success mt-2" type="submit">Add to Cart</button>
+                                              </form>
                                         <!-- Dropdown to select quantity -->
 <!-- <select id="quantityDropdown" class="form-select" onchange="updateQuantity(this, 'PRODUCT_ID_HERE')">
     <% for (let i = 1; i <= MAX_QUANTITY_PER_PRODUCT; i++) { %>

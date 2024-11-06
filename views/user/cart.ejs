@@ -42,13 +42,18 @@
                                         <td class="price" data-title="Price">
                                             <span><%= item.productId.salePrice %></span>
                                         </td>
-                                        <td class="text-center" data-title="Stock">
-                                            <div class="detail-qty border radius m-auto">
-                                                <a href="#" class="qty-down"><i class="fi-rs-angle-small-down"></i></a>
-                                                <span class="qty-val"><%= item.quantity %></span>
-                                                <a href="#" class="qty-up"><i class="fi-rs-angle-small-up"></i></a>
-                                            </div>
-                                        </td>
+                                    </td>
+                                    <td class="text-center" data-title="Stock">
+                                        <div class="detail-qty border radius m-auto d-flex justify-content-center align-items-center">
+                                            <a href="#" class="qty-down" onclick="this.closest('div').querySelector('.qty-val').innerText = Math.max(1, parseInt(this.closest('div').querySelector('.qty-val').innerText) - 1)">
+                                                <i class="fi-rs-angle-small-down"></i>
+                                            </a>
+                                            <span class="qty-val" id="quantity-<%= item._id %>"><%= item.quantity %></span>
+                                            <a href="#" class="qty-up" onclick="this.closest('div').querySelector('.qty-val').innerText = parseInt(this.closest('div').querySelector('.qty-val').innerText) + 1">
+                                                <i class="fi-rs-angle-small-up"></i>
+                                            </a>
+                                        </div>
+                                    </td> 
                                         <td class="text-right" data-title="Cart">
                                             <span><%= item.subtotal.toFixed(2) %></span>
                                         </td>
@@ -112,9 +117,38 @@
         </div>
         
   
-</main>
 
+<script>
+     function updateQuantity(event, action, itemId, quantity) {
+        event.preventDefault();  // Prevent the default anchor link behavior
+        const quantityElement = document.getElementById(`quantity-${itemId}`);
+        let currentQuantity = parseInt(quantityElement.innerText);
 
+        if (action === 'increase') {
+            if (currentQuantity < quantity) {
+                currentQuantity += 1;
+            } else {
+                // Show SweetAlert if quantity exceeds available stock
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Quantity Exceeded',
+                    text: `You cannot add more than the available stock of ${availableStock}.`,
+                    confirmButtonText: 'OK'
+                });
+                return;  // Stop if stock is exceeded
+            }
+        } else if (action === 'decrease') {
+            if (currentQuantity > 1) {
+                currentQuantity -= 1;
+            }
+        }
+
+        // Update the quantity displayed
+        quantityElement.innerText = currentQuantity;
+    }
+</script>
+
+       
     
         
         
@@ -153,6 +187,7 @@
             }
         });
     }
+
     
 
         // console.log('out')
@@ -206,6 +241,8 @@
 
 
     //     });
+
+    
 
     // </script>
 

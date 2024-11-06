@@ -5,7 +5,7 @@ const nodemailer = require("nodemailer");
 const Address = require("../../models/address");
 require("dotenv").config();
 const bcrypt = require("bcrypt");
-const Category = require("../../models/category");
+const Category = require("../../models/categoryModel");
 const Product = require("../../models/product");
 const Cart = require("../../models/cart");
 const Order = require("../../models/order");
@@ -120,7 +120,8 @@ const Registration = async (req, res) => {
   const otp = Math.floor(100000 + Math.random() * 900000);
   console.log("otpppppp:", otp);
   req.session.otp = otp;
-  req.session.expireOtp = Date.now() + 5 * 60 * 1000
+  req.session.expireOtp = Date.now() + 10 * 60 * 1000; 
+
   console.log("session otpppppp:", req.session.otp);
 
   try {
@@ -369,7 +370,9 @@ const userLogout = async (req, res) => {
       return res.redirect("/");
     }
   });
-};const profile = async (req, res) => {
+};
+
+const profile = async (req, res) => {
   try {
     const userEmail = req.session.user.email; // This should now be correctly set
 
@@ -668,53 +671,56 @@ const cartPage = async (req, res) => {
 
 const AddToCart = async (req, res) => {
   try {
-    const productId = req.query.id;
-    console.log("the product is", productId);
+    const productId = req.params.id;
     const userEmail = req.session.user.email;
-    const user = await User.findOne({ email: userEmail });
-    console.log("hello", userEmail);
 
-    if (!user) {
+    if (!userEmail) {
       return res.redirect("/login");
     }
 
+    const user = await User.findOne({ email: userEmail });
     const product = await Product.findById(productId);
+
     if (!product) {
       return res
         .status(404)
         .json({ success: false, message: "Product not found." });
     }
-    console.log("heyy product is ", product);
+
+    const quantity = parseInt(req.body.quantity, 10) || 1;
 
     let cart = await Cart.findOne({ userId: user._id }).populate(
       "products.productId"
     );
-    console.log("checkimng cart", cart);
+
     if (!cart) {
       cart = new Cart({ userId: user._id, products: [] });
     }
 
+  
     const existingProduct = cart.products.find(
       (item) => item.productId._id.toString() === productId
     );
 
     if (existingProduct) {
+
+      existingProduct.quantity += quantity;
     } else {
-      cart.products.push({ productId: product._id });
+
+      cart.products.push({ productId: product._id, quantity: quantity });
     }
 
-    await cart.save();
- 
-  
 
-    res.redirect(`/ProducDetial/${productId}`)
+    await cart.save();
+
+    // Redirect to the product details page
+    res.redirect(`/ProducDetial/${productId}`);
   } catch (error) {
     console.error("Error in AddToCart:", error);
     return res.status(500).json({ success: false, message: "Server error" });
   }
-  
-  
 };
+
 
 const removeFromCart = async (req, res) => {
   try {
@@ -821,12 +827,15 @@ const shopPage = async (req, res) => {
     const sortOption = req.query.sort || "featured";
     const currentPage = parseInt(req.query.page) || 1;
     const itemsPerPage = parseInt(req.query.limit) || 5; 
+    const searchQuery = req.query.q || '';
+    const categoryFilter = req.query.category || '';
 
     console.log("Sort option selected:", sortOption);
     console.log("Current page:", currentPage);
     console.log("Items per page:", itemsPerPage);
+    console.log("Category Filter:", categoryFilter);
 
-///sorting
+    // Sorting query
     let sortQuery = {};
 
     switch (sortOption) {
@@ -848,17 +857,35 @@ const shopPage = async (req, res) => {
 
     console.log("Sort Query:", sortQuery);
 
-    // Getting the total number of products
-    const totalProducts = await Product.countDocuments({ isListed: true });
+    // Find the category's ObjectId if a category filter is provided
+    let categoryFilterQuery = {};
+    if (categoryFilter) {
+      console.log("Looking for category:", categoryFilter);  // Log the category name
+      const category = await Category.findOne({ name: { $regex: new RegExp(`^${categoryFilter}$`, "i") } });
 
-    // Calculating total pages
+      if (category) {
+        categoryFilterQuery = { category: category._id }; // Use ObjectId for category filtering
+        console.log("Category found:", category);  // Log the category object found
+      } else {
+        console.log("No category found with name:", categoryFilter);
+        return res.status(400).send('Invalid category');
+      }
+    }
+
+    // Total products and pagination
+    const totalProducts = await Product.countDocuments({ isListed: true, ...categoryFilterQuery });
     const totalPages = Math.ceil(totalProducts / itemsPerPage);
     const skip = (currentPage - 1) * itemsPerPage;
 
-    const ProductData = await Product.find({ isListed: true })
+    // Fetch products based on the category filter and search query
+    const ProductData = await Product.find({
+      isListed: true,
+      productName: { $regex: searchQuery, $options: "i" },
+      ...categoryFilterQuery
+    })
       .populate("category")
       .sort(sortQuery)
-      .skip(skip) 
+      .skip(skip)
       .limit(itemsPerPage);
 
     const user = req.session.user || null;
@@ -870,14 +897,14 @@ const shopPage = async (req, res) => {
       currentPage,
       totalPages,
       itemsPerPage,
+      searchQuery,
+      categoryFilter
     });
   } catch (error) {
     console.error("Error in shopPage:", error);
     return res.status(500).send("Server error, please try again");
   }
 };
-
-
 
 const PlaceOrder = async (req, res) => {
   try {
@@ -1019,41 +1046,53 @@ const cancelOrder = async (req, res) => {
     return res.status(500).send("Oops! Server error");
   }
 };
-
 const searchProducts = async (req, res) => {
   try {
     const user = req.session.user || null;
-    const searchQuery = req.query.q;
+    const searchQuery = req.query.q || '';
     const sortOption = req.query.sort || "featured";
-    const currentPage = parseInt(req.query.page) || 1; 
+    const currentPage = parseInt(req.query.page) || 1;
     const itemsPerPage = parseInt(req.query.limit) || 5;
-    const totalProducts = await Product.countDocuments({ isListed: true });
+
+    // Escape the search query to prevent regex-related issues
+    const escapeRegex = (text) => text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+    const regex = searchQuery ? new RegExp(escapeRegex(searchQuery), 'i') : null;
+
+    // Query to count total products
+    const totalProducts = await Product.countDocuments({
+      isListed: true,
+      ...(regex && { productName: regex }) // Apply regex filter only if it exists
+    });
 
     const totalPages = Math.ceil(totalProducts / itemsPerPage);
     const skip = (currentPage - 1) * itemsPerPage;
 
-    if (!searchQuery) {
-      return res.status(400).json({ message: "Search query is required" });
-    }
-
-
-    const regex = new RegExp(searchQuery, 'i');
-
-
+    // Query to fetch the products
     const ProductData = await Product.find({
       isListed: true,
-      productName: regex 
-    }).populate("category");
+      ...(regex && { productName: regex }) // Apply regex filter only if it exists
+    })
+      .populate("category")
+      .skip(skip)
+      .limit(itemsPerPage);
 
+    // Render the shop page
+    res.render('shop', {
+      user,
+      ProductData,
+      sortOption,
+      currentPage,
+      itemsPerPage,
+      totalPages,
+      searchQuery
+    });
 
-    res.render('shop', { user, ProductData, sortOption,currentPage,itemsPerPage,totalPages });
     console.log('Searched Products:', ProductData);
   } catch (error) {
     console.error("Error searching for products:", error);
     res.status(500).send("Server Error");
   }
 };
-
 
 // Controller function to update the quantity
 

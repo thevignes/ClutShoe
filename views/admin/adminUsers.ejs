@@ -1,6 +1,7 @@
 
 
-<%-include("../../views/partial/admin/header")%>
+<%- include("../../views/partial/admin/header", {user: user}) %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +14,32 @@
 </head>
 <body>
    
+
+    <style>
+        .pagination-box {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.page-item {
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.page-link {
+  text-decoration: none;
+  padding: 8px 16px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.page-item.active .page-link {
+  background-color: #007bff;
+  color: white;
+}
+
+    </style>
 
     <div class="container mt-5">
         <h3 class="text-left mb-4">Users</h3>
@@ -72,27 +99,24 @@
 <nav aria-label="User table pagination">
     <ul class="pagination justify-content-center">
       <!-- Previous Button -->
-      <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
-        <a class="page-link" href="?page=<%= currentPage - 1 %>&limit=10" aria-label="Previous">
-          <span aria-hidden="true">&laquo;</span>
-        </a>
-      </li>
+
   
-      <!-- Page Numbers -->
       <div class="pagination-box">
-        <% for (let i = 1; i <= totalPages; i++) { %>
-          <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-            <a class="page-link" href="?page=<%= i %>&limit=10" class="page-number"><%= i %></a>
-          </li>
-        <% } %>
+        <ul class="pagination">
+          <% for (let i = 1; i <= totalPages; i++) { %>
+            <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+              <!-- Create page links with search query parameter and page number -->
+              <a class="page-link" href="?page=<%= i %>&limit=15&search=<%= searchQuery %>" class="page-number">
+                <%= i %>
+              </a>
+            </li>
+          <% } %>
+        </ul>
       </div>
+      
   
       <!-- Next Button -->
-      <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
-        <a class="page-link" href="?page=<%= currentPage + 1 %>&limit=10" aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
+      
     </ul>
   </nav>
   

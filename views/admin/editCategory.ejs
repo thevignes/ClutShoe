@@ -7,7 +7,7 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<%-include("../../views/partial/admin/header")%>
+<%- include("../../views/partial/admin/header") %>
 <body>
   <div class="container mt-5">
     <div class="row justify-content-center">
@@ -18,24 +18,20 @@
           </div>
           <div class="card-body">
             <!-- Edit Category Form -->
-            <form action="/admin/editCategory/<%= category._id %>?_method=PUT" method="POST">
+            <form id="editCategoryForm" action="/admin/editCategory/<%= category._id %>?_method=PUT" method="POST">
               <div class="mb-3">
                 <label for="name" class="form-label">Category Name</label>
-                <input type="text" class="form-control" name="name" value="<%= category.name %>" >
+                <input type="text" class="form-control" id="name" name="name" value="<%= category.name %>" >
+                <div id="name-error" class="text-danger"></div> <!-- Error message element -->
               </div>
               <div class="mb-3">
                 <label for="description" class="form-label">Category Description</label>
-                <textarea class="form-control" name="description" rows="3" ><%= category.description %></textarea>
+                <textarea class="form-control" id="description" name="description" rows="3" ><%= category.description %></textarea>
+                <div id="description-error" class="text-danger"></div> <!-- Error message element -->
               </div>
               <div class="d-flex justify-content-between">
                 <!-- Update Button -->
                 <button type="submit" class="btn btn-success">Update Category</button>
-
-                <!-- Delete Button -->
-                <!-- <form action="/admin/CategoryDelete/<%= category._id %>?_method=PUT" method="POST" class="mt-3">
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this category?');">Delete Category</button>
-                  </form> -->
-
               </div>
             </form>
           </div>
@@ -46,6 +42,54 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- JavaScript for Validation -->
+  <script>
+    document.getElementById('editCategoryForm').addEventListener('submit', function(event) {
+  let isValid = true;
+
+  // Clear previous error messages
+  document.getElementById('name-error').textContent = '';
+  document.getElementById('description-error').textContent = '';
+
+  // Get form values
+  const name = document.getElementById('name').value.trim();
+  const description = document.getElementById('description').value.trim();
+
+  // Regular expression to check only alphabetic characters
+  const alphabeticRegex = /^[A-Za-z\s]+$/;
+
+  // Validate Category Name
+  if (name === "") {
+    document.getElementById('name-error').textContent = 'Category name is required.';
+    isValid = false;
+  } else if (!alphabeticRegex.test(name)) {
+    document.getElementById('name-error').textContent = 'Category name must contain only alphabetic characters.';
+    isValid = false;
+  } else if (name.length < 3) {
+    document.getElementById('name-error').textContent = 'Category name must be at least 3 characters long.';
+    isValid = false;
+  }
+
+  // Validate Category Description
+  if (description === "") {
+    document.getElementById('description-error').textContent = 'Category description is required.';
+    isValid = false;
+  } else if (!alphabeticRegex.test(description)) {
+    document.getElementById('description-error').textContent = 'Description must contain only alphabetic characters.';
+    isValid = false;
+  } else if (description.length < 10) {
+    document.getElementById('description-error').textContent = 'Description must be at least 10 characters long.';
+    isValid = false;
+  }
+
+  // Prevent form submission if validation fails
+  if (!isValid) {
+    event.preventDefault();
+  }
+});
+
+  </script>
 </body>
 </html>
-<%-include("../../views/partial/admin/footer")%>
+<%- include("../../views/partial/admin/footer") %>

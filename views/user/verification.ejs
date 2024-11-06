@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="UTF-8">
     <title>Verify OTP</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <!-- Include SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             background-color: #f8f9fa;
@@ -23,11 +24,10 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <h3 class="text-center mb-4">Verify OTP</h3>
-        <form action="/resetCode" method="post">
+        <form id="otpForm" action="/resetCode" method="post">
             <div class="form-group">
                 <label for="otp">Enter resetCode</label>
                 <input type="text" id="otp" name="resetCode" class="form-control" placeholder="Enter the OTP" required />
@@ -35,6 +35,47 @@
             <button type="submit" class="btn btn-primary btn-block">Verify</button>
         </form>
     </div>
-</body>
 
+    <script>
+document.getElementById('otpForm').addEventListener('submit', function (event) {
+  const otpInput = document.getElementById('otp').value;
+
+  // Check if the OTP input is valid (adjust your validation logic as needed)
+  if (otpInput.trim() === '' || otpInput.length !== 6) { // Example check for a 6-digit OTP
+    event.preventDefault();
+    // Show SweetAlert2 toast notification for error
+    Swal.fire({
+      toast: true,
+      icon: 'error',
+      title: 'Invalid code',
+      text: 'Please enter a valid CODE.',
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      background: '#f8d7da',  // Light red background for error
+      color: '#721c24',       // Dark red text color for error
+      customClass: {
+        popup: 'colored-toast'
+      }
+    });
+  } else {
+    // Show SweetAlert2 toast notification for success
+    Swal.fire({
+      toast: true,
+      icon: 'success',
+      title: 'code Submitted',
+      text: 'resetCode is being verified...',
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 10000, // 3 seconds delay
+      background: '#d4edda',  // Light green background for success
+      color: '#155724',       // Dark green text color for success
+      customClass: {
+        popup: 'colored-toast'
+      }
+    });
+  }
+});
+    </script>
+</body>
 </html>

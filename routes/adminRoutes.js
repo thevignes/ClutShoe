@@ -24,6 +24,8 @@ router.get('/blockUser', AdminController.blockUser)
 router.get('/unblockUser', AdminController.UnblockUser)
 
 
+router.get('/users', AdminController.Userlist)
+
 //category routes 
 
 
@@ -35,7 +37,7 @@ router.get('/editCategory/:id', CategoryController.editCatePage);
 
 router.post('/editCategory/:id', CategoryController.editCategory)
 
-router.post('/CategoryDelete/:id', CategoryController.CategoryDelete)
+// router.post('/CategoryDelete/:id', CategoryController.CategoryDelete)
 
 router.post('/CategoryList/:id',CategoryController.CategoryList)
 

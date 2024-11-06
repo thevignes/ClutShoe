@@ -12,16 +12,15 @@ const forgetPassword = async (req, res) => {
     console.log("hello", user);
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      // Send an error message to the EJS template
+      return res.render('forgetPassword', { errorMessage: 'User not found.' });
     }
-    const resetPas = crypto.randomBytes(3).toString("hex");
 
+    const resetPas = crypto.randomBytes(3).toString("hex");
     const ExpireIn = Date.now() + 30 * 60 * 1000;
 
     req.session.resetCode = resetPas;
-
     req.session.resetCodeExpires = ExpireIn;
-
     req.session.userEmail = email;
 
     const transport = nodemailer.createTransport({
@@ -44,7 +43,10 @@ const forgetPassword = async (req, res) => {
 
     await transport.sendMail(mailOptions);
     console.log(`OTP sent successfully to ${email}: ${resetPas}`);
-    return res.redirect("/verification");
+
+    // Send a success message to the EJS template
+    res.render('verification', { successMessage: 'OTP sent successfully! Please check your email.' });
+    
   } catch (error) {
     console.log("error while doing this ", error);
     res.status(500).send("!oops server error ");
@@ -87,44 +89,45 @@ const  ResetPass = async (req,res)=>{
     }
 }
 
+const resetpassword = async (req, res) => {
+  try {
+
+    const { password, confirmPassword } = req.body;
+
+ 
+    if (!password || !confirmPassword) {
+      return res.status(400).send("Both password fields are required.");
+    }
+    if (password !== confirmPassword) {
+      return res.status(400).send("Passwords do not match.");
+    }
+
+    const userEmail = req.session.userEmail; 
+    if (!req.session.resetCode || Date.now() > req.session.resetCodeExpires) {
+      return res.status(404).send("Password reset session has expired. Please request a new reset.");
+    }
+
+    const user = await User.findOne({ email: userEmail });
+    if (!user) {
+      return res.status(404).send("User not found.");
+    }
 
 
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.password = hashedPassword;
+    await user.save();
 
-// const resetpassword = async (req, res) => {
-//     try {
-//       const { newpassword } = req.body;
-  
-//       // Check if the reset code session has expired or is missing
-//       if (!req.session.resetCode || Date.now() > req.session.resetCodeExpires) {
-//         return res.status(404).send('Password reset session has expired. Please request a new reset.');
-//       }
-  
-//       // Find the user using the email stored in the session
-//       const user = await User.findOne({ email: req.session.email });
-//       if (!user) {
-//         return res.status(404).send('User not found.');
-//       }
-  
-//       // Hash the new password
-//       const hashedPassword = await bcrypt.hash(newpassword, 10);
-  
-//       // Update the user's password
-//       user.password = hashedPassword;
-//       await user.save();
-  
-//       // Clear the session information related to password reset
 
-//       req.session.resetCode = null;
-//       req.session.resetCodeExpires = null;
-//       req.session.email = null;
-  
-//       // Redirect the user to the login page
-//       res.redirect('/login');
-//     } catch (error) {
-//       console.error('Error while resetting password:', error);
-//       return res.status(500).send('Oops! Server error occurred.');
-//     }
-//   };
+    req.session.resetCode = null;
+    req.session.resetCodeExpires = null;
+    req.session.userEmail = null;
+
+    res.redirect("/login");
+  } catch (error) {
+    console.error("Error while resetting password:", error);
+    return res.status(500).send("Oops! Server error occurred.");
+  }
+};
 
 
 
@@ -132,6 +135,6 @@ module.exports = {
   forgetPassword,
   verify,
   codeVerification,
-  ResetPass
-//   resetpassword
+  ResetPass,
+  resetpassword
 };

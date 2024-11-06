@@ -5,7 +5,7 @@ const User = require('../../models/userModel')
 const fs = require ('fs')
 const Sharp = require('sharp')
 const path = require('path')
-const Category = require('../../models/category')
+const Category = require('../../models/categoryModel')
 
 
 

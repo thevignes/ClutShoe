@@ -1,4 +1,5 @@
-const Category = require('../../models/category')
+const Category = require('../../models/categoryModel')
+const { MongoDBCollectionNamespace } = require('mongodb')
 
 const CategoryDet = async (req, res) => {
   try {
@@ -31,24 +32,38 @@ const CategoryDet = async (req, res) => {
   }
 };
 
+const addCategory = async (req, res) => {
+  const { name, description } = req.body;
 
-const addCategory = async (req,res) =>{
-    const {name,description} = req.body;
-   
-    try {                                                    
-        const exisitngCate = await Category.find({name})
-        if(exisitngCate.length > 0){
-            return res.status(400).json({error:'Category already exists'})
-        }
-        const newCategory = new Category({name,description})
-        await newCategory.save()
-        console.log(newCategory)
-        return res.json({message:"category added"})
-       
-    } catch (error) {
-        return res.status(500).json({error:"internal server error"})
+
+  console.log("Received category data:", { name, description });
+
+
+  if (!name || !description) {
+    return res.status(400).json({ success: false, error: 'Name and description are required' });
+  }
+
+  try {
+    const existingCate = await Category.findOne({ name });
+
+    if (existingCate) {
+      console.log('Category already exists');
+      return res.status(400).json({ success: false, message: 'Category already exists' });
     }
-}
+
+    const newCategory = new Category({ name, description });
+
+    await newCategory.save();
+
+    console.log('New category added:', newCategory);
+
+   return res.json({success:true, message: 'Category added successfully' });
+  } catch (error) {
+    console.error('Error adding category:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 
 const editCatePage = async (req, res) => {
   try {
@@ -84,32 +99,32 @@ const editCategory = async (req, res) => {
 
 ///deleting category SoftDelete
 
-const CategoryDelete = async (req, res) => {
-  const id = req.params.id;
-  console.log('The ID is', id);
+// const CategoryDelete = async (req, res) => {
+//   const id = req.params.id;
+//   console.log('The ID is', id);
 
-  try {
+//   try {
 
-    const category = await Category.findById(id);
-    if (!category) {
-      return res.status(404).send({ message: "Category not found" });
-    }
+//     const category = await Category.findById(id);
+//     if (!category) {
+//       return res.status(404).send({ message: "Category not found" });
+//     }
 
    
-    const updatedCategory = await Category.findByIdAndUpdate(id, {
-      isDelete: true,
-      deletedAt: Date.now()
-    }, { new: true });
+//     const updatedCategory = await Category.findByIdAndUpdate(id, {
+//       isDelete: true,
+//       deletedAt: Date.now()
+//     }, { new: true });
 
-    console.log("Deleted category:", id);
+//     console.log("Deleted category:", id);
 
 
-    return res.redirect('/admin/category');
-  } catch (err) {
-    console.log(err, "while deleting the category");
-    return res.status(500).send('Server error. Please try again.');
-  }
-};
+//     return res.redirect('/admin/category');
+//   } catch (err) {
+//     console.log(err, "while deleting the category");
+//     return res.status(500).send('Server error. Please try again.');
+//   }
+// };
 
 const CategoryList = async (req,res)=>{
   
@@ -152,7 +167,7 @@ module.exports = {
     addCategory,
     editCategory,
     editCatePage,
-    CategoryDelete,
+    // CategoryDelete,
     CategoryList,
     UnCategoryList
     

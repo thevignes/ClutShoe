@@ -1,94 +1,126 @@
-
-<%-include('../../views/partial/user/header',{user:user})%>
+<%-include('../../views/partial/user/header', { user: user })%>
 
 <html>
 <head>
-    <title >My Account</title>
+    <title>My Account</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/evara-frontend/assets/css/profle.css">
-
 </head>
 <body>
-    <% if (user) { %> 
+
+    <style>
+        .error {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+    </style>
+    <% if (user) { %>
     <div class="container">
         <div class="sidebar">
             <div class="profile">
                 <img alt="Profile Picture" height="100" src="https://e7.pngegg.com/pngimages/136/22/png-clipart-user-profile-computer-icons-girl-customer-avatar-angle-heroes-thumbnail.png" width="100" />
-                <h4 class="p-1 text-white" style="background-color: #8967B3; border-radius: 5%;  " ><%=user.name%></h4>
+                <span>Hello</span>
+                <h4 class="p-1 text-black"><%= user.name %></h4>
             </div>
             <ul class="menu">
-                <li>
-                    <a class="active" href="#">
-                        <i class="fas fa-user"></i>
-                        Account Overview
-                    </a>
-                </li>
-                <li>
-                    <a href="/order">
-                        <i class="fas fa-box"></i>
-                        My Orders
-                    </a>
-                </li>
-                <li>
-                    <a href="/manageAddress">
-                        <i class="fas fa-map-marker-alt"></i>
-                        Manage Addresses
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-wallet"></i>
-                        Wallet
-                    </a>
-                </li>
+                <li><a class="active" href="#"><i class="fas fa-user"></i> Account Overview</a></li>
+                <li><a href="/order"><i class="fas fa-box"></i> My Orders</a></li>
+                <li><a href="/manageAddress"><i class="fas fa-map-marker-alt"></i> Manage Addresses</a></li>
+                <li><a href="#"><i class="fas fa-wallet"></i> Wallet</a></li>
             </ul>
             <div class="logout text-white">
-                <button>
-                    <a href="/userLogout" class="border-rounded text-white ">LOGOUT</a>
-                </button>
+                <button><a href="/userLogout" class="border-rounded text-white">LOGOUT</a></button>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-auto">
-                <h3 class="text-center" style="right: 51%;
-                position: absolute;
-                top: 9%;  color: #7C73C0;">My Account</h3>
+                <h3 class="text-center" style="right: 51%; position: absolute; top: 9%; color: #7C73C0;">My Account</h3>
             </div>
         </div>
-        
         <div class="content">
-         
             <div class="form-container">
-               
                 <h2 class="text-primary">Edit Your Profile</h2>
-                <form action="/profile/edit" method="POST">
+                <form action="/profile/edit" method="POST" id="editProfileForm">
                     <div class="form-group">
                         <label for="name" class="text-dark">Name</label>
                         <input id="name" type="text" name="name" value="<%= user.name %>" >
+                        <span id="nameError" class="error"></span> <!-- Error message for name -->
                     </div>
                     <div class="form-group full-width">
                         <label for="email">Email</label>
                         <input id="email" type="email" name="email" value="<%= user.email %>">
+                        <span id="emailError" class="error"></span> <!-- Error message for email -->
                     </div>
                     <div class="form-group full-width">
                         <label for="current-password">Current Password</label>
                         <input id="current-password" type="password" name="currentPassword" >
+                        <span id="currentPasswordError" class="error"></span> 
                     </div>
                     <div class="form-group full-width">
                         <label for="new-password">New Password</label>
-                        <input id="new-password" type="password" name="newPassword">
+                        <input id="new-password" type="password" name="newPassword" >
+                        <span id="newPasswordError" class="error"></span> 
                     </div>
                     <div class="form-actions">
                         <button class="cancel" type="button">Cancel</button>
-               
                         <button class="save" type="submit">Save Changes</button>
                     </div>
                 </form>
-                
             </div>
-            <%}%>   
         </div>
     </div>
+    <% } %>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        document.getElementById('editProfileForm').addEventListener('submit', function(event) {
+
+            document.getElementById('nameError').textContent = '';
+            document.getElementById('emailError').textContent = '';
+            document.getElementById('currentPasswordError').textContent = '';
+            document.getElementById('newPasswordError').textContent = '';
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const currentPassword = document.getElementById('current-password').value.trim();
+            const newPassword = document.getElementById('new-password').value.trim();
+
+            let isValid = true;
+
+       
+            if (name.length < 3) {
+                document.getElementById('nameError').textContent = "Name must be at least 2 characters long.";
+                isValid = false;
+            }
+
+        
+            const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+            if (!emailPattern.test(email)) {
+                document.getElementById('emailError').textContent = "Please enter a valid email address.";
+                isValid = false;
+            }
+
+            // if (currentPassword.length < 6) {
+            //     document.getElementById('currentPasswordError').textContent = "Current password must be at least 6 characters long.";
+            //     isValid = false;
+            // }
+
+
+            if (newPassword && newPassword.length < 6) {
+                document.getElementById('newPasswordError').textContent = "New password must be at least 6 characters long.";
+                isValid = false;
+            }
+
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+
+
 </html>
 <%-include('../../views/partial/user/footer')%>

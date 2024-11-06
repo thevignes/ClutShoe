@@ -75,9 +75,11 @@ router.post('/edit-address/:id',userControler.EditAddress)
 
 router.get('/cart',userControler.cartPage)
 
-router.post('/add-to-cart',userControler.shopPage)
+router.post('/add-cart-cart/:id',userControler.shopPage)
 
-router.get('/add-to-cart',userControler.AddToCart)
+
+router.post('/add-to-cart/:id', userControler.AddToCart);
+
 
 // Assuming your route is defined as follows:
 router.get('/remove-from-cart/:id',  userControler.removeFromCart);
@@ -85,6 +87,7 @@ router.get('/remove-from-cart/:id',  userControler.removeFromCart);
 //shop route 
 router.get('/shop',userControler.shopPage)
 
+router.get('/ProducDetial/:id',userControler.shopPage)
 //checkout page 
 router.get('/checkOut',userControler.checkout)  
 
@@ -123,6 +126,6 @@ router.get('/resetpass', ForgetController.ResetPass);
 
 router.post('/resetCode', ForgetController.codeVerification)
 
-//  router.post('/Resetpassword', ForgetController.resetpassword)
+ router.post('/Resetpassword', ForgetController.resetpassword)
 
 module.exports = router

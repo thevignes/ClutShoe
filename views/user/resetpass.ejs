@@ -5,6 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reset Password</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -75,15 +76,44 @@
   </div>
 </body>
 <script>
-    document.querySelector('form').addEventListener('submit', function (event) {
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
-  
-      if (password !== confirmPassword) {
-        event.preventDefault();
-        alert('Passwords do not match. Please try again.');
+ document.querySelector('form').addEventListener('submit', function (event) {
+  const password = document.getElementById('password').value;
+  const confirmPassword = document.getElementById('confirmPassword').value;
+
+  if (password !== confirmPassword) {
+    event.preventDefault();
+    // Show SweetAlert2 toast notification for error
+    Swal.fire({
+      toast: true,
+      icon: 'error',
+      title: 'Passwords do not match. Please try again.',
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      background: '#f8d7da',  // Light red background for error
+      color: '#721c24',       // Dark red text color for error
+      customClass: {
+        popup: 'colored-toast'
       }
     });
-  </script>
+  } else {
+    // Show SweetAlert2 toast notification for success
+    Swal.fire({
+      toast: true,
+      icon: 'success',
+      title: 'Passwords match. Form is being submitted!',
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 5000,
+      background: '#d4edda',  // Light green background for success
+      color: '#155724',       // Dark green text color for success
+      customClass: {
+        popup: 'colored-toast'
+      }
+    });
+  }
+});
+
+</script>
   
 </html>
