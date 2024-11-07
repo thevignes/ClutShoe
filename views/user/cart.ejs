@@ -44,16 +44,21 @@
                                         </td>
                                     </td>
                                     <td class="text-center" data-title="Stock">
-                                        <div class="detail-qty border radius m-auto d-flex justify-content-center align-items-center">
-                                            <a href="#" class="qty-down" onclick="this.closest('div').querySelector('.qty-val').innerText = Math.max(1, parseInt(this.closest('div').querySelector('.qty-val').innerText) - 1)">
-                                                <i class="fi-rs-angle-small-down"></i>
-                                            </a>
-                                            <span class="qty-val" id="quantity-<%= item._id %>"><%= item.quantity %></span>
-                                            <a href="#" class="qty-up" onclick="this.closest('div').querySelector('.qty-val').innerText = parseInt(this.closest('div').querySelector('.qty-val').innerText) + 1">
-                                                <i class="fi-rs-angle-small-up"></i>
-                                            </a>
+                                        <div class="cp_quntty">
+                                          <input
+                                            name="quantity"
+                                            min="1"
+                                            max="10"
+                                            value="<%= item.quantity %>" 
+                                            size="2"
+                                            type="number"
+                                            onchange="updateQuantity('<%= item._id %>', this.value, this.max)" 
+                                            style="width: 60px; text-align: center;" 
+                                            data-product-id="<%= item._id %>" 
+                                          />
                                         </div>
-                                    </td> 
+                                      </td>
+                                      
                                         <td class="text-right" data-title="Cart">
                                             <span><%= item.subtotal.toFixed(2) %></span>
                                         </td>
@@ -117,36 +122,61 @@
         </div>
         
   
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-<script>
-     function updateQuantity(event, action, itemId, quantity) {
-        event.preventDefault();  // Prevent the default anchor link behavior
-        const quantityElement = document.getElementById(`quantity-${itemId}`);
-        let currentQuantity = parseInt(quantityElement.innerText);
-
-        if (action === 'increase') {
-            if (currentQuantity < quantity) {
-                currentQuantity += 1;
-            } else {
-                // Show SweetAlert if quantity exceeds available stock
+        <script>
+          async function updateQuantity(itemId, newQuantity, maxStock) {
+              try {
+                
+              // Ensure newQuantity doesn't exceed the maxStock
+              if (parseInt(newQuantity) > parseInt(maxStock)) {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Quantity Exceeded',
-                    text: `You cannot add more than the available stock of ${availableStock}.`,
-                    confirmButtonText: 'OK'
+                  icon: 'error',
+                  title: 'Quantity Exceeded',
+                  text: `Only ${maxStock} items are available for this product.`,
+                  confirmButtonText: 'OK'
                 });
-                return;  // Stop if stock is exceeded
-            }
-        } else if (action === 'decrease') {
-            if (currentQuantity > 1) {
-                currentQuantity -= 1;
-            }
-        }
+        
+                // Reset the quantity to maxStock if the user exceeds it
+                document.querySelector(`input[name="quantity"][data-product-id="${itemId}"]`).value = maxStock;
+                return;  // Stop execution if quantity exceeds max
+              }
+              
+        
+              const response = await fetch("http://localhost:3100/updateQuantity", {
+  method: "PATCH", // Specify the HTTP method
+  headers: {
+    "Content-Type": "application/json", // Set the content type to JSON
+  },
+  body: JSON.stringify({
+    newQuantity, // Include the new quantity in the request body
+    itemId, // Include the itemId in the request body
+  }),
+});
 
-        // Update the quantity displayed
-        quantityElement.innerText = currentQuantity;
-    }
-</script>
+if (!response.ok) {
+  // If the response is not okay, throw an error
+  throw new Error('Failed to update quantity');
+}
+
+const data = await response.json(); // Parse the response as JSON
+
+// Handle the response (data) if necessary
+console.log(data);
+
+        
+              alert("Res2");
+        
+              // Reload the page to reflect the updated quantity
+              window.location.reload();
+            } catch (error) {
+              // Handle errors gracefully
+              console.error(error);
+              alert('An error occurred while updating the quantity.');
+            }
+          }
+        </script>
+        
 
        
     

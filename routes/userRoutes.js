@@ -3,7 +3,8 @@ const router = express.Router();
 const userControler = require('../controller/user/userControler');
 const passport = require('passport');
 const ForgetController = require('../controller/user/forgetController')
-// const checkBlockedStatus = require('../middlewares/checkBlockedStatus');
+const checkBlockedStatus = require('../middlewares/checkBlockedStatus');
+
 // const { UserAuth} = require('../middlewares/auth')
 // router.get('/',userControler.HomePage)
 
@@ -52,7 +53,7 @@ router.get('/userLogout' , userControler.userLogout )
 
 // router.get(`/productDetails/${productId}`,userControler.ProducDetial)
 // profile routes//
-router.get('/profile',userControler.profile)
+router.get('/profile',checkBlockedStatus,userControler.profile)
 
 router.post('/profile/edit',userControler.editProfile)
 
@@ -127,5 +128,7 @@ router.get('/resetpass', ForgetController.ResetPass);
 router.post('/resetCode', ForgetController.codeVerification)
 
  router.post('/Resetpassword', ForgetController.resetpassword)
+
+ router.patch('/updateQuantity', userControler.updateQuantity);
 
 module.exports = router

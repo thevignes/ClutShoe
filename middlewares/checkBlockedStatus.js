@@ -4,12 +4,12 @@ const CheckRouter = express.Router();
 
 CheckRouter.use(async (req, res, next) => {
   try {
-    console.log(req.session.user.email)
+    console.log(req.session)
     if (req.session.user.email) {
       
-      const user = await User.findOne({email: req.session.user_i});
+      const user = await User.findOne({email: req.session.user.email});
 
-
+      
       if (user && user.IsBlocked) {
         req.session.destroy(() => {
           res.redirect('/login?message=Your account has been blocked.');

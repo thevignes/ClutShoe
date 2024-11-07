@@ -51,17 +51,18 @@
                 background-color: #45a049;
                 /* Slightly darker color on hover */
             }
-            /* Add this to your CSS file */
-.quantity-input {
-  width: 80px; /* Adjust the width as needed */
-}
 
+            /* Add this to your CSS file */
+            .quantity-input {
+                width: 80px;
+                /* Adjust the width as needed */
+            }
         </style>
 
         <section class="mt-50 mb-50">
             <div class="container">
 
-<div class="row flex-row-reverse">
+                <div class="row flex-row-reverse">
 
 
                     <div class="col-lg-9 col-lg-3">
@@ -71,25 +72,36 @@
                                 <div class="col-md-6 col-sm-12">
                                     <div class="detail-gallery">
                                         <!-- Product Image -->
-                                        <div class="zoom-container" onmousemove="zoomIn(event)" onmouseleave="resetZoom()">
-                                            <img id="zoomable-image" alt="zoomable-image" class="rounded-lg" height="400" width="400"
+                                        <div class="zoom-container" onmousemove="zoomIn(event)"
+                                            onmouseleave="resetZoom()">
+                                            <img id="zoomable-image" alt="zoomable-image" class="rounded-lg"
+                                                height="400" width="400"
                                                 src="<%= ProductData.images && ProductData.images.length ? '/uploads/re-image/' + ProductData.images[0] : 'images/no_productImage.png' %>" />
                                         </div>
                                         <!-- Thumbnails -->
                                         <div class="slider-nav-thumbnails mt-3 d-flex">
-                                            <% ProductData.images.forEach((image, index) => { %>
-                                                <img alt="Thumbnail <% index %>" class="thumbnail rounded-lg me-2" height="70" width="70"
-                                                    src="/uploads/re-image/<%= image %>" onclick="updateMainImage(this, '<%= image %>')" />
-                                            <% }); %>
+                                            <% ProductData.images.forEach((image, index)=> { %>
+                                                <img alt="Thumbnail <% index %>" class="thumbnail rounded-lg me-2"
+                                                    height="70" width="70" src="/uploads/re-image/<%= image %>"
+                                                    onclick="updateMainImage(this, '<%= image %>')" />
+                                                <% }); %>
                                         </div>
                                         <!-- Social Share Icons -->
                                         <div class="social-icons single-share mt-3">
                                             <ul class="text-grey-5 d-inline-block">
                                                 <li><strong class="me-2">Share this:</strong></li>
-                                                <li class="social-facebook"><a href="#"><img src="assets/imgs/theme/icons/icon-facebook.svg" alt=""></a></li>
-                                                <li class="social-twitter"><a href="#"><img src="assets/imgs/theme/icons/icon-twitter.svg" alt=""></a></li>
-                                                <li class="social-instagram"><a href="#"><img src="assets/imgs/theme/icons/icon-instagram.svg" alt=""></a></li>
-                                                <li class="social-linkedin"><a href="#"><img src="assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a></li>
+                                                <li class="social-facebook"><a href="#"><img
+                                                            src="assets/imgs/theme/icons/icon-facebook.svg" alt=""></a>
+                                                </li>
+                                                <li class="social-twitter"><a href="#"><img
+                                                            src="assets/imgs/theme/icons/icon-twitter.svg" alt=""></a>
+                                                </li>
+                                                <li class="social-instagram"><a href="#"><img
+                                                            src="assets/imgs/theme/icons/icon-instagram.svg" alt=""></a>
+                                                </li>
+                                                <li class="social-linkedin"><a href="#"><img
+                                                            src="assets/imgs/theme/icons/icon-pinterest.svg" alt=""></a>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -97,10 +109,14 @@
                                 <!-- Product Details Section -->
                                 <div class="col-md-6 col-sm-12">
                                     <div class="detail-info">
-                                        <h2 class="title-detail"><%= ProductData.productName %></h2>
+                                        <h2 class="title-detail">
+                                            <%= ProductData.productName %>
+                                        </h2>
                                         <div class="product-detail-rating">
                                             <div class="pro-details-brand">
-                                                <span>Category: <a href="shop-grid-right.html"><%= ProductData.category.name %></a></span>
+                                                <span>Category: <a href="shop-grid-right.html">
+                                                        <%= ProductData.category.name %>
+                                                    </a></span>
                                             </div>
                                             <div class="product-rate-cover text-end">
                                                 <div class="product-rate d-inline-block">
@@ -112,283 +128,274 @@
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
                                                 <ins><span class="text-brand">$<%= ProductData.salePrice %></span></ins>
-                                                <ins><span class="old-price font-md ms-2">$<%= ProductData.regularPrice %></span></ins>
+                                                <ins><span class="old-price font-md ms-2">$<%= ProductData.regularPrice
+                                                            %></span></ins>
                                                 <span class="save-price font-md color3 ms-2">25% Off</span>
                                             </div>
                                         </div>
                                         <div class="bt-1 border-color-1 mt-3 mb-3"></div>
                                         <div class="short-desc mb-3">
-                                            <p><%= ProductData.description %></p>
+                                            <p>
+                                                <%= ProductData.description %>
+                                            </p>
                                         </div>
-                                        <% if (ProductData.quantity <= 0) { %>
-                                            <div class="alert alert-danger" role="alert">This product is currently out of stock.</div>
-                                        <% } %>
-                                        <div class="product_sort_info font-xs mb-3">
-                                            <ul>
-                                                <li class="mb-2"><i class="fi-rs-crown me-2"></i> 1 Year AL Jazeera Brand Warranty</li>
-                                                <li class="mb-2"><i class="fi-rs-refresh me-2"></i> 30 Day Return Policy</li>
-                                                <li><i class="fi-rs-credit-card me-2"></i> Cash on Delivery available</li>
-                                            </ul>
-                                        </div>
-                                     
-                                        <div class="detail-extralink">
-                                     
-                                            
-                                            <form action="/add-to-cart/<%= ProductData._id %>" method="post">
-<!-- Quantity input -->
-                                                <button class="btn btn-success mt-2" type="submit">Add to Cart</button>
-                                              </form>
-                                        <!-- Dropdown to select quantity -->
-<!-- <select id="quantityDropdown" class="form-select" onchange="updateQuantity(this, 'PRODUCT_ID_HERE')">
+                                        <% if (ProductData.quantity <=0) { %>
+                                            <div class="alert alert-danger" role="alert">This product is currently out
+                                                of stock.</div>
+                                            <% } %>
+                                                <div class="product_sort_info font-xs mb-3">
+                                                    <ul>
+                                                        <li class="mb-2"><i class="fi-rs-crown me-2"></i> 1 Year AL
+                                                            Jazeera Brand Warranty</li>
+                                                        <li class="mb-2"><i class="fi-rs-refresh me-2"></i> 30 Day
+                                                            Return Policy</li>
+                                                        <li><i class="fi-rs-credit-card me-2"></i> Cash on Delivery
+                                                            available</li>
+                                                    </ul>
+                                                </div>
+
+                                                <div class="detail-extralink">
+
+
+                                                    <form action="/add-to-cart/<%= ProductData._id %>" method="post">
+                                                        <!-- Quantity input -->
+                                                        <!-- <button class="btn btn-success mt-2" type="submit">Add to Cart</button> -->
+                                                        <button
+                                                            class="<%= ProductData.quantity !== 0 ? 'btn btn-success mt-2' : 'd-none' %>"
+                                                            type="submit">
+                                                            Add to Cart
+                                                        </button>
+
+                                                    </form>
+                                                    <!-- Dropdown to select quantity -->
+                                                    <!-- <select id="quantityDropdown" class="form-select" onchange="updateQuantity(this, 'PRODUCT_ID_HERE')">
     <% for (let i = 1; i <= MAX_QUANTITY_PER_PRODUCT; i++) { %>
       <option value="<%= i %>"><%= i %></option>
     <% } %>
   </select>
    -->
-                                            <a aria-label="Add To Wishlist" class="action-btn hover-up ms-2" href=""><i class="fi-rs-heart"></i></a>
-                                            <a aria-label="Compare" class="action-btn hover-up ms-2" href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
-                                        </div>
-                                        <ul class="product-meta font-xs color-grey mt-3 text-dark">
-                                            <li>
-                                                <%= ProductData.status %>: <span class="in-stock text-success ms-2"><%= ProductData.quantity %></span>
-                                            </li>
-                                        </ul>
+                                                    <a aria-label="Add To Wishlist" class="action-btn hover-up ms-2"
+                                                        href=""><i class="fi-rs-heart"></i></a>
+                                                    <a aria-label="Compare" class="action-btn hover-up ms-2"
+                                                        href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
+                                                </div>
+                                                <ul class="product-meta font-xs color-grey mt-3 text-dark">
+                                                    <li>
+                                                        <%= ProductData.status %>: <span
+                                                                class="in-stock text-success ms-2">
+                                                                <%= ProductData.quantity %>
+                                                            </span>
+                                                    </li>
+                                                </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-
-                                        <div class="tab-style3">
-                                            <ul class="nav nav-tabs text-uppercase">
-                                                <li class="nav-item">
-                                                    <a class="nav-link active" id="Description-tab" data-bs-toggle="tab"
-                                                        href="#Description">Description</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" id="Additional-info-tab" data-bs-toggle="tab"
-                                                        href="#Additional-info">Additional info</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" id="Reviews-tab" data-bs-toggle="tab"
-                                                        href="#Reviews">Reviews (3)</a>
-                                                </li>
-                                            </ul>
-                                            <div class="tab-content shop_info_tab entry-main-content">
-                                                <div class="tab-pane fade show active" id="Description">
-                                                    <div class="">
-                                                        <p>Uninhibited carnally hired played in whimpered dear gorilla
-                                                            koala
-                                                            depending and much yikes off far quetzal goodness and from
-                                                            for
-                                                            grimaced goodness unaccountably and meadowlark near
-                                                            unblushingly
-                                                            crucial scallop
-                                                            tightly neurotic hungrily some and dear furiously this
-                                                            apart.</p>
-                                                        <p>Spluttered narrowly yikes left moth in yikes bowed this that
-                                                            grizzly
-                                                            much hello on spoon-fed that alas rethought much decently
-                                                            richly and
-                                                            wow against the frequent fluidly at formidable acceptably
-                                                            flapped
-                                                            besides and much circa far over the bucolically hey
-                                                            precarious
-                                                            goldfinch mastodon goodness gnashed a jellyfish and one
-                                                            however
-                                                            because.
-                                                        </p>
-                                                        <ul class="product-more-infor mt-30">
-                                                            <li><span>Type Of Packing</span> Bottle</li>
-                                                            <li><span>Color</span> Green, Pink, Powder Blue, Purple</li>
-                                                            <li><span>Quantity Per Case</span> 100ml</li>
-                                                            <li><span>Ethyl Alcohol</span> 70%</li>
-                                                            <li><span>Piece In One</span> Carton</li>
-                                                        </ul>
-                                                        <hr class="wp-block-separator is-style-dots">
-                                                        <p>Laconic overheard dear woodchuck wow this outrageously taut
-                                                            beaver
-                                                            hey hello far meadowlark imitatively egregiously hugged that
-                                                            yikes
-                                                            minimally unanimous pouted flirtatiously as beaver beheld
-                                                            above
-                                                            forward
-                                                            energetic across this jeepers beneficently cockily less a
-                                                            the
-                                                            raucously that magic upheld far so the this where crud then
-                                                            below
-                                                            after jeez enchanting drunkenly more much wow callously
-                                                            irrespective
-                                                            limpet.</p>
-                                                        <h4 class="mt-30">Packaging & Delivery</h4>
-                                                        <hr class="wp-block-separator is-style-wide">
-                                                        <p>Less lion goodness that euphemistically robin expeditiously
-                                                            bluebird
-                                                            smugly scratched far while thus cackled sheepishly rigid
-                                                            after due
-                                                            one assenting regarding censorious while occasional or this
-                                                            more
-                                                            crane
-                                                            went more as this less much amid overhung anathematic
-                                                            because much
-                                                            held one exuberantly sheep goodness so where rat wry well
-                                                            concomitantly.
-                                                        </p>
-                                                        <p>Scallop or far crud plain remarkably far by thus far iguana
-                                                            lewd
-                                                            precociously and and less rattlesnake contrary caustic wow
-                                                            this near
-                                                            alas and next and pled the yikes articulate about as less
-                                                            cackled
-                                                            dalmatian
-                                                            in much less well jeering for the thanks blindly sentimental
-                                                            whimpered less across objectively fanciful grimaced wildly
-                                                            some wow
-                                                            and rose jeepers outgrew lugubrious luridly irrationally
-                                                            attractively
-                                                            dachshund.
-                                                        </p>
-                                                    </div>
-                                                </div>
 
 
-                                                <div class="tab-pane fade" id="Reviews">
-                                                    <!--Comments-->
-                                                    <div class="comments-area">
-                                                        <div class="row">
-                                                            <div class="col-lg-8">
-                                                                <h4 class="mb-30">Customer questions & answers</h4>
-                                                                <div class="comment-list">
-                                                                    <div
-                                                                        class="single-comment justify-content-between d-flex">
-                                                                        <div
-                                                                            class="user justify-content-between d-flex">
-                                                                            <div class="thumb text-center">
-                                                                                <img src="assets/imgs/page/avatar-6.jpg"
-                                                                                    alt="">
-                                                                                <h6><a href="#">Jacky Chan</a></h6>
-                                                                                <p class="font-xxs">Since 2012</p>
-                                                                            </div>
-                                                                            <div class="desc">
-                                                                                <div
-                                                                                    class="product-rate d-inline-block">
-                                                                                    <div class="product-rating"
-                                                                                        style="width:90%">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <p>Thank you very fast shipping from
-                                                                                    Poland only
-                                                                                    3days.</p>
-                                                                                <div
-                                                                                    class="d-flex justify-content-between">
-                                                                                    <div
-                                                                                        class="d-flex align-items-center">
-                                                                                        <p class="font-xs mr-30">
-                                                                                            December 4,
-                                                                                            2020 at 3:12 pm </p>
-                                                                                        <a href="#"
-                                                                                            class="text-brand btn-reply">Reply
-                                                                                            <i
-                                                                                                class="fi-rs-arrow-right"></i>
-                                                                                        </a>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
+                        <div class="tab-style3">
+                            <ul class="nav nav-tabs text-uppercase">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="Description-tab" data-bs-toggle="tab"
+                                        href="#Description">Description</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="Additional-info-tab" data-bs-toggle="tab"
+                                        href="#Additional-info">Additional info</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="Reviews-tab" data-bs-toggle="tab" href="#Reviews">Reviews
+                                        (3)</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content shop_info_tab entry-main-content">
+                                <div class="tab-pane fade show active" id="Description">
+                                    <div class="">
+                                        <p>Uninhibited carnally hired played in whimpered dear gorilla
+                                            koala
+                                            depending and much yikes off far quetzal goodness and from
+                                            for
+                                            grimaced goodness unaccountably and meadowlark near
+                                            unblushingly
+                                            crucial scallop
+                                            tightly neurotic hungrily some and dear furiously this
+                                            apart.</p>
+                                        <p>Spluttered narrowly yikes left moth in yikes bowed this that
+                                            grizzly
+                                            much hello on spoon-fed that alas rethought much decently
+                                            richly and
+                                            wow against the frequent fluidly at formidable acceptably
+                                            flapped
+                                            besides and much circa far over the bucolically hey
+                                            precarious
+                                            goldfinch mastodon goodness gnashed a jellyfish and one
+                                            however
+                                            because.
+                                        </p>
+                                        <ul class="product-more-infor mt-30">
+                                            <li><span>Type Of Packing</span> Bottle</li>
+                                            <li><span>Color</span> Green, Pink, Powder Blue, Purple</li>
+                                            <li><span>Quantity Per Case</span> 100ml</li>
+                                            <li><span>Ethyl Alcohol</span> 70%</li>
+                                            <li><span>Piece In One</span> Carton</li>
+                                        </ul>
+                                        <hr class="wp-block-separator is-style-dots">
+                                        <p>Laconic overheard dear woodchuck wow this outrageously taut
+                                            beaver
+                                            hey hello far meadowlark imitatively egregiously hugged that
+                                            yikes
+                                            minimally unanimous pouted flirtatiously as beaver beheld
+                                            above
+                                            forward
+                                            energetic across this jeepers beneficently cockily less a
+                                            the
+                                            raucously that magic upheld far so the this where crud then
+                                            below
+                                            after jeez enchanting drunkenly more much wow callously
+                                            irrespective
+                                            limpet.</p>
+                                        <h4 class="mt-30">Packaging & Delivery</h4>
+                                        <hr class="wp-block-separator is-style-wide">
+                                        <p>Less lion goodness that euphemistically robin expeditiously
+                                            bluebird
+                                            smugly scratched far while thus cackled sheepishly rigid
+                                            after due
+                                            one assenting regarding censorious while occasional or this
+                                            more
+                                            crane
+                                            went more as this less much amid overhung anathematic
+                                            because much
+                                            held one exuberantly sheep goodness so where rat wry well
+                                            concomitantly.
+                                        </p>
+                                        <p>Scallop or far crud plain remarkably far by thus far iguana
+                                            lewd
+                                            precociously and and less rattlesnake contrary caustic wow
+                                            this near
+                                            alas and next and pled the yikes articulate about as less
+                                            cackled
+                                            dalmatian
+                                            in much less well jeering for the thanks blindly sentimental
+                                            whimpered less across objectively fanciful grimaced wildly
+                                            some wow
+                                            and rose jeepers outgrew lugubrious luridly irrationally
+                                            attractively
+                                            dachshund.
+                                        </p>
+                                    </div>
+                                </div>
+
+
+                                <div class="tab-pane fade" id="Reviews">
+                                    <!--Comments-->
+                                    <div class="comments-area">
+                                        <div class="row">
+                                            <div class="col-lg-8">
+                                                <h4 class="mb-30">Customer questions & answers</h4>
+                                                <div class="comment-list">
+                                                    <div class="single-comment justify-content-between d-flex">
+                                                        <div class="user justify-content-between d-flex">
+                                                            <div class="thumb text-center">
+                                                                <img src="assets/imgs/page/avatar-6.jpg" alt="">
+                                                                <h6><a href="#">Jacky Chan</a></h6>
+                                                                <p class="font-xxs">Since 2012</p>
+                                                            </div>
+                                                            <div class="desc">
+                                                                <div class="product-rate d-inline-block">
+                                                                    <div class="product-rating" style="width:90%">
                                                                     </div>
-                                                                    <!--single-comment -->
-                                                                    <div
-                                                                        class="single-comment justify-content-between d-flex">
-                                                                        <div
-                                                                            class="user justify-content-between d-flex">
-                                                                            <div class="thumb text-center">
-                                                                                <img src="assets/imgs/page/avatar-7.jpg"
-                                                                                    alt="">
-                                                                                <h6><a href="#">Ana Rosie</a></h6>
-                                                                                <p class="font-xxs">Since 2008</p>
-                                                                            </div>
-                                                                            <div class="desc">
-                                                                                <div
-                                                                                    class="product-rate d-inline-block">
-                                                                                    <div class="product-rating"
-                                                                                        style="width:90%">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <p>Great low price and works well.</p>
-                                                                                <div
-                                                                                    class="d-flex justify-content-between">
-                                                                                    <div
-                                                                                        class="d-flex align-items-center">
-                                                                                        <p class="font-xs mr-30">
-                                                                                            December 4,
-                                                                                            2020 at 3:12 pm </p>
-                                                                                        <a href="#"
-                                                                                            class="text-brand btn-reply">Reply
-                                                                                            <i
-                                                                                                class="fi-rs-arrow-right"></i>
-                                                                                        </a>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
+                                                                </div>
+                                                                <p>Thank you very fast shipping from
+                                                                    Poland only
+                                                                    3days.</p>
+                                                                <div class="d-flex justify-content-between">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <p class="font-xs mr-30">
+                                                                            December 4,
+                                                                            2020 at 3:12 pm </p>
+                                                                        <a href="#" class="text-brand btn-reply">Reply
+                                                                            <i class="fi-rs-arrow-right"></i>
+                                                                        </a>
                                                                     </div>
-                                                                    <!--single-comment -->
-                                                                    <div
-                                                                        class="single-comment justify-content-between d-flex">
-                                                                        <div
-                                                                            class="user justify-content-between d-flex">
-                                                                            <div class="thumb text-center">
-                                                                                <img src="assets/imgs/page/avatar-8.jpg"
-                                                                                    alt="">
-                                                                                <h6><a href="#">Steven Keny</a></h6>
-                                                                                <p class="font-xxs">Since 2010</p>
-                                                                            </div>
-                                                                            <div class="desc">
-                                                                                <div
-                                                                                    class="product-rate d-inline-block">
-                                                                                    <div class="product-rating"
-                                                                                        style="width:90%">
-                                                                                    </div>
-                                                                                </div>
-                                                                                <p>Authentic and Beautiful, Love these
-                                                                                    way more
-                                                                                    than ever expected They are Great
-                                                                                    earphones
-                                                                                </p>
-                                                                                <div
-                                                                                    class="d-flex justify-content-between">
-                                                                                    <div
-                                                                                        class="d-flex align-items-center">
-                                                                                        <p class="font-xs mr-30">
-                                                                                            December 4,
-                                                                                            2020 at 3:12 pm </p>
-                                                                                        <a href="#"
-                                                                                            class="text-brand btn-reply">Reply
-                                                                                            <i
-                                                                                                class="fi-rs-arrow-right"></i>
-                                                                                        </a>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <!--single-comment -->
                                                                 </div>
                                                             </div>
-                                                            <div class="col-lg-4">
-
+                                                        </div>
+                                                    </div>
+                                                    <!--single-comment -->
+                                                    <div class="single-comment justify-content-between d-flex">
+                                                        <div class="user justify-content-between d-flex">
+                                                            <div class="thumb text-center">
+                                                                <img src="assets/imgs/page/avatar-7.jpg" alt="">
+                                                                <h6><a href="#">Ana Rosie</a></h6>
+                                                                <p class="font-xxs">Since 2008</p>
+                                                            </div>
+                                                            <div class="desc">
+                                                                <div class="product-rate d-inline-block">
+                                                                    <div class="product-rating" style="width:90%">
+                                                                    </div>
+                                                                </div>
+                                                                <p>Great low price and works well.</p>
+                                                                <div class="d-flex justify-content-between">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <p class="font-xs mr-30">
+                                                                            December 4,
+                                                                            2020 at 3:12 pm </p>
+                                                                        <a href="#" class="text-brand btn-reply">Reply
+                                                                            <i class="fi-rs-arrow-right"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <!--comment form-->
-                                                        <div class="comment-form">
-                                                            <h4 class="mb-15">Add a review</h4>
-                                                            <div class="product-rate d-inline-block mb-30">
+                                                    </div>
+                                                    <!--single-comment -->
+                                                    <div class="single-comment justify-content-between d-flex">
+                                                        <div class="user justify-content-between d-flex">
+                                                            <div class="thumb text-center">
+                                                                <img src="assets/imgs/page/avatar-8.jpg" alt="">
+                                                                <h6><a href="#">Steven Keny</a></h6>
+                                                                <p class="font-xxs">Since 2010</p>
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="col-lg-8 col-md-12">
+                                                            <div class="desc">
+                                                                <div class="product-rate d-inline-block">
+                                                                    <div class="product-rating" style="width:90%">
+                                                                    </div>
+                                                                </div>
+                                                                <p>Authentic and Beautiful, Love these
+                                                                    way more
+                                                                    than ever expected They are Great
+                                                                    earphones
+                                                                </p>
+                                                                <div class="d-flex justify-content-between">
+                                                                    <div class="d-flex align-items-center">
+                                                                        <p class="font-xs mr-30">
+                                                                            December 4,
+                                                                            2020 at 3:12 pm </p>
+                                                                        <a href="#" class="text-brand btn-reply">Reply
+                                                                            <i class="fi-rs-arrow-right"></i>
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--single-comment -->
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+
+                                            </div>
+                                        </div>
+                                        <!--comment form-->
+                                        <div class="comment-form">
+                                            <h4 class="mb-15">Add a review</h4>
+                                            <div class="product-rate d-inline-block mb-30">
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-8 col-md-12">
 
 
-                                                                    <!-- <form class="form-contact comment_form" 
+                                                    <!-- <form class="form-contact comment_form" 
                                                                 id="commentForm">
                                                                 <div class="row">
                                                                     <div class="col-12">
@@ -427,104 +434,102 @@
                                                                         Review</button>
                                                                 </div>
                                                             </form> -->
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+
+                <div class="col-12">
+                    <h3 class="section-title style-1 mb-30">Related products</h3>
+                </div>
+                <div class="row related-products">
+                    <% relatedProducts.forEach(product=> { %>
+                        <div class="col-lg-3 col-md-4 col-12 col-sm-6">
+                            <div class="product-cart-wrap small hover-up">
+                                <div class="product-img-action-wrap">
+                                    <div class="product-img product-img-zoom">
+                                        <a href="/products/<%= product._id %>" tabindex="0">
+                                            <img class="default-img" src="/uploads/re-image/<%= product.images[0] %>"
+                                                alt="">
+
+                                            <img class="hover-img"
+                                                src="/public/public/uploads/re-image/ product.images[1] %>" alt="">
+
+
+                                        </a>
+                                    </div>
+                                    <div class="product-action-1">
+                                        <a aria-label="Quick view" class="action-btn small hover-up"
+                                            data-bs-toggle="modal" data-bs-target="#quickViewModal">
+                                            <i class="fi-rs-search"></i>
+                                        </a>
+                                        <a aria-label="Add To Wishlist" class="action-btn small hover-up"
+                                            href="/wishlist/add/<%= product._id %>" tabindex="0">
+                                            <i class="fi-rs-heart"></i>
+                                        </a>
+                                        <a aria-label="Compare" class="action-btn small hover-up"
+                                            href="/compare/add/<%= product._id %>" tabindex="0">
+                                            <i class="fi-rs-shuffle"></i>
+                                        </a>
+                                    </div>
+
+                                </div>
+                                <div class="product-content-wrap">
+                                    <h2><a href="/products/<%= product._id %>" tabindex="0">
+                                            <%= product.productName %>
+                                        </a></h2>
+                                    <div class="rating-result" title="<%= product.rating * 20 %>%">
+
+                                    </div>
+                                    <div class="product-price">
+                                        <span>$<%= product.salePrice %> </span>
+
+                                        <span class="old-price">$<%= product.regularPrice %></span>
 
                                     </div>
                                 </div>
-
-
-
-
-                                <div class="col-12">
-                                    <h3 class="section-title style-1 mb-30">Related products</h3>
-                                </div>
-                                <div class="row related-products">
-                                    <% relatedProducts.forEach(product=> { %>
-                                        <div class="col-lg-3 col-md-4 col-12 col-sm-6">
-                                            <div class="product-cart-wrap small hover-up">
-                                                <div class="product-img-action-wrap">
-                                                    <div class="product-img product-img-zoom">
-                                                        <a href="/products/<%= product._id %>" tabindex="0">
-                                                            <img class="default-img"
-                                                                src="/uploads/re-image/<%= product.images[0] %>" alt="">
-
-                                                            <img class="hover-img"
-                                                                src="/public/public/uploads/re-image/ product.images[1] %>"
-                                                                alt="">
-
-
-                                                        </a>
-                                                    </div>
-                                                    <div class="product-action-1">
-                                                        <a aria-label="Quick view" class="action-btn small hover-up"
-                                                            data-bs-toggle="modal" data-bs-target="#quickViewModal">
-                                                            <i class="fi-rs-search"></i>
-                                                        </a>
-                                                        <a aria-label="Add To Wishlist"
-                                                            class="action-btn small hover-up"
-                                                            href="/wishlist/add/<%= product._id %>" tabindex="0">
-                                                            <i class="fi-rs-heart"></i>
-                                                        </a>
-                                                        <a aria-label="Compare" class="action-btn small hover-up"
-                                                            href="/compare/add/<%= product._id %>" tabindex="0">
-                                                            <i class="fi-rs-shuffle"></i>
-                                                        </a>
-                                                    </div>
-
-                                                </div>
-                                                <div class="product-content-wrap">
-                                                    <h2><a href="/products/<%= product._id %>" tabindex="0">
-                                                            <%= product.productName %>
-                                                        </a></h2>
-                                                    <div class="rating-result" title="<%= product.rating * 20 %>%">
-
-                                                    </div>
-                                                    <div class="product-price">
-                                                        <span>$<%= product.salePrice %> </span>
-
-                                                        <span class="old-price">$<%= product.regularPrice %></span>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <% }) %>
-                                </div>
+                            </div>
+                        </div>
+                        <% }) %>
+                </div>
 
         </section>
     </main>
 
     <script>
         function updateQuantity(selectElement, productId) {
-  const newQuantity = selectElement.value;
+            const newQuantity = selectElement.value;
 
-  // Make a POST request to update the quantity in the cart
-  fetch('/cart/update-quantity', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ productId, quantity: newQuantity }),
-    credentials: 'include'
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      // Update the cart UI, reload the page, or notify the user
-      location.reload(); // Simple way to reflect changes
-    } else {
-      alert(data.message); // Show an error message
-    }
-  })
-  .catch(error => {
-    console.error('Error updating quantity:', error);
-    alert('Something went wrong. Please try again.');
-  });
-}
+            // Make a POST request to update the quantity in the cart
+            fetch('/cart/update-quantity', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productId, quantity: newQuantity }),
+                credentials: 'include'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update the cart UI, reload the page, or notify the user
+                        location.reload(); // Simple way to reflect changes
+                    } else {
+                        alert(data.message); // Show an error message
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating quantity:', error);
+                    alert('Something went wrong. Please try again.');
+                });
+        }
 
     </script>
 
@@ -538,34 +543,34 @@
 
 
 
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-<script>
-  async function addToCart(productId) {
-    try {
-      const response = await fetch(`/add-to-cart?id=${productId}`, {
-        method: 'GET', // or 'POST' if you prefer
-        credentials: 'include' // to include cookies (session)
-      });
+    <script>
+        async function addToCart(productId) {
+            try {
+                const response = await fetch(`/add-to-cart?id=${productId}`, {
+                    method: 'GET', // or 'POST' if you prefer
+                    credentials: 'include' // to include cookies (session)
+                });
 
-      const data = await response.json();
+                const data = await response.json();
 
-      if (data.success) {
-        // Show success message using SweetAlert
-        swal("Success!", data.message, "success").then(() => {
-          // Optionally redirect to product detail page
-          window.location.href = `/ProducDetial/${productId}`;
-        });
-      } else {
-        // Show error message using SweetAlert
-        swal("Error!", data.message, "error");
-      }
-    } catch (error) {
-      console.error("Error adding to cart:", error);
-      swal("Error!", "Something went wrong. Please try again.", "error");
-    }
-  }
-</script>
+                if (data.success) {
+                    // Show success message using SweetAlert
+                    swal("Success!", data.message, "success").then(() => {
+                        // Optionally redirect to product detail page
+                        window.location.href = `/ProducDetial/${productId}`;
+                    });
+                } else {
+                    // Show error message using SweetAlert
+                    swal("Error!", data.message, "error");
+                }
+            } catch (error) {
+                console.error("Error adding to cart:", error);
+                swal("Error!", "Something went wrong. Please try again.", "error");
+            }
+        }
+    </script>
 
     </script>
     <script>

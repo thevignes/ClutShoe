@@ -49,21 +49,23 @@ const PageNotFound = async (req, res) => {
 //   }
 const homePage = async (req, res) => {
   try {
-    let ProductData = await Product.find({ isListed: true }).populate("category");
+    let ProductData = await Product.find({ isListed: true }).populate(
+      "category"
+    );
 
     const user = req.session.user || null;
-    console.log('hello use', user)
+    console.log("hello use", user);
 
     if (user && user.IsBlocked) {
       req.session.user = null;
-      req.session.destroy(err => {
+      req.session.destroy((err) => {
         if (err) {
           console.error("Failed to destroy session:", err);
           return res.status(500).send("Server Error");
         }
-        return res.redirect('/login');
+        return res.redirect("/login");
       });
-      return; 
+      return;
     }
 
     if (!user) {
@@ -72,7 +74,6 @@ const homePage = async (req, res) => {
       return res.render("home", { user, ProductData });
     }
   } catch (error) {
-
     console.error(error);
     res.status(500).send("Server Error");
   }
@@ -120,7 +121,7 @@ const Registration = async (req, res) => {
   const otp = Math.floor(100000 + Math.random() * 900000);
   console.log("otpppppp:", otp);
   req.session.otp = otp;
-  req.session.expireOtp = Date.now() + 10 * 60 * 1000; 
+  req.session.expireOtp = Date.now() + 10 * 60 * 1000;
 
   console.log("session otpppppp:", req.session.otp);
 
@@ -166,7 +167,11 @@ const verifyOtp = async (req, res) => {
     const { otp } = req.body;
 
     // Check if OTP session has expired
-    if (!req.session.otp || !req.session.Tempuser || req.session.expireOtp < Date.now()) {
+    if (
+      !req.session.otp ||
+      !req.session.Tempuser ||
+      req.session.expireOtp < Date.now()
+    ) {
       return res.status(400).render("verify-otp", {
         message: "Session expired, please try again.",
         alertType: "error",
@@ -353,7 +358,12 @@ const ProducDetial = async (req, res) => {
       _id: { $ne: ProductId },
     }).limit(4);
 
-    res.render("productDetials", { user, ProductData, relatedProducts ,MAX_QUANTITY_PER_PRODUCT});
+    res.render("productDetials", {
+      user,
+      ProductData,
+      relatedProducts,
+      MAX_QUANTITY_PER_PRODUCT,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).send("Server Error");
@@ -379,7 +389,9 @@ const profile = async (req, res) => {
     console.log("Checking user email:", userEmail);
 
     if (!userEmail) {
-      console.error("userEmail is undefined or null. Check your session configuration.");
+      console.error(
+        "userEmail is undefined or null. Check your session configuration."
+      );
       return res.status(400).send("Email is not defined in session.");
     }
 
@@ -401,7 +413,6 @@ const profile = async (req, res) => {
     return res.status(500).send("Internal server error");
   }
 };
-
 
 const editProfile = async (req, res) => {
   try {
@@ -507,7 +518,6 @@ const ViewAddress = async (req, res) => {
     const user = await User.findOne({ email: userEmail });
     const addresses = await Address.find({ userId: user._id });
 
-
     res.render("viewAddress", { user, addresses });
   } catch (error) {
     console.error("Error fetching user:", error);
@@ -547,7 +557,7 @@ const EditAddress = async (req, res) => {
     const { id } = req.params; // Address ID from request parameters
     const userEmail = req.session.user.email; // User email from session
 
-    console.log('User email from session:', userEmail);
+    console.log("User email from session:", userEmail);
 
     // Fetch the user by email
     const user = await User.findOne({ email: userEmail });
@@ -556,7 +566,8 @@ const EditAddress = async (req, res) => {
       return res.status(404).send("User not found");
     }
 
-    const { state, pin, district, city, Firstname, Lastname, country, type } = req.body;
+    const { state, pin, district, city, Firstname, Lastname, country, type } =
+      req.body;
 
     // Update the address with the specified ID for the logged-in user
     const updatedAddress = await Address.findOneAndUpdate(
@@ -577,10 +588,12 @@ const EditAddress = async (req, res) => {
     );
 
     if (!updatedAddress) {
-      return res.status(404).send("Address not found or not authorized to update");
+      return res
+        .status(404)
+        .send("Address not found or not authorized to update");
     }
 
-    console.log('Updated address:', updatedAddress);
+    console.log("Updated address:", updatedAddress);
 
     // Render the view with the updated address
     res.render("editAddress", { user, addresses: updatedAddress });
@@ -589,8 +602,6 @@ const EditAddress = async (req, res) => {
     return res.status(500).send("Oops, server error!");
   }
 };
-
-
 
 const deletingAddress = async (req, res) => {
   try {
@@ -613,10 +624,9 @@ const deletingAddress = async (req, res) => {
   }
 };
 
-
 const cartPage = async (req, res) => {
   try {
-    const userEmail = req.session.user?.email; 
+    const userEmail = req.session.user?.email;
     const { productId, change } = req.body;
 
     // Finding the user
@@ -625,20 +635,23 @@ const cartPage = async (req, res) => {
       return res.redirect("/login");
     }
 
-//populating product//
-    const cart = await Cart.findOne({ userId: userDoc._id }).populate("products.productId");
+    //populating product//
+    const cart = await Cart.findOne({ userId: userDoc._id }).populate(
+      "products.productId"
+    );
     if (!cart || cart.products.length === 0) {
       return res.render("cart", {
         message: "Your cart is empty go and  add something into cart",
-        products: [], 
+        products: [],
         user: userDoc,
         cartTotals: { total: 0 },
       });
     }
 
-
     if (productId && change !== undefined) {
-      const productEntry = cart.products.find(item => item.productId._id.toString() === productId);
+      const productEntry = cart.products.find(
+        (item) => item.productId._id.toString() === productId
+      );
       if (productEntry) {
         productEntry.quantity += change;
         productEntry.quantity = Math.max(productEntry.quantity, 1);
@@ -647,15 +660,18 @@ const cartPage = async (req, res) => {
     }
 
     // Calculate cart totals
-    const cartTotals = cart.products.reduce((acc, productEntry) => {
-      const product = productEntry.productId;
-      const productPrice = product.salePrice;
-      const quantity = productEntry.quantity;
+    const cartTotals = cart.products.reduce(
+      (acc, productEntry) => {
+        const product = productEntry.productId;
+        const productPrice = product.salePrice;
+        const quantity = productEntry.quantity;
 
-      productEntry.subtotal = quantity * productPrice;
-      acc.total += productEntry.subtotal;
-      return acc;
-    }, { total: 0 });
+        productEntry.subtotal = quantity * productPrice;
+        acc.total += productEntry.subtotal;
+        return acc;
+      },
+      { total: 0 }
+    );
 
     res.render("cart", {
       products: cart.products,
@@ -680,7 +696,7 @@ const AddToCart = async (req, res) => {
 
     const user = await User.findOne({ email: userEmail });
     const product = await Product.findById(productId);
-
+  
     if (!product) {
       return res
         .status(404)
@@ -697,19 +713,19 @@ const AddToCart = async (req, res) => {
       cart = new Cart({ userId: user._id, products: [] });
     }
 
-  
     const existingProduct = cart.products.find(
       (item) => item.productId._id.toString() === productId
     );
 
     if (existingProduct) {
-
       existingProduct.quantity += quantity;
     } else {
-
-      cart.products.push({ productId: product._id, quantity: quantity });
+      cart.products.push({
+        productId: product._id,
+        quantity: quantity,
+        price: product.salePrice,
+      });
     }
-
 
     await cart.save();
 
@@ -721,14 +737,15 @@ const AddToCart = async (req, res) => {
   }
 };
 
-
 const removeFromCart = async (req, res) => {
   try {
-    const productId = req.params.id; 
+    const productId = req.params.id;
     console.log("Product ID to remove:", productId);
 
     if (!mongoose.Types.ObjectId.isValid(productId)) {
-      return res.status(400).json({ success: false, message: "Invalid Product ID." });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid Product ID." });
     }
 
     const user = req.session.user;
@@ -738,21 +755,31 @@ const removeFromCart = async (req, res) => {
 
     const userDoc = await User.findOne({ email: user.email });
     if (!userDoc) {
-      return res.status(404).json({ success: false, message: "User not found." });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found." });
     }
 
     const cart = await Cart.findOne({ userId: userDoc._id });
     if (!cart) {
-      return res.status(404).json({ success: false, message: "Cart not found." });
+      return res
+        .status(404)
+        .json({ success: false, message: "Cart not found." });
     }
 
-    console.log("Cart products before removal:", cart.products.map(product => product.productId.toString()));
+    console.log(
+      "Cart products before removal:",
+      cart.products.map((product) => product.productId.toString())
+    );
 
     cart.products = cart.products.filter(
       (product) => product._id.toString() !== productId
     );
 
-    console.log("Cart products after removal:", cart.products.map(product => product.productId.toString()));
+    console.log(
+      "Cart products after removal:",
+      cart.products.map((product) => product.productId.toString())
+    );
 
     await cart.save();
     console.log("Cart saved successfully after removing the product.");
@@ -763,7 +790,6 @@ const removeFromCart = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
-
 
 const checkout = async (req, res) => {
   try {
@@ -821,14 +847,13 @@ const checkout = async (req, res) => {
   }
 };
 
-
 const shopPage = async (req, res) => {
   try {
     const sortOption = req.query.sort || "featured";
     const currentPage = parseInt(req.query.page) || 1;
-    const itemsPerPage = parseInt(req.query.limit) || 5; 
-    const searchQuery = req.query.q || '';
-    const categoryFilter = req.query.category || '';
+    const itemsPerPage = parseInt(req.query.limit) || 5;
+    const searchQuery = req.query.q || "";
+    const categoryFilter = req.query.category || "";
 
     console.log("Sort option selected:", sortOption);
     console.log("Current page:", currentPage);
@@ -860,20 +885,25 @@ const shopPage = async (req, res) => {
     // Find the category's ObjectId if a category filter is provided
     let categoryFilterQuery = {};
     if (categoryFilter) {
-      console.log("Looking for category:", categoryFilter);  // Log the category name
-      const category = await Category.findOne({ name: { $regex: new RegExp(`^${categoryFilter}$`, "i") } });
+      console.log("Looking for category:", categoryFilter); // Log the category name
+      const category = await Category.findOne({
+        name: { $regex: new RegExp(`^${categoryFilter}$`, "i") },
+      });
 
       if (category) {
         categoryFilterQuery = { category: category._id }; // Use ObjectId for category filtering
-        console.log("Category found:", category);  // Log the category object found
+        console.log("Category found:", category); // Log the category object found
       } else {
         console.log("No category found with name:", categoryFilter);
-        return res.status(400).send('Invalid category');
+        return res.status(400).send("Invalid category");
       }
     }
 
     // Total products and pagination
-    const totalProducts = await Product.countDocuments({ isListed: true, ...categoryFilterQuery });
+    const totalProducts = await Product.countDocuments({
+      isListed: true,
+      ...categoryFilterQuery,
+    });
     const totalPages = Math.ceil(totalProducts / itemsPerPage);
     const skip = (currentPage - 1) * itemsPerPage;
 
@@ -881,7 +911,7 @@ const shopPage = async (req, res) => {
     const ProductData = await Product.find({
       isListed: true,
       productName: { $regex: searchQuery, $options: "i" },
-      ...categoryFilterQuery
+      ...categoryFilterQuery,
     })
       .populate("category")
       .sort(sortQuery)
@@ -898,7 +928,7 @@ const shopPage = async (req, res) => {
       totalPages,
       itemsPerPage,
       searchQuery,
-      categoryFilter
+      categoryFilter,
     });
   } catch (error) {
     console.error("Error in shopPage:", error);
@@ -913,7 +943,9 @@ const PlaceOrder = async (req, res) => {
     const userEmail = req.session.user.email;
     const user = await User.findOne({ email: userEmail });
     const address = await Address.findOne({ userId: user._id, _id: addressId });
-    const products = await Cart.findOne({ userId: user._id }).populate("products.productId");
+    const products = await Cart.findOne({ userId: user._id }).populate(
+      "products.productId"
+    );
 
     const oid = `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
@@ -965,7 +997,6 @@ const PlaceOrder = async (req, res) => {
     await order.save();
     console.log("Order placed successfully:", order);
 
-
     await Cart.findOneAndUpdate(
       { userId: user._id },
       { $set: { products: [] } }
@@ -981,13 +1012,17 @@ const PlaceOrder = async (req, res) => {
             await product.save();
             console.log(`Updated quantity for product ID: ${item.productId}`);
           } else {
-            throw new Error(`Insufficient stock for product ID: ${item.productId}`);
+            throw new Error(
+              `Insufficient stock for product ID: ${item.productId}`
+            );
           }
         }
       })
     );
 
-    return res.status(200).json({ success: true, message: "Order placed successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Order placed successfully" });
   } catch (error) {
     console.error("Error placing order:", error);
     res.status(500).send("Oops! Server error, please try again later.");
@@ -1049,19 +1084,22 @@ const cancelOrder = async (req, res) => {
 const searchProducts = async (req, res) => {
   try {
     const user = req.session.user || null;
-    const searchQuery = req.query.q || '';
+    const searchQuery = req.query.q || "";
     const sortOption = req.query.sort || "featured";
     const currentPage = parseInt(req.query.page) || 1;
     const itemsPerPage = parseInt(req.query.limit) || 5;
 
     // Escape the search query to prevent regex-related issues
-    const escapeRegex = (text) => text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-    const regex = searchQuery ? new RegExp(escapeRegex(searchQuery), 'i') : null;
+    const escapeRegex = (text) =>
+      text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+    const regex = searchQuery
+      ? new RegExp(escapeRegex(searchQuery), "i")
+      : null;
 
     // Query to count total products
     const totalProducts = await Product.countDocuments({
       isListed: true,
-      ...(regex && { productName: regex }) // Apply regex filter only if it exists
+      ...(regex && { productName: regex }), // Apply regex filter only if it exists
     });
 
     const totalPages = Math.ceil(totalProducts / itemsPerPage);
@@ -1070,24 +1108,24 @@ const searchProducts = async (req, res) => {
     // Query to fetch the products
     const ProductData = await Product.find({
       isListed: true,
-      ...(regex && { productName: regex }) // Apply regex filter only if it exists
+      ...(regex && { productName: regex }), // Apply regex filter only if it exists
     })
       .populate("category")
       .skip(skip)
       .limit(itemsPerPage);
 
     // Render the shop page
-    res.render('shop', {
+    res.render("shop", {
       user,
       ProductData,
       sortOption,
       currentPage,
       itemsPerPage,
       totalPages,
-      searchQuery
+      searchQuery,
     });
 
-    console.log('Searched Products:', ProductData);
+    console.log("Searched Products:", ProductData);
   } catch (error) {
     console.error("Error searching for products:", error);
     res.status(500).send("Server Error");
@@ -1095,7 +1133,6 @@ const searchProducts = async (req, res) => {
 };
 
 // Controller function to update the quantity
-
 
 // const updateQuantity = async (req, res) => {
 //   try {
@@ -1113,7 +1150,7 @@ const searchProducts = async (req, res) => {
 
 //     let cart = await Cart.findOne({ userId:user.  _id });
 //     console.log('heyy cart', cart);
-    
+
 //     if (!cart) {
 //       return res.status(404).json({ success: false, message: 'Cart not found' });
 //     }
@@ -1137,16 +1174,52 @@ const searchProducts = async (req, res) => {
 
 // Add this route in your routes file
 
-
 const ForgetPas = async (req, res) => {
   try {
-    res.render('forgetPassword'); // Renders the 'forgetPassword' view
+    res.render("forgetPassword"); // Renders the 'forgetPassword' view
   } catch (error) {
-    res.status(500).send('Unable to get this page');
+    res.status(500).send("Unable to get this page");
   }
 };
 
+const updateQuantity = async (req, res) => {
+  try {
+    console.log("hey");
+    const { newQuantity, itemId } = req.body;
+    const email = req.session.user.email;
+    console.log("heyyoooo", newQuantity, itemId);
+    const user = await User.findOne({ email });
+    console.log(user);
+    const cart = await Cart.findOne({ userId: user._id });
+    console.log(cart, "<<cart>>>");
+    if (!cart) return res.status(400).json({ message: "cart not found " });
 
+    console.log(itemId);
+    // const existingItem = cart.items.findIndex(
+    //   (item) => item._id.toString() == productId
+    // );
+    const existingItem = cart.products.findIndex(
+      (item) => item._id.toString() == itemId
+    );
+    console.log(existingItem);
+    // console.log("SDFASDF",cart.products[existingItem].price, "SDFADSF");
+    if (existingItem == -1)
+      return res.status(400).json({ message: "Product not found in cart" });
+    cart.products[existingItem].quantity = newQuantity;
+    // cart.products[existingItem].totalAmount =
+    //   newQuantity * cart.products[existingItem].price;
+    console.log(">>>>>>>>>>>>>>>>>>>...", newQuantity);
+    console.log(
+      "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ",
+      cart.products[existingItem],
+      ">>>>>>>>>>>>>>>>>>"
+    );
+    await cart.save();
+    return res.status(200).json({ message: "Quantity updated successfully" });
+  } catch (error) {
+    console.log(error);
+  }
+};
 module.exports = {
   HomePage,
   PageNotFound,
@@ -1172,7 +1245,7 @@ module.exports = {
   cartPage,
   AddToCart,
   removeFromCart,
-  
+
   // relatedProduct
   shopPage,
   checkout,
@@ -1181,6 +1254,6 @@ module.exports = {
   myOrders,
   cancelOrder,
   searchProducts,
-  // updateQuantity
-  ForgetPas
+  updateQuantity,
+  ForgetPas,
 };
