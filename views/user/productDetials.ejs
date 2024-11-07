@@ -139,6 +139,11 @@
                                                 <%= ProductData.description %>
                                             </p>
                                         </div>
+                                        <div class="short-desc mb-3">
+                                            <p >available size :
+                                                <%= ProductData.size %>
+                                            </p>
+                                        </div>
                                         <% if (ProductData.quantity <=0) { %>
                                             <div class="alert alert-danger" role="alert">This product is currently out
                                                 of stock.</div>
@@ -157,12 +162,12 @@
                                                 <div class="detail-extralink">
 
 
-                                                    <form action="/add-to-cart/<%= ProductData._id %>" method="post">
+                                                    <form class="add-to-cart">
                                                         <!-- Quantity input -->
                                                         <!-- <button class="btn btn-success mt-2" type="submit">Add to Cart</button> -->
                                                         <button
                                                             class="<%= ProductData.quantity !== 0 ? 'btn btn-success mt-2' : 'd-none' %>"
-                                                            type="submit">
+                                                            type="button" onclick="addToCart('<%= ProductData._id %>')">
                                                             Add to Cart
                                                         </button>
 
@@ -543,33 +548,62 @@
 
 
 
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
 
     <script>
-        async function addToCart(productId) {
-            try {
-                const response = await fetch(`/add-to-cart?id=${productId}`, {
-                    method: 'GET', // or 'POST' if you prefer
-                    credentials: 'include' // to include cookies (session)
+          async function addToCart(productId) {
+        try {
+            const response = await fetch(`http://localhost:3100/add-to-cart?id=${productId}`, {
+                method: 'POST', 
+                credentials: 'include'
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                // Show success toast notification
+                Swal.fire({
+                    icon: 'success',
+                    title: data.message,
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
                 });
+                // alert('heyyy')
+                // Optional delay before redirecting
+                // setTimeout(() => {
+                //     window.location.href = `/ProductDetail/${productId}`;
 
-                const data = await response.json();
-
-                if (data.success) {
-                    // Show success message using SweetAlert
-                    swal("Success!", data.message, "success").then(() => {
-                        // Optionally redirect to product detail page
-                        window.location.href = `/ProducDetial/${productId}`;
-                    });
-                } else {
-                    // Show error message using SweetAlert
-                    swal("Error!", data.message, "error");
-                }
-            } catch (error) {
-                console.error("Error adding to cart:", error);
-                swal("Error!", "Something went wrong. Please try again.", "error");
+                // }, 3000); // Redirect after toast disappears
+            } else {
+                // Show error toast notification
+                Swal.fire({
+                    icon: 'error',
+                    title: data.message,
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
             }
+        } catch (error) {
+            console.error("Error adding to cart:", error);
+            // Show general error toast notification
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went wrong. Please try again.',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+            });
         }
+    }
     </script>
 
     </script>

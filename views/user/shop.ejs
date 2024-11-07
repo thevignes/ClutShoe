@@ -131,6 +131,21 @@
                     <div class="sort-by-product-area">      
                       
                         <div class="sort-by-cover">
+                            <form method="get" action="/shop" class="d-flex align-items-center">
+                                <!-- Sorting by Size -->
+                                <div class="form-group mr-3">
+                                  <label for="sizeSort" class="mr-2"><strong>Sort by Size</strong></label>
+                                  <select name="sizeSort" id="sizeSort" class="form-control">
+                                    <option value="">Select Size Sort Option</option>
+                                    <option value="smallToLarge" <%= sizeSortOption === 'smallToLarge' ? 'selected' : '' %>>Small to Large</option>
+                                    <option value="largeToSmall" <%= sizeSortOption === 'largeToSmall' ? 'selected' : '' %>>Large to Small</option>
+                                  </select>
+                                </div>
+                              
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn btn-primary">Apply</button>
+                              </form>
+                              
                             <div class="sort-by-product-wrap">
                                 <div class="sort-by">
                                     <span><i class="fi-rs-apps-sort"></i>Sort by:</span>
@@ -139,7 +154,6 @@
                                     <span> Featured <i class="fi-rs-angle-small-down"></i></span>
                                 </div>
                             </div>
-                      
                                     <div class="sort-by-dropdown">
                                         <ul>
                                           <li><a class="<%= sortOption === 'aToZ' ? 'active' : '' %>" href="/shop?sort=aToZ">A to Z</a></li>
@@ -154,6 +168,7 @@
                         </div>
                     </div>
                 </div>
+          
 
                 
                 <hr>

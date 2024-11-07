@@ -229,6 +229,7 @@ const UpdateProduct = async (req, res) => {
             regularPrice: data.regularPrice || product.regularPrice,
             salePrice: data.salePrice || product.salePrice,
             quantity: data.quantity || product.quantity,
+            size:data.size || product.size
         };
 
         // Update product in the database

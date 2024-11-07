@@ -49,6 +49,9 @@ router.post('/resend-otp',userControler.resendOtp)
 
 router.get('/ProducDetial/:id',userControler.ProducDetial)
 
+router.get('/ProductDetail/:productId', userControler.ProducDetial);
+
+
 router.get('/userLogout' , userControler.userLogout )
 
 // router.get(`/productDetails/${productId}`,userControler.ProducDetial)
@@ -74,21 +77,22 @@ router.post('/edit-address/:id',userControler.EditAddress)
 
 ///related product //
 
+router.get('/shop',userControler.shopPage)
 router.get('/cart',userControler.cartPage)
 
-router.post('/add-cart-cart/:id',userControler.shopPage)
+// router.post('/add-cart-cart/:id',userControler.shopPage)
 
 
-router.post('/add-to-cart/:id', userControler.AddToCart);
+router.post('/add-to-cart', userControler.AddToCart);
 
 
 // Assuming your route is defined as follows:
 router.get('/remove-from-cart/:id',  userControler.removeFromCart);
 
 //shop route 
-router.get('/shop',userControler.shopPage)
+router.get('/shop',checkBlockedStatus,userControler.shopPage)
 
-router.get('/ProducDetial/:id',userControler.shopPage)
+router.get('/ProducDetial/:id',checkBlockedStatus,userControler.shopPage)
 //checkout page 
 router.get('/checkOut',userControler.checkout)  
 

@@ -687,7 +687,8 @@ const cartPage = async (req, res) => {
 
 const AddToCart = async (req, res) => {
   try {
-    const productId = req.params.id;
+    const productId = req.query.id;
+    console.log(productId);
     const userEmail = req.session.user.email;
 
     if (!userEmail) {
@@ -730,7 +731,7 @@ const AddToCart = async (req, res) => {
     await cart.save();
 
     // Redirect to the product details page
-    res.redirect(`/ProducDetial/${productId}`);
+    res.status(200).json({success:true,  message:"product added to cart successfully"})
   } catch (error) {
     console.error("Error in AddToCart:", error);
     return res.status(500).json({ success: false, message: "Server error" });
@@ -847,15 +848,18 @@ const checkout = async (req, res) => {
   }
 };
 
+
 const shopPage = async (req, res) => {
   try {
     const sortOption = req.query.sort || "featured";
+    const sizeSortOption = req.query.sizeSort || "";  // New sizeSort query parameter
     const currentPage = parseInt(req.query.page) || 1;
     const itemsPerPage = parseInt(req.query.limit) || 5;
     const searchQuery = req.query.q || "";
     const categoryFilter = req.query.category || "";
 
     console.log("Sort option selected:", sortOption);
+    console.log("Size Sort option selected:", sizeSortOption);  // Log size sort option
     console.log("Current page:", currentPage);
     console.log("Items per page:", itemsPerPage);
     console.log("Category Filter:", categoryFilter);
@@ -880,19 +884,28 @@ const shopPage = async (req, res) => {
         sortQuery = {};
     }
 
+
+    if (sizeSortOption) {
+      if (sizeSortOption === "smallToLarge") {
+        sortQuery.size = 1;  
+      } else if (sizeSortOption === "largeToSmall") {
+        sortQuery.size = -1; 
+      }
+    }
+
     console.log("Sort Query:", sortQuery);
 
-    // Find the category's ObjectId if a category filter is provided
+  
     let categoryFilterQuery = {};
     if (categoryFilter) {
-      console.log("Looking for category:", categoryFilter); // Log the category name
+      console.log("Looking for category:", categoryFilter);
       const category = await Category.findOne({
         name: { $regex: new RegExp(`^${categoryFilter}$`, "i") },
       });
 
       if (category) {
-        categoryFilterQuery = { category: category._id }; // Use ObjectId for category filtering
-        console.log("Category found:", category); // Log the category object found
+        categoryFilterQuery = { category: category._id }; 
+        console.log("Category found:", category); 
       } else {
         console.log("No category found with name:", categoryFilter);
         return res.status(400).send("Invalid category");
@@ -924,6 +937,7 @@ const shopPage = async (req, res) => {
       user: user || "",
       ProductData,
       sortOption,
+      sizeSortOption,  
       currentPage,
       totalPages,
       itemsPerPage,
