@@ -4,7 +4,7 @@ const userControler = require('../controller/user/userControler');
 const passport = require('passport');
 const ForgetController = require('../controller/user/forgetController')
 const checkBlockedStatus = require('../middlewares/checkBlockedStatus');
-
+const wishlistController = require('../controller/user/wishlist')
 // const { UserAuth} = require('../middlewares/auth')
 // router.get('/',userControler.HomePage)
 
@@ -117,6 +117,7 @@ router.get('/search', userControler.searchProducts);
 
 
 // router.post('/cart/update-quantity', userControler.updateQuantity);
+//forget password routes  
 
 router.get('/forgetPassword', userControler.ForgetPas)
 
@@ -135,4 +136,11 @@ router.post('/resetCode', ForgetController.codeVerification)
 
  router.patch('/updateQuantity', userControler.updateQuantity);
 
+ ///wishlist routes
+
+ router.get('/wishlist', wishlistController.wishlistPage)
+
+router.post('/wishlist/add', wishlistController.addToWishlist)
+
+router.post('/wishlist/remove/:productId',  wishlistController.removeFromWish)
 module.exports = router

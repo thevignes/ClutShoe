@@ -1,54 +1,125 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>My Orders</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="/public/public/evara-frontend/assets/css/order.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .wishlist-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .wishlist-item {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .wishlist-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+        .wishlist-details {
+            flex-grow: 1;
+        }
+        .wishlist-details h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #333;
+        }
+        .wishlist-details p {
+            margin: 5px 0;
+            color: #555;
+        }
+        .wishlist-price {
+            font-weight: bold;
+            color: #008080;
+        }
+        .wishlist-actions {
+            display: flex;
+            align-items: center;
+        }
+        .wishlist-actions button {
+            background-color: #008080;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+        .wishlist-actions button:hover {
+            background-color: #005959;
+        }
+        .wishlist-stock {
+            font-size: 0.9rem;
+            color: #888;
+        }
+        .wishlist-rating i {
+            color: #FFD700;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="sidebar">
-            <h3>Filters</h3>
-            <ul>
-                <li><strong>ORDER STATUS</strong></li>
-                <li><input type="checkbox"/> On the way</li>
-                <li><input type="checkbox"/> Delivered</li>
-                <li><input type="checkbox"/> Cancelled</li>
-                <li><input type="checkbox"/> Returned</li>
-            </ul>
-            <ul>
-                <li><strong>ORDER TIME</strong></li>
-                <li><input type="checkbox"/> Last 30 days</li>
-                <li><input type="checkbox"/> 2023</li>
-                <li><input type="checkbox"/> 2022</li>
-                <li><input type="checkbox"/> 2021</li>
-                <li><input type="checkbox"/> 2020</li>
-                <li><input type="checkbox"/> Older</li>
-            </ul>
-        </div>
-        <div class="main-content">
-            <div class="breadcrumb">
-                <a href="#">Home</a> &gt; <a href="#">My Account</a> &gt; My Orders
-            </div>
-            <div class="search-bar">
-                <input placeholder="Search your orders here" type="text"/>
-                <button><i class="fas fa-search"></i> Search Orders</button>
-            </div>
-            <div class="order-item">
-                <img src="https://storage.googleapis.com/a1aa/image/8LxL3X9tf60ySiYMvBQ6lO9a3ffItMYilvOcjkYgLunSgXXnA.jpg" alt="SHUANG YOU Plastic ID Badge Holder" />
-                <div class="order-details">
-                    <h4>SHUANG YOU Plastic ID Badge Holder</h4>
-                    <p>Color: Black</p>
-                </div>
-                <div class="order-status">
-                    <p>₹315</p>
-                    <div class="status cancelled">
-                        <i class="fas fa-circle"></i> Cancelled on Jul 19
-                    </div>
-                    <p>You requested a cancellation because of issues with the delivery date.</p>
+    <div class="wishlist-container">
+        <div class="wishlist-item">
+            <img src="https://via.placeholder.com/80" alt="Product Image">
+            <div class="wishlist-details">
+                <h3>Apple MacBook Pro 14"</h3>
+                <p>14-inch, M1 Chip, 16GB RAM, 512GB SSD</p>
+                <p class="wishlist-price">$1999</p>
+                <p class="wishlist-stock">In Stock</p>
+                <div class="wishlist-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
                 </div>
             </div>
-            <!-- Repeat other order items here... -->
+            <div class="wishlist-actions">
+                <button>Add to Cart</button>
+                <button style="background-color: #ff4d4d;">Remove</button>
+            </div>
         </div>
+
+        <div class="wishlist-item">
+            <img src="https://via.placeholder.com/80" alt="Product Image">
+            <div class="wishlist-details">
+                <h3>Sony WH-1000XM4</h3>
+                <p>Noise Cancelling Wireless Headphones</p>
+                <p class="wishlist-price">$349</p>
+                <p class="wishlist-stock" style="color: red;">Out of Stock</p>
+                <div class="wishlist-rating">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+            </div>
+            <div class="wishlist-actions">
+                <button disabled style="background-color: gray; cursor: not-allowed;">Add to Cart</button>
+                <button style="background-color: #ff4d4d;">Remove</button>
+            </div>
+        </div>
+
+        <!-- Add more wishlist items here as needed -->
     </div>
 </body>
 </html>

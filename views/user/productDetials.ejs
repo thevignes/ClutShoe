@@ -172,6 +172,10 @@
                                                         </button>
 
                                                     </form>
+                                                    <form id="wishlistForm" data-product-id="<%= ProductData._id %>">
+                                                        <button type="button" onclick="addToWishlist('<%= ProductData._id %>')">Add to Wishlist</button>
+                                                    </form>
+                                                    
                                                     <!-- Dropdown to select quantity -->
                                                     <!-- <select id="quantityDropdown" class="form-select" onchange="updateQuantity(this, 'PRODUCT_ID_HERE')">
     <% for (let i = 1; i <= MAX_QUANTITY_PER_PRODUCT; i++) { %>
@@ -546,10 +550,67 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/zoom/extm.min.js"></script>
 
+    
 
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function addToWishlist(productId) {
+            fetch('/wishlist/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+    
+                    Swal.fire({
+                        icon: 'success',
+                        title: data.message,
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        background: 'white', 
+                        iconColor: 'green',
+                    });
+                } else {
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+                    Swal.fire({
+                        icon: 'success',
+                        title: data.message || 'Something went wrong!',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        background: 'white', // Red color for error
+                        iconColor: 'green',
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Show general error toast notification
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Failed to add to wishlist.',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    background: 'white', // Red color for general error
+                    iconColor: 'green',
+                });
+            });
+        }
+    </script>
+    
 
     <script>
           async function addToCart(productId) {

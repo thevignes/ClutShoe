@@ -203,12 +203,14 @@
                             </div>
                             <div class="buttons">
                                 <button class="view">View</button>
-
                                 <form action="/order/cancel" method="POST">
                                     <input type="hidden" name="orderId" value="<%= order.oid %>">
-                                    <button type="submit" class="cancel" style="background-color: red;">Cancel Order</button>
+                                    <% if (order.status === 'Cancelled') { %>
+                                        <button type="submit" class="cancel" style="background-color: red;" disabled>Order Cancelled</button>
+                                    <% } else { %>
+                                        <button type="submit" class="cancel" style="background-color: red;">Cancel Order</button>
+                                    <% } %>
                                 </form>
-                                
                                 
 
                             </div>

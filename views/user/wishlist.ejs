@@ -1,0 +1,190 @@
+<%-include('../../views/partial/user/header',{user:user})%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+</head>
+<body>
+    <body>
+
+        <h3 class="text-center">your wishlist</h3>
+        <div class="content">
+            <div class="wishlist-container">
+                <% if (products.length > 0) { %>
+                    <% products.forEach(product => { %>
+                        <div class="wishlist-item">
+                            <img src="/uploads/re-image/<%= product.images[0] %>" alt="Product Image">
+                            <div class="wishlist-details">
+                                <h3 class="text-dark" style="color:black"><%= product.productName %></h3>
+                                <p><%= product.description %></p>
+                                <p class="wishlist-price">$<%= product.salePrice %></p>
+                                <p class="wishlist-stock">
+                                    <% if (product.quantity > 0) { %>
+                                        In Stock (Quantity: <%= product.quantity %>)
+                                    <% } else { %>
+                                        Out of Stock
+                                    <% } %>
+                                </p>
+                                
+                                <div class="wishlist-rating">
+                                    <% for (let i = 1; i <= 5; i++) { %>
+                                        <i class="fas fa-star<%= i <= product.rating ? '' : '-half-alt' %>"></i>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <div class="wishlist-actions">
+                                <form class="add-to-cart">
+                                    <!-- Quantity input -->
+                                    <!-- <button class="btn btn-success mt-2" type="submit">Add to Cart</button> -->
+                                    <button
+                                        class="<%= product.quantity !== 0 ? 'btn btn-success mt-2' : 'd-none' %>"
+                                        type="button" onclick="addToCart('<%= product._id %>')">
+                                        Add to Cart
+                                    </button>
+
+                                </form>
+                                <form style="display: inline;">
+                                    <input type="hidden" name="productId" value="<%= product._id %>">
+                                    <button type="button" onclick="removeFromWishlist('<%= product._id %>')" style="background-color:red;">Remove</button>
+                                </form>
+                            </div>
+                        </div>
+                    <% }); %>
+                <% } else { %>
+                    <h3 class="empty-message"><%= message %></h3>
+                    <span>
+        
+                        <a href="/shop"> click here to to buy product</a>
+                    </span>
+                    <% } %>
+            </div>
+        </div>
+        
+        <%- include('../../views/partial/user/footer') %>
+    </body>
+
+    
+    <script>
+        async function addToCart(productId) {
+      try {
+          const response = await fetch(`http://localhost:3100/add-to-cart?id=${productId}`, {
+              method: 'POST', 
+              credentials: 'include'
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+              // Show success toast notification
+              Swal.fire({
+                  icon: 'success',
+                  title: data.message,
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  timerProgressBar: true,
+              });
+              // alert('heyyy')
+              // Optional delay before redirecting
+              // setTimeout(() => {
+              //     window.location.href = `/ProductDetail/${productId}`;
+
+              // }, 3000); // Redirect after toast disappears
+          } else {
+              // Show error toast notification
+              Swal.fire({
+                  icon: 'error',
+                  title: data.message,
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  timerProgressBar: true,
+              });
+          }
+      } catch (error) {
+          console.error("Error adding to cart:", error);
+          // Show general error toast notification
+          Swal.fire({
+              icon: 'error',
+              title: 'Something went wrong. Please try again.',
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 3000,
+              timerProgressBar: true,
+          });
+      }
+  }
+  </script>
+<script>
+    function removeFromWishlist(productId) {
+        fetch(`/wishlist/remove/${productId} `, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ productId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success toast notification
+                Swal.fire({
+                    icon: 'error',
+                    title: data.message || 'Removed from wishlist',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    background: 'white', // Green color for success
+                    iconColor: 'green',
+                });
+                
+                // Optional: remove item from DOM if successful
+                document.getElementById(`wishlist-item-${productId}`).remove();
+            } else {
+                // Show error toast notification
+                Swal.fire({
+                    icon: 'success',
+                    title: data.message || 'Something went wrong!',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    background: 'white', // Red color for error
+                    iconColor: 'green'
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Show general error toast notification
+            Swal.fire({
+                icon: 'success',
+                title: 'removed successfully.',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                background: 'white', // Red color for general error
+                iconColor: 'green',
+            });
+        });
+    }
+</script>
+
+
+
+
+
+    
+    </html>

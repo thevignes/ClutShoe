@@ -734,7 +734,7 @@ const AddToCart = async (req, res) => {
     res.status(200).json({success:true,  message:"product added to cart successfully"})
   } catch (error) {
     console.error("Error in AddToCart:", error);
-    return res.status(500).json({ success: false, message: "Server error" });
+    return res.status(500).json({ success: false, message: " please login and buy your product" });
   }
 };
 
@@ -742,6 +742,7 @@ const removeFromCart = async (req, res) => {
   try {
     const productId = req.params.id;
     console.log("Product ID to remove:", productId);
+    
 
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       return res
