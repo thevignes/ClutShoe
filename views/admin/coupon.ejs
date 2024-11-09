@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupon List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body class="bg-[#ffeded]">
+    <!-- Include Header -->
+    <%- include("../../views/partial/admin/header") %>
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container-center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 150px); /* Adjust for header/footer height */
+        }
+
+        .form-container {
+            background-color: #111;
+            padding: 2rem;
+            width: 90%;
+            max-width: 93%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            color: #ddd;
+            text-align: left;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1rem;
+        }
+
+        .form-row label {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-row input[type="text"],
+        .form-row input[type="number"],
+        .form-row input[type="date"] {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #333;
+            color: #ccc;
+            border: 1px solid #444;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+
+        .form-row input[type="text"]:focus,
+        .form-row input[type="number"]:focus,
+        .form-row input[type="date"]:focus {
+            border-color: #5a67d8;
+            outline: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.9rem;
+            background-color: #357edd;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #2b5fa5;
+        }
+
+        .form-container form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        @media (max-width: 600px) {
+            .form-container form {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <button class="btn btn-primary">
+      <a href="/admin/couponList" class="text-dark"> view coupons</a>
+    </button>
+    <!-- Centered Container for the Form -->
+    <div class="container-center">
+        <div class="form-container">
+            <h2>Add Coupon</h2>
+            <form class="add-coupon" id="couponForm" action="/admin/coupons/add" method="post">
+              <div class="form-row">
+                  <label for="name">Coupon name :</label>
+                  <input type="text" id="name" name="name" placeholder="Enter coupon name" >
+                  <p id="nameError" class="error-message" class="text-danger" style='color: red;'></p> <!-- Error message -->
+              </div>
+          
+              <div class="form-row">
+                  <label for="amount">Coupon amount :</label>
+                  <input type="number" id="amount" name="amount" placeholder="Enter coupon amount" >
+                  <p id="amountError" class="error-message" class="text-danger" style="color: red;"></p> <!-- Error message -->
+              </div>
+          
+              <div class="form-row">
+                  <label for="code">Coupon code :</label>
+                  <input type="text" id="code" name="couponCode" placeholder="Enter coupon code">
+                  <p id="codeError" class="error-message" class="text-danger" style="color: red;"></p> <!-- Error message -->
+              </div>
+          
+              <div class="form-row">
+                  <label for="description">Description :</label>
+                  <input type="text" id="description" name="description" placeholder="Enter description">
+                  <p id="descriptionError" class="error-message" class="text-danger" style="color: red;"></p> <!-- Error message -->
+              </div>
+          
+              <div class="form-row">
+                  <label for="limit">Limit :</label>
+                  <input type="number" id="limit" name="limit" placeholder="Enter usage limit" >
+                  <p id="limitError" class="error-message" class="text-danger" style="color: red;"></p> <!-- Error message -->
+              </div>
+          
+              <div class="form-row">
+                  <label for="userLimit">User Limit :</label>
+                  <input type="number" id="userLimit" name="userLimit" placeholder="Enter per-user limit" >
+                  <p id="userLimitError" class="error-message" class="text-danger" style="color: red;"></p> <!-- Error message -->
+              </div>
+          
+              <div class="form-row">
+                  <label for="maxDiscount">Max Discount :</label>
+                  <input type="number" id="maxDiscount" name="maxDiscount" placeholder="Enter max discount amount" ">
+                  <p id="maxDiscountError" class="error-message" class="text-danger" style="color: red;"></p> <!-- Error message -->
+              </div>
+          
+              <div class="form-row">
+                  <label for="expiry">Expiry Date :</label>
+                  <input type="date" id="expiry" name="expiryDate" style="color: #111;">
+                  <span id="expiryError" class="error-message" style="color: red;"></span> <!-- Error message -->
+              </div>
+          
+              <div class="form-row full-width">
+                  <button type="submit" class="submit-btn">Add Coupon</button>
+              </div>
+          </form>
+        </div>
+    </div>
+
+    <!-- Include Footer -->
+    <%- include("../../views/partial/admin/footer") %>
+
+</body>
+<script>
+   document.getElementById('couponForm').addEventListener('submit', function(event) {
+        // Prevent the form from submitting if validation fails
+        event.preventDefault();
+
+        let isValid = true;
+
+        // Clear previous error messages
+        const errorMessages = document.querySelectorAll('.error-message');
+        errorMessages.forEach(message => message.textContent = '');
+
+        // Validate coupon name
+        const name = document.getElementById('name');
+        if (name.value.trim() === '') {
+            isValid = false;
+            document.getElementById('nameError').textContent = 'Coupon name is required.';
+        }
+
+        const description = document.getElementById('description')
+
+        if(description.value.trim() ===''){
+          isValid = false;
+          document.getElementById('descriptionError').textContent = 'Description is required.';
+        }
+
+        // Validate coupon amount (must be a positive number)
+        const amount = document.getElementById('amount');
+        if (amount.value <= 0) {
+            isValid = false;
+            document.getElementById('amountError').textContent = 'Coupon amount must be greater than 0.';
+        }
+
+        // Validate coupon code (must match pattern)
+        const code = document.getElementById('code');
+        const codePattern = /^[A-Za-z0-9]{5,10}$/;
+        if (!codePattern.test(code.value)) {
+            isValid = false;
+            document.getElementById('codeError').textContent = 'Coupon code must be 5-10 alphanumeric characters.';
+        }
+
+        // Validate limit (must be greater than 0)
+        const limit = document.getElementById('limit');
+        if (limit.value <= 0) {
+            isValid = false;
+            document.getElementById('limitError').textContent = 'Usage limit must be greater than 0.';
+        }
+
+        // Validate user limit (must be greater than 0)
+        const userLimit = document.getElementById('userLimit');
+        if (userLimit.value <= 0) {
+            isValid = false;
+            document.getElementById('userLimitError').textContent = 'User limit must be greater than 0.';
+        }else if (userLimit.value.trim() === ''){
+          isValid = false;
+          document.getElementById('userLimitError').textContent = 'User limit is required.';
+        }
+
+        // Validate max discount (must be greater than or equal to 0)
+        const maxDiscount = document.getElementById('maxDiscount');
+        if (maxDiscount.value < 0) {
+            isValid = false;
+            document.getElementById('maxDiscountError').textContent = 'Max discount cannot be negative.';
+        }else if( maxDiscount.value.trim() === ''){
+          isValid = false
+
+          document.getElementById('maxDiscountError').textContent = ' max discount is require'
+        }
+
+        // If all validations pass, submit the form
+        if (isValid) {
+            this.submit();
+        }
+    });
+</script>
+</html>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.querySelector('.add-coupon').addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Collect form data
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData.entries()); // Convert FormData to a JSON object
+
+    try {
+        // Send POST request
+        const response = await fetch('/admin/coupons/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        // Handle response based on success or failure
+        const result = await response.json();
+
+        if (response.ok) {
+            // Success toast notification with SweetAlert
+            Swal.fire({
+                icon: 'success',
+                title: result.message,
+                toast: true,
+                position: 'top-end',
+                timer: 2000,
+                timerProgressBar: true,
+                showConfirmButton: false
+            });
+            // Optionally, reset the form
+            event.target.reset();
+        } else {
+            // Error toast notification with SweetAlert
+            Swal.fire({
+                icon: 'error',
+                title: result.message || 'Something went wrong!',
+                toast: true,
+                position: 'top-end',
+                timer: 2000,
+                timerProgressBar: true,
+                showConfirmButton: false
+            });
+        }
+    } catch (error) {
+        // Handle unexpected errors
+        Swal.fire({
+            icon: 'error',
+            title: 'Unable to add coupon. Please try again later.',
+            toast: true,
+            position: 'top-end',
+            timer: 2000,
+            timerProgressBar: true,
+            showConfirmButton: false
+        });
+        console.error(error);
+    }
+});
+</script>
+
+<!-- 
+<script>
+   document.querySelector('.add-coupon').addEventListener('submit', function (e) {
+//       e.preventDefault(); 
+//       const formData = new FormData(this)   
+
+//   formData.forEach((value, key) => {
+//     console.log(key, value);
+//   });
+
+//       fetch('/admin/coupons/add', {
+//         method: 'POST',
+//         body: formData
+//       })
+//         .then(response => response.json()) 
+//         .then(data => {
+//           if (data.success) {
+
+//             Swal.fire({
+//               icon: 'success',
+//               title: 'Coupon Added Successfully!',
+//               toast: true,
+//               position: 'top-end',
+//               showConfirmButton: false,
+//               timer: 3000,
+//               background: '#28a745',
+//               color: '#fff',
+//               timerProgressBar: true
+//             });
+  
+//             document.querySelector('.add-coupon').reset();
+//           } else {
+
+//             Swal.fire({
+//               icon: 'error',
+//               title: 'Error Adding Coupon!',
+//               text: data.message || 'Something went wrong. Please try again.',
+//               toast: true,
+//               position: 'top-end',
+//               showConfirmButton: false,
+//               timer: 3000,
+//               background: '#dc3545',
+//               color: '#fff',
+//               timerProgressBar: true
+//             });
+//           }
+//         })
+//         .catch(error => {
+//           console.error('Error:', error);
+        
+//           Swal.fire({
+//             icon: 'error',
+//             title: 'Network Error!',
+//             text: 'Please try again later.',
+//             toast: true,
+//             position: 'top-end',
+//             showConfirmButton: false,
+//             timer: 3000,
+//             background: '#dc3545',
+//             color: '#fff',
+//             timerProgressBar: true
+//           });
+//         });
+    });
+  </script>
+   -->
+</html>

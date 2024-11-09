@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupon List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body class="bg-white text-black">
+    
+    <!-- Include Header -->
+    <%- include("../../views/partial/admin/header") %>
+
+    <div class="container mx-auto px-4 py-8">
+        <button class=' btn btn-primary'>
+            <a href="/admin/coupon" style="color: black;">add coupons</a>
+        </button>
+        <div class="overflow-x-auto  rounded-lg shadow-md"  >
+            <table class="min-w-full bg-white text-black">
+                <thead>
+                    <tr class="border-b border-white bg-white">
+                        <th class="py-3 px-4 text-left border-white">Code</th>
+                        <th class="py-3 px-4 text-left border-white">Coupon Code</th>
+                        <th class="py-3 px-4 text-left border-white">Coupon Amount</th>
+                        <th class="py-3 px-4 text-left border-white">Description</th>
+                        <th class="py-3 px-4 text-left border-white">Usage Limit</th>
+                        <th class="py-3 px-4 text-left border-white">Expiry Date</th>
+                        <th class="py-3 px-4 text-left border-white">Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% coupons.forEach(coupon => { %>
+                    <tr class="border-b border-white">
+                        <td class="py-3 px-4 border-white"><%= coupon.name %></td>
+                        <td class="py-3 px-4 border-white"><%= coupon.couponCode %></td>
+                        <td class="py-3 px-4 border-white"><%= coupon.amount %></td>
+                        <td class="py-3 px-4 border-white"><%= coupon.description %></td>
+                        <td class="py-3 px-4 border-white"><%= coupon.limit %></td>
+                        <td class="py-3 px-4 border-white"><%= new Date(coupon.expiryDate).toLocaleDateString() %></td>
+                        <td class="py-3 px-4 text-red-500 cursor-pointer">
+                            <a href="#" onclick="confirmDelete(event, '<%= coupon._id %>');">
+                                <i class="fas fa-trash-alt" style="color: red;"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Include Footer -->
+    <%- include("../../views/partial/admin/footer") %>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+     function confirmDelete(event, couponId) {
+    event.preventDefault(); // Prevent the default link behavior
+
+    // Show SweetAlert confirmation dialog
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'This action cannot be undone!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Send a DELETE request with the actual couponId in the URL
+            fetch(`/admin/coupons/delete/${couponId}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.status === 200) { // Corrected to response.status
+                    return response.json(); // Parse the JSON if status is 200
+                } else {
+                    throw new Error('Failed to delete the coupon');
+                }
+            })
+            .then(data => {
+                Swal.fire(
+                    'Deleted!',
+                    'The coupon has been deleted.',
+                    'success'
+                ).then(() => location.reload()); // Reload page after successful deletion
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('Error', 'An error occurred during deletion.', 'error');
+            });
+        }
+    });
+}
+
+    </script>
+    
+</body>
+</html>

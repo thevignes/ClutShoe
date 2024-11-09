@@ -1,125 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wishlist</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 20px;
-        }
-        .wishlist-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .wishlist-item {
-            display: flex;
-            align-items: center;
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            padding: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .wishlist-item img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 5px;
-            margin-right: 20px;
-        }
-        .wishlist-details {
-            flex-grow: 1;
-        }
-        .wishlist-details h3 {
-            margin: 0;
-            font-size: 1.1rem;
-            color: #333;
-        }
-        .wishlist-details p {
-            margin: 5px 0;
-            color: #555;
-        }
-        .wishlist-price {
-            font-weight: bold;
-            color: #008080;
-        }
-        .wishlist-actions {
-            display: flex;
-            align-items: center;
-        }
-        .wishlist-actions button {
-            background-color: #008080;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-left: 10px;
-            transition: background-color 0.3s;
-        }
-        .wishlist-actions button:hover {
-            background-color: #005959;
-        }
-        .wishlist-stock {
-            font-size: 0.9rem;
-            color: #888;
-        }
-        .wishlist-rating i {
-            color: #FFD700;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Coupon</title>
+  <link rel="stylesheet" href="style.css">
 </head>
+<style>
+    * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #ffeded;
+}
+
+.form-container {
+  background-color: #111;
+  padding: 2rem;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+  color: #ddd;
+  text-align: left;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.form-row label {
+  color: #ccc;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-row input[type="text"],
+.form-row input[type="number"],
+.form-row input[type="date"] {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #333;
+  color: #ccc;
+  border: 1px solid #444;
+  border-radius: 5px;
+  transition: border-color 0.3s;
+}
+
+.form-row input[type="text"]:focus,
+.form-row input[type="number"]:focus,
+.form-row input[type="date"]:focus {
+  border-color: #5a67d8;
+  outline: none;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 0.9rem;
+  background-color: #357edd;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #2b5fa5;
+}
+
+.form-container form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+@media (max-width: 600px) {
+  .form-container form {
+    grid-template-columns: 1fr;
+  }
+}
+
+</style>
 <body>
-    <div class="wishlist-container">
-        <div class="wishlist-item">
-            <img src="https://via.placeholder.com/80" alt="Product Image">
-            <div class="wishlist-details">
-                <h3>Apple MacBook Pro 14"</h3>
-                <p>14-inch, M1 Chip, 16GB RAM, 512GB SSD</p>
-                <p class="wishlist-price">$1999</p>
-                <p class="wishlist-stock">In Stock</p>
-                <div class="wishlist-rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star-half-alt"></i>
-                </div>
-            </div>
-            <div class="wishlist-actions">
-                <button>Add to Cart</button>
-                <button style="background-color: #ff4d4d;">Remove</button>
-            </div>
-        </div>
+  <div class="form-container">
+    <h2>Add Coupon</h2>
+    <form action="/coupons/add" method="POST">
+      <div class="form-row">
+        <label for="name">Coupon name :</label>
+        <input type="text" id="name" name="name" placeholder="Enter coupon name" required>
+      </div>
 
-        <div class="wishlist-item">
-            <img src="https://via.placeholder.com/80" alt="Product Image">
-            <div class="wishlist-details">
-                <h3>Sony WH-1000XM4</h3>
-                <p>Noise Cancelling Wireless Headphones</p>
-                <p class="wishlist-price">$349</p>
-                <p class="wishlist-stock" style="color: red;">Out of Stock</p>
-                <div class="wishlist-rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                </div>
-            </div>
-            <div class="wishlist-actions">
-                <button disabled style="background-color: gray; cursor: not-allowed;">Add to Cart</button>
-                <button style="background-color: #ff4d4d;">Remove</button>
-            </div>
-        </div>
+      <div class="form-row">
+        <label for="amount">Coupon amount :</label>
+        <input type="number" id="amount" name="amount" placeholder="Enter coupon amount" required>
+      </div>
 
-        <!-- Add more wishlist items here as needed -->
-    </div>
+      <div class="form-row">
+        <label for="code">Coupon code :</label>
+        <input type="text" id="code" name="code" placeholder="Enter coupon code" required>
+      </div>
+
+      <div class="form-row">
+        <label for="description">Description :</label>
+        <input type="text" id="description" name="description" placeholder="Enter description">
+      </div>
+
+      <div class="form-row">
+        <label for="limit">Limit :</label>
+        <input type="number" id="limit" name="limit" placeholder="Enter usage limit" required>
+      </div>
+
+      <div class="form-row">
+        <label for="expiry">Expiry Date :</label>
+        <input type="date" id="expiry" name="expiryDate" required>
+      </div>
+
+      <div class="form-row full-width">
+        <button type="submit" class="submit-btn">Add</button>
+      </div>
+    </form>
+  </div>
 </body>
 </html>
