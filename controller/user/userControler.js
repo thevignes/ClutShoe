@@ -9,7 +9,7 @@ const Category = require("../../models/categoryModel");
 const Product = require("../../models/product");
 const Cart = require("../../models/cart");
 const Order = require("../../models/order");
-
+const Coupon = require('../../models/couponModels')
 const HomePage = async (req, res) => {
   try {
     // console.log('rendering')
@@ -796,6 +796,8 @@ const removeFromCart = async (req, res) => {
 const checkout = async (req, res) => {
   try {
     const userId = req.session.user.email;
+    const orderValue = req.session.orderValue;
+    const coupons = await Coupon.find({});
     console.log("your >>>>>>>>>>", userId);
     const user = await User.findOne({ email: userId });
     console.log("heyy good", user);
@@ -820,6 +822,9 @@ const checkout = async (req, res) => {
         user: userId,
         cartTotals: { total: 0 },
         addresses,
+        orderValue,
+        userId,
+        coupons
       });
     }
 
@@ -842,6 +847,9 @@ const checkout = async (req, res) => {
       message: null,
       user: userId,
       addresses,
+      orderValue,
+      userId,
+      coupons
     });
   } catch (error) {
     console.error("Error in checkout function:", error);

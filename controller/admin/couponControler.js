@@ -10,42 +10,56 @@ const couponPage = async (req,res)=>{
         
     }
 }
-    const addCoupon =  async (req,res)=>{
-        console.log('heheheheheheh')
-        try {
-            console.log('requeseeeeeee')
-            const {name, amount,couponCode,description,limit,expiryDate, userLimit, maxDiscount} = req.body;
-            console.log(req.body)
+const addCoupon = async (req, res) => {
+    console.log('Starting addCoupon function');
+    try {
+        const {
+       
+            amount,
+            couponCode,
+            description,
+            limit,
+            expiryDate,
+            userLimit,
+            maxDiscount,
+            minOrderValue,    // Make sure these fields are passed if required
+            discountType,
+          
+        } = req.body;
+        
+        console.log('Received coupon data:', req.body);
 
-            const existingCoupon = await Coupon.findOne({couponCode})
-
-            if(existingCoupon){
-                return res.status(400).json({message: 'Coupon already exists!'})
-            }
-
-            const coupon = new Coupon ({
-                    name,
-                    couponCode,
-                    amount,
-                    description,
-                    limit,
-                    userLimit,
-                    expiryDate,
-                    maxDiscount
-            });
-
-                    
-
-            await coupon.save();
-            console.log('hwlo', coupon)
-            return res.status(201).json({message: 'Coupon created successfully!'})
-            
-        } catch (error) {
-            console.log(error, ' cannot add this coupon !');
-            return res.status(500).json({ message: 'Internal Server Error' });
-            
+        // Check if coupon already exists
+        const existingCoupon = await Coupon.findOne({ couponCode });
+        if (existingCoupon) {
+            return res.status(400).json({ message: 'Coupon already exists!' });
         }
+
+        // Create new coupon instance
+        const coupon = new Coupon({
+        
+            couponCode,
+            amount,
+            description,
+            limit,
+            userLimit,
+            expiryDate,
+            maxDiscount,
+            minOrderValue,     // Include these fields if they are required in your schema
+            discountType,
+          
+        });
+
+        // Save to database
+        await coupon.save();
+        console.log('Coupon created successfully:', coupon);
+        return res.status(201).json({ message: 'Coupon created successfully!' });
+
+    } catch (error) {
+        console.error('Error while adding coupon:', error.message);
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
+};
 
     const  couponList = async(req,res)=>{
         try {

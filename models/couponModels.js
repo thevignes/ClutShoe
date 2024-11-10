@@ -1,63 +1,67 @@
-const  mongoose = require('mongoose')
-
+const mongoose = require('mongoose');
 
 const CouponSchema = new mongoose.Schema({
-    name:{
-        type:String,
-        required:true
-
-    },
-    couponCode:{
+    name: {
         type: String,
-        required:true,
-        unique:true
-
+        required: false
     },
-    amount:{
-        type:Number,
-        required:true
-
+    couponCode: {
+        type: String,
+        required: true,
+        unique: true
     },
-    maxDiscount :{
-        type:Number,
-        required:true
-
+    amount: {
+        type: Number,
+        required: true
     },
-    limit:{
-        type:Number,
-        required:true,
-        min:1
+    discountType: {
+        type: String,
+        enum: ['percentage', 'fixed'], 
+        required: true
     },
-    expiryDate:{
-        type:Date,
-        required:true
-         
+    minOrderValue: {
+        type: Number,
+        required: true
     },
-    isActive :{
-        type:Boolean,
-        default:true
+    maxDiscount: {
+        type: Number,
+        required: true
     },
-     description :{
-        type:String,
-        default:""
-     },
-     createdAt:{
-        type:Date,
-        default:Date.now
+    limit: {
+        type: Number,
+        required: true,
+        min: 1
+    },
+    expiryDate: {
+        type: Date,
+        required: true
+    },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
+    description: {
+        type: String,
+        default: ""
+    },
+    usersUsed: [{
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        usageCount: { type: Number, default: 0 }
+    }],
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now
+    },
+    userLimit: {
+        type: Number,
+        default: 1
+    }
+}, { timestamps: true });
 
-     },
-     updatedAt:{
-        type:Date,
-        default:Date.now
-     },
+const Coupon = mongoose.model('Coupon', CouponSchema);
 
-     userLimit:{
-
-        type:Number,
-        default:1
-     }
-},{timestamps: true})
-
-const Coupon= mongoose.model('Coupon', CouponSchema);
-
-module.exports  =  Coupon
+module.exports = Coupon;

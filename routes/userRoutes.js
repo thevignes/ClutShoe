@@ -5,6 +5,7 @@ const passport = require('passport');
 const ForgetController = require('../controller/user/forgetController')
 const checkBlockedStatus = require('../middlewares/checkBlockedStatus');
 const wishlistController = require('../controller/user/wishlist')
+const CouponController = require('../controller/user/coupon')
 // const { UserAuth} = require('../middlewares/auth')
 // router.get('/',userControler.HomePage)
 
@@ -27,19 +28,21 @@ router.get('/login',userControler.GetLogin)
 router.post('/login',userControler.userLogin)
 
 router.get('/auth/google',passport.authenticate('google',{scope:['profile','email'],prompt:"select_account"}))
+
+
 router.get('/auth/google/callback', passport.authenticate('google', {
   failureRedirect: '/register',
 }), (req, res) => {
 
   if (req.user && req.user.email) {
-    const userEmail = req.user.email; // Assuming email is a string
+    const userEmail = req.user.email; 
     req.session.user = {
       name: req.user.name,
       email: userEmail,
     };
     res.redirect('/');
   } else {
-    console.error("User information is incomplete or undefined");
+ 
     res.redirect('/register');
   }
 });
@@ -142,5 +145,10 @@ router.post('/resetCode', ForgetController.codeVerification)
 
 router.post('/wishlist/add', wishlistController.addToWishlist)
 
-router.post('/wishlist/remove/:productId',  wishlistController.removeFromWish)
+router.post('/wishlist/remove/:productId',  wishlistController.removeFromWish);
+
+///coupon applying route//
+
+router.post('/apply-coupon',CouponController.ApplyCoupon )
+
 module.exports = router

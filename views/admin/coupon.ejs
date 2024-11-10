@@ -114,11 +114,7 @@
         <div class="form-container">
             <h2>Add Coupon</h2>
             <form class="add-coupon" id="couponForm" action="/admin/coupons/add" method="post">
-              <div class="form-row">
-                  <label for="name">Coupon name :</label>
-                  <input type="text" id="name" name="name" placeholder="Enter coupon name" >
-                  <p id="nameError" class="error-message" class="text-danger" style='color: red;'></p> <!-- Error message -->
-              </div>
+            
           
               <div class="form-row">
                   <label for="amount">Coupon amount :</label>
@@ -131,7 +127,22 @@
                   <input type="text" id="code" name="couponCode" placeholder="Enter coupon code">
                   <p id="codeError" class="error-message" class="text-danger" style="color: red;"></p> <!-- Error message -->
               </div>
-          
+                 
+              <div class="form-row">
+                <label for="code">max purchase :</label>
+                <input type="text" id="code" name="minOrderValue" placeholder="Enter coupon code">
+                <p id="codeError" class="error-message" class="text-danger" style="color: red;"></p> <!-- Error message -->
+            </div>
+        
+            <div class="form-row">
+                <label for="discountType">Discount Type :</label>
+                <select id="discountType" name="discountType">
+                    <option value="percentage" name="percentage">Percentage</option>
+                    <option value="flat" name="fixed">Fixed</option>
+                </select>
+                <p id="discountTypeError" class="error-message text-danger" style="color: red;"></p>
+            </div>
+
               <div class="form-row">
                   <label for="description">Description :</label>
                   <input type="text" id="description" name="description" placeholder="Enter description">
@@ -213,14 +224,13 @@
             document.getElementById('codeError').textContent = 'Coupon code must be 5-10 alphanumeric characters.';
         }
 
-        // Validate limit (must be greater than 0)
         const limit = document.getElementById('limit');
         if (limit.value <= 0) {
             isValid = false;
             document.getElementById('limitError').textContent = 'Usage limit must be greater than 0.';
         }
 
-        // Validate user limit (must be greater than 0)
+
         const userLimit = document.getElementById('userLimit');
         if (userLimit.value <= 0) {
             isValid = false;
@@ -230,7 +240,6 @@
           document.getElementById('userLimitError').textContent = 'User limit is required.';
         }
 
-        // Validate max discount (must be greater than or equal to 0)
         const maxDiscount = document.getElementById('maxDiscount');
         if (maxDiscount.value < 0) {
             isValid = false;
