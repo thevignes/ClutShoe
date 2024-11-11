@@ -22,7 +22,7 @@ const addCoupon = async (req, res) => {
             expiryDate,
             userLimit,
             maxDiscount,
-            minOrderValue,    // Make sure these fields are passed if required
+            minOrderValue,   
             discountType,
           
         } = req.body;
@@ -45,7 +45,7 @@ const addCoupon = async (req, res) => {
             userLimit,
             expiryDate,
             maxDiscount,
-            minOrderValue,     // Include these fields if they are required in your schema
+            minOrderValue,     
             discountType,
           
         });

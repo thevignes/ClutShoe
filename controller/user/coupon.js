@@ -13,14 +13,13 @@ const ApplyCoupon = async (req, res) => {
         console.log('Starting coupon application...');
 
         const { couponCode, orderValue } = req.body;
-        const userEmail = req.session.user?.email; // Ensure user session exists before proceeding
+        const userEmail = req.session.user?.email;
 
         if (!userEmail) {
             console.log("User is not logged in");
             return res.status(401).json({ message: "You must be logged in to apply a coupon" });
         }
 
-        // Fetch the user by email to get their ObjectId
         const user = await User.findOne({ email: userEmail });
 
         if (!user) {
@@ -47,7 +46,7 @@ const ApplyCoupon = async (req, res) => {
             return res.status(400).json({ message: `Minimum order value of ${coupon.minOrderValue} is required to apply this coupon` });
         }
 
-        // Find if the user has already used this coupon
+       
         const userUsage = coupon.usersUsed.find(us => us.userId.toString() === user._id.toString());
 
         if (userUsage && userUsage.usageCount >= coupon.userLimit) {
@@ -55,23 +54,35 @@ const ApplyCoupon = async (req, res) => {
             return res.status(400).json({ message: 'You have reached the limit for using this coupon' });
         }
 
-        // Calculate discount
-        let discount;
+        let discount = 0;
+
         if (coupon.discountType === 'percentage') {
-            discount = Math.min(orderValue * (coupon.amount / 100), coupon.maxDiscount);
-        } else {
+            // Calculate the discount as a percentage of the order value
+            discount = orderValue * (coupon.amount / 100);
+        
+
+        
+            console.log(`Percentage discount calculated: ₹${discount}`);
+        } else if (coupon.discountType === 'fixed') {
+            // For a fixed discount, apply the lesser of the fixed amount and max discount
             discount = Math.min(coupon.amount, coupon.maxDiscount);
+        
+            console.log(`Fixed discount calculated: ₹${discount}`);
         }
+        
+        // Calculate the final price after applying the discount
+ 
+        const finalPrice = orderValue - discount;
+        
+        console.log(`Final Price after discount: ₹${finalPrice}`);
+        
         
         console.log('The coupon amount is', coupon.amount, 'The max discount is', coupon.maxDiscount);
 
-        const finalPrice = orderValue - discount;
-
-        // Update usage count
         if (userUsage) {
             userUsage.usageCount += 1;
         } else {
-            coupon.usersUsed.push({ userId: user._id, usageCount: 1 }); // Use the ObjectId of the user
+            coupon.usersUsed.push({ userId: user._id, usageCount: 1 }); 
         }
 
         await coupon.save();

@@ -8,7 +8,7 @@ const storage = require('../helpers/multer')
 const couponController = require('../controller/admin/couponControler')
 const uploads= multer({ storage: storage })
 const {UserAuth,AdminAuth} = require('../middlewares/auth')
-
+const OfferController = require('../controller/admin/offerController')
 
 router.get('/dashboard',AdminController.Dashboard)
 
@@ -93,5 +93,12 @@ router.post('/coupons/add', couponController.addCoupon)
 router.get('/couponList', couponController.couponList)
 
 router.delete('/coupons/delete/:id', couponController.DeleteCoupon)
+
+
+//offer route 
+
+router.post('/addOffer/:productId',OfferController.ApplyOffer)
+
+router.post('/addCategoryOffer/:id', OfferController.CateOffer)
 
 module.exports = router 

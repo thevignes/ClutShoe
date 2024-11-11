@@ -798,33 +798,26 @@ const checkout = async (req, res) => {
     const userId = req.session.user.email;
     const orderValue = req.session.orderValue;
     const coupons = await Coupon.find({});
-    console.log("your >>>>>>>>>>", userId);
-    const user = await User.findOne({ email: userId });
-    console.log("heyy good", user);
+    console.log("User ID:", userId);
 
+    const user = await User.findOne({ email: userId });
     if (!user) {
       return res.redirect("/login");
     }
 
-    const cart = await Cart.findOne({ userId: user._id }).populate(
-      "products.productId"
-    );
-    console.log("heyy>>>>>>>>>>>>>", cart);
-
+    const cart = await Cart.findOne({ userId: user._id }).populate("products.productId");
     const addresses = await Address.find({ userId: user._id });
-    console.log("the user id", userId);
-    console.log("your address is ", addresses);
 
     if (!cart || cart.products.length === 0) {
       return res.render("checkout", {
         message: "Your cart is empty",
         products: [],
         user: userId,
-        cartTotals: { total: 0 },
+        cartTotals: { total: 0, discount: 0, finalTotal: 0 },
         addresses,
         orderValue,
         userId,
-        coupons
+        coupons,
       });
     }
 
@@ -841,6 +834,9 @@ const checkout = async (req, res) => {
       { total: 0 }
     );
 
+    cartTotals.discount = 0;
+    cartTotals.finalTotal = cartTotals.total; // Update finalTotal calculation
+
     res.render("checkOut", {
       products: cart.products,
       cartTotals,
@@ -849,7 +845,7 @@ const checkout = async (req, res) => {
       addresses,
       orderValue,
       userId,
-      coupons
+      coupons,
     });
   } catch (error) {
     console.error("Error in checkout function:", error);
