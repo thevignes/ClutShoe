@@ -6,6 +6,7 @@ const ForgetController = require('../controller/user/forgetController')
 const checkBlockedStatus = require('../middlewares/checkBlockedStatus');
 const wishlistController = require('../controller/user/wishlist')
 const CouponController = require('../controller/user/coupon')
+const WalletController = require('../controller/user/wallet')
 // const { UserAuth} = require('../middlewares/auth')
 // router.get('/',userControler.HomePage)
 
@@ -150,5 +151,9 @@ router.post('/wishlist/remove/:productId',  wishlistController.removeFromWish);
 ///coupon applying route//
 
 router.post('/apply-coupon',CouponController.ApplyCoupon )
+
+
+//wallet routes//
+router.get('/wallet', WalletController.LoadWallet );
 
 module.exports = router

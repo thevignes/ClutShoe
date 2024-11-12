@@ -99,6 +99,6 @@ router.delete('/coupons/delete/:id', couponController.DeleteCoupon)
 
 router.post('/addOffer/:productId',OfferController.ApplyOffer)
 
-router.post('/addCategoryOffer/:id', OfferController.CateOffer)
+router.post('/addCategoryOffer/:CateId', OfferController.CateOffer)
 
 module.exports = router 

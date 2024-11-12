@@ -134,51 +134,40 @@
 
     <body>
 
-
-
-<!-- Modal -->
-<% cate.forEach(function(category) { %>
+<!-- Modal - move outside the loop -->
 <div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="offerModalLabel">Add Offer</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-              <form id="offerForm">
-                  <!-- Category Dropdown -->
-                  <div class="mb-3">
-                      <label for="categorySelect" class="form-label">Select Category</label>
-                      <select class="form-select" id="categorySelect" required>
-                          <option value=""><%=category.name%></option>
-                          <!-- Categories will be dynamically populated -->
-                      </select>
-                  </div>
-
-                  <!-- Offer Value Input -->
-                  <div class="mb-3">
-                      <label for="offerValue" class="form-label">Offer Value</label>
-                      <input type="text" class="form-control" id="offerValue" placeholder="Enter offer value" required>
-                  </div>
-              </form>
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-info" id="addOfferBtn">Add Offer</button>
-          </div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="offerModalLabel">Add Offer</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <div class="modal-body">
+        <form id="offerForm">
+          <!-- Category Dropdown -->
+          <div class="mb-3">
+            <label for="categorySelect" class="form-label">Select Category</label>
+            <select class="form-select" id="categorySelect" required>
+              <% cate.forEach(function(category) { %>
+                <option value="<%= category.name %>"><%= category.name %></option>
+              <% }); %>
+            </select>
+          </div>
+
+          <!-- Offer Value Input -->
+          <div class="mb-3">
+            <label for="offerValue" class="form-label">Offer Value</label>
+            <input type="text" class="form-control" id="offerValue" name="offerValue" placeholder="Enter offer value" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-info" id="addOfferBtn" >Add Offer</button>
+      </div>
+    </div>
   </div>
 </div>
-
-<%})%>
-
-
-
-
-
-
-
       <section class="content-main">
         <div class="content-header">
           <div>
@@ -391,10 +380,13 @@
 
 <script>
  document.getElementById('addOfferBtn').addEventListener('click', async (e) => {
-    e.preventDefault();  // Prevents the form from submitting traditionally
+    e.preventDefault();  
 
     const categoryId = document.getElementById('categorySelect').value;
     const offerValue = document.getElementById('offerValue').value;
+console.log('Frontend value', offerValue); 
+
+
 
     if (!categoryId || !offerValue) {
         alert('Please select a category and enter an offer value.');
@@ -407,7 +399,7 @@
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ offerValue }),
+            body: JSON.stringify({  value:offerValue }),
         });
 
         const result = await response.json();

@@ -10,6 +10,9 @@ const Product = require("../../models/product");
 const Cart = require("../../models/cart");
 const Order = require("../../models/order");
 const Coupon = require('../../models/couponModels')
+const Wallet = require('../../models/wallet')
+
+
 const HomePage = async (req, res) => {
   try {
     // console.log('rendering')
@@ -229,35 +232,35 @@ const verifyOtp = async (req, res) => {
 };
 
 ///resend otp
-
 const userLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // console.log("email ,password :  ", email, password);
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res
-        .status(404)
-        .send({ message: "User not found, please enter a valid email" });
+      return res.status(404).send({ message: "User not found, please enter a valid email" });
     }
+
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
-      return res
-        .status(401)
-        .send({ message: "Incorrect password, please try again" });
+      return res.status(401).send({ message: "Incorrect password, please try again" });
     }
+
     if (user.IsBlocked) {
-      return res.status(403).send({ message: "User were blocked" });
+      return res.status(403).send({ message: "User is blocked" });
     }
 
-    // console.log(user);
-    // if(user){
-    //   req.session.email = user.email
-    //   return res.redirect('/')
-
-    // }
+    // Check if user already has a wallet; if not, create one
+    let wallet = await Wallet.findOne({ userId: user._id });
+    if (!wallet) {
+      wallet = new Wallet({
+        userId: user._id,
+        balance: 0,
+        transaction: []
+      });
+      await wallet.save(); 
+    }
 
     req.session.user = {
       name: user.name,
@@ -266,11 +269,10 @@ const userLogin = async (req, res) => {
     return res.status(200).redirect("/");
   } catch (err) {
     console.error(err);
-    return res
-      .status(500)
-      .send({ message: "Server error, please try again later" });
+    return res.status(500).send({ message: "Server error, please try again later" });
   }
 };
+
 
 const resendOtp = async (req, res) => {
   console.log("OTP is:", req.session.otp);
@@ -997,6 +999,27 @@ const PlaceOrder = async (req, res) => {
       })
     );
 
+if(paymentOption === "wallet"){
+  const walletBalance = await Wallet.findOne({ userId: user._id });
+  if(!walletBalance || walletBalance < total  ){
+    return res.status(400).json({message:' wallet balance is not enough '});
+  }
+
+  walletBalance.balance -= total;
+  console.log('>>>>>>', walletBalance.balance)
+  walletBalance.transaction.push({
+    type: "debit",
+    amount: total,
+    description: `Order Payment for ${oid}`,
+  });
+  await walletBalance.save();
+  console.log('>>>>>>>>>>', walletBalance)
+
+}
+
+
+    
+
     const order = new Order({
       oid,
       userId: user._id,
@@ -1083,13 +1106,43 @@ const myOrders = async (req, res) => {
 const cancelOrder = async (req, res) => {
   try {
     const orderId = req.body.orderId;
+    const userEmail = req.session.user.email;
 
+    const user = await User.findOne({ email: userEmail });
+    console.log('/////>>>>>>>>>>>', user);
+
+    // Find the order
     const order = await Order.findOne({ oid: orderId });
     console.log("Attempting to cancel order:", orderId);
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
+
+    if (order.status === "cancelled") {
+      return res.status(400).json({ message: "Order is already cancelled" });
+    }
+
+
+    const wallet = await Wallet.findOne({ userId: user?._id })
+    console.log('the wallet is', wallet, user._id);
+
+    if (!wallet) {
+      return res.status(404).json({ message: "Wallet not found" });
+    }
+
+    const refundAmount = order.total;
+    wallet.balance += refundAmount;
+console.log('returned amount is ', refundAmount)
+    wallet.transaction.push({
+      type: "credit",
+      amount: refundAmount,
+      description: `Refund for canceled order ${orderId}`,
+    });
+    console.log('the wallet:', wallet.balance, order.total)
+
+
+    await Wallet.updateOne({ userId: user?._id }, wallet);  
 
     order.status = "cancelled";
     await order.save();
@@ -1100,6 +1153,8 @@ const cancelOrder = async (req, res) => {
     return res.status(500).send("Oops! Server error");
   }
 };
+
+
 const searchProducts = async (req, res) => {
   try {
     const user = req.session.user || null;
@@ -1108,26 +1163,24 @@ const searchProducts = async (req, res) => {
     const currentPage = parseInt(req.query.page) || 1;
     const itemsPerPage = parseInt(req.query.limit) || 5;
 
-    // Escape the search query to prevent regex-related issues
     const escapeRegex = (text) =>
       text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
     const regex = searchQuery
       ? new RegExp(escapeRegex(searchQuery), "i")
       : null;
 
-    // Query to count total products
     const totalProducts = await Product.countDocuments({
       isListed: true,
-      ...(regex && { productName: regex }), // Apply regex filter only if it exists
+      ...(regex && { productName: regex }),
     });
 
     const totalPages = Math.ceil(totalProducts / itemsPerPage);
     const skip = (currentPage - 1) * itemsPerPage;
 
-    // Query to fetch the products
+
     const ProductData = await Product.find({
       isListed: true,
-      ...(regex && { productName: regex }), // Apply regex filter only if it exists
+      ...(regex && { productName: regex }),
     })
       .populate("category")
       .skip(skip)
@@ -1195,7 +1248,7 @@ const searchProducts = async (req, res) => {
 
 const ForgetPas = async (req, res) => {
   try {
-    res.render("forgetPassword"); // Renders the 'forgetPassword' view
+    res.render("forgetPassword"); 
   } catch (error) {
     res.status(500).send("Unable to get this page");
   }

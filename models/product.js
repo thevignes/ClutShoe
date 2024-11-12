@@ -72,12 +72,12 @@
         offer: {
             type: {
                 type: String,
-                enum: ['percentage', 'flat'], // Allows for percentage or flat discount offers
-                default: 'percentage' // Default to percentage-based discount
+                enum: ['percentage', 'flat'], 
+                default: 'percentage'
             },
             value: {
                 type: Number,
-                required: false // Only required if an offer is applied
+                required: false
             },
             startDate: {
                 type: Date,
@@ -87,7 +87,11 @@
                 type: Date,
                 required: false
             }
-        }
+        },
+        categoryId:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref:'Category'
+          }
 
 
     },{timestamps:true})                                    
