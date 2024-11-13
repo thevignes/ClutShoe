@@ -9,9 +9,8 @@ const Category = require("../../models/categoryModel");
 const Product = require("../../models/product");
 const Cart = require("../../models/cart");
 const Order = require("../../models/order");
-const Coupon = require('../../models/couponModels')
-const Wallet = require('../../models/wallet')
-
+const Coupon = require("../../models/couponModels");
+const Wallet = require("../../models/wallet");
 
 const HomePage = async (req, res) => {
   try {
@@ -239,12 +238,16 @@ const userLogin = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(404).send({ message: "User not found, please enter a valid email" });
+      return res
+        .status(404)
+        .send({ message: "User not found, please enter a valid email" });
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
-      return res.status(401).send({ message: "Incorrect password, please try again" });
+      return res
+        .status(401)
+        .send({ message: "Incorrect password, please try again" });
     }
 
     if (user.IsBlocked) {
@@ -257,9 +260,9 @@ const userLogin = async (req, res) => {
       wallet = new Wallet({
         userId: user._id,
         balance: 0,
-        transaction: []
+        transaction: [],
       });
-      await wallet.save(); 
+      await wallet.save();
     }
 
     req.session.user = {
@@ -269,10 +272,11 @@ const userLogin = async (req, res) => {
     return res.status(200).redirect("/");
   } catch (err) {
     console.error(err);
-    return res.status(500).send({ message: "Server error, please try again later" });
+    return res
+      .status(500)
+      .send({ message: "Server error, please try again later" });
   }
 };
-
 
 const resendOtp = async (req, res) => {
   console.log("OTP is:", req.session.otp);
@@ -631,13 +635,11 @@ const cartPage = async (req, res) => {
     const userEmail = req.session.user?.email;
     const { productId, change } = req.body;
 
-    // Finding the user
     const userDoc = await User.findOne({ email: userEmail });
     if (!userDoc) {
       return res.redirect("/login");
     }
 
-    //populating product//
     const cart = await Cart.findOne({ userId: userDoc._id }).populate(
       "products.productId"
     );
@@ -680,7 +682,13 @@ const cartPage = async (req, res) => {
       cartTotals,
       message: null,
       user: userDoc,
+      cart,
     });
+
+    console.log(
+      "the cart >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",
+      cart.discountAmount
+    );
   } catch (error) {
     console.error(error);
     res.status(500).send("Oops, server error!");
@@ -699,7 +707,7 @@ const AddToCart = async (req, res) => {
 
     const user = await User.findOne({ email: userEmail });
     const product = await Product.findById(productId);
-  
+
     if (!product) {
       return res
         .status(404)
@@ -727,16 +735,33 @@ const AddToCart = async (req, res) => {
         productId: product._id,
         quantity: quantity,
         price: product.salePrice,
+        offerPrice: product.salePrice,
       });
     }
 
+    const coupon = await Coupon.findOne();
+
+    cart.totalAmount = cart.products.reduce(
+      (acc, product) => product.price + acc,
+      0
+    );
+    cart.discountAmount = cart.products.reduce(
+      (acc, product) => acc + (product.price - product.offerPrice),
+      0
+    );
     await cart.save();
 
-    // Redirect to the product details page
-    res.status(200).json({success:true,  message:"product added to cart successfully"})
+    res
+      .status(200)
+      .json({ success: true, message: "product added to cart successfully" });
   } catch (error) {
     console.error("Error in AddToCart:", error);
-    return res.status(500).json({ success: false, message: " please login and buy your product" });
+    return res
+      .status(500)
+      .json({
+        success: false,
+        message: " cannot add this product in cart server error",
+      });
   }
 };
 
@@ -744,7 +769,6 @@ const removeFromCart = async (req, res) => {
   try {
     const productId = req.params.id;
     console.log("Product ID to remove:", productId);
-    
 
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       return res
@@ -807,7 +831,9 @@ const checkout = async (req, res) => {
       return res.redirect("/login");
     }
 
-    const cart = await Cart.findOne({ userId: user._id }).populate("products.productId");
+    const cart = await Cart.findOne({ userId: user._id }).populate(
+      "products.productId"
+    );
     const addresses = await Address.find({ userId: user._id });
 
     if (!cart || cart.products.length === 0) {
@@ -820,6 +846,7 @@ const checkout = async (req, res) => {
         orderValue,
         userId,
         coupons,
+        cart
       });
     }
 
@@ -835,9 +862,12 @@ const checkout = async (req, res) => {
       },
       { total: 0 }
     );
-
-    cartTotals.discount = 0;
-    cartTotals.finalTotal = cartTotals.total; // Update finalTotal calculation
+    let couponDetails = null;
+    if (cart && cart.couponCode) {
+      couponDetails = await Coupon.findOne({ couponCode: cart.couponCode });
+    }
+    // cartTotals.discount = 0;
+    // cartTotals.finalTotal = cartTotals.total;
 
     res.render("checkOut", {
       products: cart.products,
@@ -848,6 +878,8 @@ const checkout = async (req, res) => {
       orderValue,
       userId,
       coupons,
+      cart,
+      coupon: couponDetails
     });
   } catch (error) {
     console.error("Error in checkout function:", error);
@@ -855,18 +887,17 @@ const checkout = async (req, res) => {
   }
 };
 
-
 const shopPage = async (req, res) => {
   try {
     const sortOption = req.query.sort || "featured";
-    const sizeSortOption = req.query.sizeSort || "";  // New sizeSort query parameter
+    const sizeSortOption = req.query.sizeSort || ""; // New sizeSort query parameter
     const currentPage = parseInt(req.query.page) || 1;
     const itemsPerPage = parseInt(req.query.limit) || 5;
     const searchQuery = req.query.q || "";
     const categoryFilter = req.query.category || "";
 
     console.log("Sort option selected:", sortOption);
-    console.log("Size Sort option selected:", sizeSortOption);  // Log size sort option
+    console.log("Size Sort option selected:", sizeSortOption); // Log size sort option
     console.log("Current page:", currentPage);
     console.log("Items per page:", itemsPerPage);
     console.log("Category Filter:", categoryFilter);
@@ -891,18 +922,16 @@ const shopPage = async (req, res) => {
         sortQuery = {};
     }
 
-
     if (sizeSortOption) {
       if (sizeSortOption === "smallToLarge") {
-        sortQuery.size = 1;  
+        sortQuery.size = 1;
       } else if (sizeSortOption === "largeToSmall") {
-        sortQuery.size = -1; 
+        sortQuery.size = -1;
       }
     }
 
     console.log("Sort Query:", sortQuery);
 
-  
     let categoryFilterQuery = {};
     if (categoryFilter) {
       console.log("Looking for category:", categoryFilter);
@@ -911,8 +940,8 @@ const shopPage = async (req, res) => {
       });
 
       if (category) {
-        categoryFilterQuery = { category: category._id }; 
-        console.log("Category found:", category); 
+        categoryFilterQuery = { category: category._id };
+        console.log("Category found:", category);
       } else {
         console.log("No category found with name:", categoryFilter);
         return res.status(400).send("Invalid category");
@@ -944,7 +973,7 @@ const shopPage = async (req, res) => {
       user: user || "",
       ProductData,
       sortOption,
-      sizeSortOption,  
+      sizeSortOption,
       currentPage,
       totalPages,
       itemsPerPage,
@@ -999,26 +1028,24 @@ const PlaceOrder = async (req, res) => {
       })
     );
 
-if(paymentOption === "wallet"){
-  const walletBalance = await Wallet.findOne({ userId: user._id });
-  if(!walletBalance || walletBalance < total  ){
-    return res.status(400).json({message:' wallet balance is not enough '});
-  }
+    if (paymentOption === "wallet") {
+      const walletBalance = await Wallet.findOne({ userId: user._id });
+      if (!walletBalance || walletBalance < total) {
+        return res
+          .status(400)
+          .json({ message: " wallet balance is not enough " });
+      }
 
-  walletBalance.balance -= total;
-  console.log('>>>>>>', walletBalance.balance)
-  walletBalance.transaction.push({
-    type: "debit",
-    amount: total,
-    description: `Order Payment for ${oid}`,
-  });
-  await walletBalance.save();
-  console.log('>>>>>>>>>>', walletBalance)
-
-}
-
-
-    
+      walletBalance.balance -= total;
+      console.log(">>>>>>", walletBalance.balance);
+      walletBalance.transaction.push({
+        type: "debit",
+        amount: total,
+        description: `Order Payment for ${oid}`,
+      });
+      await walletBalance.save();
+      console.log(">>>>>>>>>>", walletBalance);
+    }
 
     const order = new Order({
       oid,
@@ -1109,7 +1136,7 @@ const cancelOrder = async (req, res) => {
     const userEmail = req.session.user.email;
 
     const user = await User.findOne({ email: userEmail });
-    console.log('/////>>>>>>>>>>>', user);
+    console.log("/////>>>>>>>>>>>", user);
 
     // Find the order
     const order = await Order.findOne({ oid: orderId });
@@ -1119,13 +1146,12 @@ const cancelOrder = async (req, res) => {
       return res.status(404).json({ message: "Order not found" });
     }
 
-    if (order.status === "cancelled") {
+    if (order.status === "Cancelled") {
       return res.status(400).json({ message: "Order is already cancelled" });
     }
 
-
-    const wallet = await Wallet.findOne({ userId: user?._id })
-    console.log('the wallet is', wallet, user._id);
+    const wallet = await Wallet.findOne({ userId: user?._id });
+    console.log("the wallet is", wallet, user._id);
 
     if (!wallet) {
       return res.status(404).json({ message: "Wallet not found" });
@@ -1133,18 +1159,17 @@ const cancelOrder = async (req, res) => {
 
     const refundAmount = order.total;
     wallet.balance += refundAmount;
-console.log('returned amount is ', refundAmount)
+    console.log("returned amount is ", refundAmount);
     wallet.transaction.push({
       type: "credit",
       amount: refundAmount,
       description: `Refund for canceled order ${orderId}`,
     });
-    console.log('the wallet:', wallet.balance, order.total)
+    console.log("the wallet:", wallet.balance, order.total);
 
+    await Wallet.updateOne({ userId: user?._id }, wallet);
 
-    await Wallet.updateOne({ userId: user?._id }, wallet);  
-
-    order.status = "cancelled";
+    order.status = "Cancelled";
     await order.save();
 
     res.redirect("/order");
@@ -1154,6 +1179,54 @@ console.log('returned amount is ', refundAmount)
   }
 };
 
+const returnOrder = async (req, res) => {
+  try {
+    const orderId = req.body.orderId;
+    const userEmail = req.session.user.email;
+
+    const user = await User.findOne({ email: userEmail });
+    console.log("/////>>>>>>>>>>>", user);
+
+    // Find the order
+    const order = await Order.findOne({ oid: orderId });
+    console.log("Attempting to Returned order:", orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    if (order.status === "Returned") {
+      return res.status(400).json({ message: "Order is already Returned" });
+    }
+
+    const wallet = await Wallet.findOne({ userId: user?._id });
+    console.log("the wallet is", wallet, user._id);
+
+    if (!wallet) {
+      return res.status(404).json({ message: "Wallet not found" });
+    }
+
+    const refundAmount = order.total;
+    wallet.balance += refundAmount;
+    console.log("returned amount is ", refundAmount);
+    wallet.transaction.push({
+      type: "credit",
+      amount: refundAmount,
+      description: `Refund for canceled order ${orderId}`,
+    });
+    console.log("the wallet:", wallet.balance, order.total);
+
+    await Wallet.updateOne({ userId: user?._id }, wallet);
+
+    order.status = "Returned";
+    await order.save();
+
+    res.redirect("/order");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send("Oops! Server error");
+  }
+};
 
 const searchProducts = async (req, res) => {
   try {
@@ -1176,7 +1249,6 @@ const searchProducts = async (req, res) => {
 
     const totalPages = Math.ceil(totalProducts / itemsPerPage);
     const skip = (currentPage - 1) * itemsPerPage;
-
 
     const ProductData = await Product.find({
       isListed: true,
@@ -1248,7 +1320,7 @@ const searchProducts = async (req, res) => {
 
 const ForgetPas = async (req, res) => {
   try {
-    res.render("forgetPassword"); 
+    res.render("forgetPassword");
   } catch (error) {
     res.status(500).send("Unable to get this page");
   }
@@ -1328,4 +1400,5 @@ module.exports = {
   searchProducts,
   updateQuantity,
   ForgetPas,
+  returnOrder,
 };

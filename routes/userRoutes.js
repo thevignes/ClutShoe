@@ -156,4 +156,6 @@ router.post('/apply-coupon',CouponController.ApplyCoupon )
 //wallet routes//
 router.get('/wallet', WalletController.LoadWallet );
 
+router.post('/delete-coupon', CouponController.removeCoupon)
+
 module.exports = router

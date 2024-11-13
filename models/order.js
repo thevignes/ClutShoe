@@ -34,15 +34,17 @@ const OrderSchema = new mongoose.Schema({
             type: Number,
             required: true
         },
-        status: {
-            type: String,
-            enum: ['pending', 'shipped', 'delivered','Returned','Cancelled'],
-            default: 'pending'
-        }
+    
     }],
     paymentMethod: {
         type: String,
         required: true
+    },
+
+    status: {
+        type: String,
+        enum: ['pending', 'shipped', 'delivered','Returned','Cancelled'],
+        default: 'pending'
     },
     total: {
         type: Number,
@@ -51,6 +53,10 @@ const OrderSchema = new mongoose.Schema({
     orderDate: {
         type: Date,
         default: Date.now
+    },
+    appliedCoupon:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Coupon'
     }
 },{timestamps:true});
 

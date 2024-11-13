@@ -32,49 +32,61 @@
                 <h4>Your Orders</h4>
                 <div class="table-responsive order_table text-center">
                     <table class="table">
-                        <thead>
+                      <thead>
+                        <tr>
+                          <th colspan="2">Product</th>
+                          <th>Total</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if (products && products.length > 0) { %>
+                          <% products.forEach(productEntry => { %>
                             <tr>
-                                <th colspan="2">Product</th>
-                                <th>Total</th>
+                              <td class="image product-thumbnail">
+                                <img src="/uploads/re-image/<%= productEntry.productId.images[0] %>" alt="<%= productEntry.productId.productName %>">
+                              </td>
+                              <td>
+                                <h5><a href="shop-product-full.html"><%= productEntry.productId.productName %></a></h5>
+                                <span class="product-qty">x <%= productEntry.quantity %></span>
+                              </td>
+                              <td><%= productEntry.subtotal.toFixed(2) %></td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <% if (products && products.length > 0) { %>
-                                <% products.forEach(productEntry => { %>
-                                    <tr>
-                                        <td class="image product-thumbnail">
-                                            <img src="/uploads/re-image/<%= productEntry.productId.images[0] %>" alt="<%= productEntry.productId.productName %>">
-                                        </td>
-                                        <td>
-                                            <h5><a href="shop-product-full.html"><%= productEntry.productId.productName %></a></h5>
-                                            <span class="product-qty">x <%= productEntry.quantity %></span>
-                                        </td>
-                                        <td>$<%= productEntry.subtotal.toFixed(2) %></td>
-                                    </tr>
-                                <% }) %>
-                            <% } else { %>
-                                <tr>
-                                    <td colspan="3">Your cart is empty.</td>
-                                </tr>
-                            <% } %>
+                          <% }) %>
+                        <% } else { %>
+                          <tr>
+                            <td colspan="3">Your cart is empty.</td>
+                          </tr>
+                        <% } %>
                         
-                            <tr>
-                                <th>SubTotal</th>
-                                <td class="product-subtotal" colspan="2">$<%= cartTotals.total.toFixed(2) %></td>
-                            </tr>
+                        <tr>
+                          <th>SubTotal</th>
+                          <td class="product-subtotal" colspan="2"><span id="subtotal"><%= cartTotals.total.toFixed(2) %></span></td>
+                        </tr>
                         
-                            <tr>
-                                <th>Shipping</th>
-                                <td colspan="2"><em>Free Shipping</em></td>
-                            </tr>
+                        <tr>
+                          <th>Discount</th>
+                          <td colspan="2"><span id="discountAmount"><%= cart.discountAmount ? cart.discountAmount.toFixed(2) : '0.00' %></span></td>
+                        </tr>
+                  
+                        <tr>
+                          <th>Final Total</th>
+                          <td colspan="2">
+                            <span id="finalTotal">
+                              <%= cartTotals && cartTotals.finalTotal ? cartTotals.finalTotal.toFixed(2) : '0.00' %>
+                            </span>
+                          </td>
+                        </tr>
                         
-                          
-                              
-                        </tbody>
-                        
+                        <tr>
+                          <th>Shipping</th>
+                          <td colspan="2"><em>Free Shipping</em></td>
+                        </tr>
+                  
+                 
+                      </tbody>
                     </table>
-                </div>
-
+                  </div>
+                  
                 <!-- Coupons Section -->
                 <div class="coupon_section">
                     <h5>Available Coupons</h5>
@@ -116,6 +128,17 @@
     </div>
 </div>
 
+        <tr>
+        <td colspan="3">
+            <div class="coupon_item">
+            
+                <button class="btn btn-sm btn-danger" onclick="removeCoupon('<%= userId %>')">Remove Coupon</button>
+
+            </div>
+        </td>
+        </tr>
+
+
 <!-- Modal for Coupons -->
 <div class="modal fade" id="couponModal" tabindex="-1" role="dialog" aria-labelledby="couponModalLabel" aria-hidden="true">
    <div class="modal-dialog" role="document">
@@ -127,13 +150,17 @@
                </button>
            </div>
            <div class="modal-body">
-               <% coupons.forEach(function(coupon) { %>
-                   <div class="coupon_item">
-                       <p><%= coupon.couponCode %> - <%= coupon.description %></p>
-                       <button class="btn btn-sm btn-primary" onclick="copyCoupon('<%= coupon.couponCode %>')">Copy</button>
-                   </div>
-               <% }) %>
-           </div>
+<!-- If no coupon is applied, show available coupons -->
+                <% coupons.forEach(function(coupon) { %>
+                    <div class="coupon_item">
+                        <p><%= coupon.couponCode %> - <%= coupon.description %></p>
+                        <button class="btn btn-sm btn-primary" onclick="copyCoupon('<%= coupon.couponCode %>')">Copy</button>
+                    </div>
+                <% }) %>
+     
+        </div>
+        
+            
        </div>
    </div>
 </div>
@@ -326,49 +353,39 @@
         </script>
 
 <script>
-    async function applyCoupon() {
-        const couponCode = document.getElementById('couponCode').value;
-        const orderValue = parseFloat(document.getElementById('orderValue').value); 
-        const userId = document.getElementById('userId').value;
+   async function applyCoupon() {
+    const couponCode = document.getElementById('couponCode').value;
+    const orderValue = parseFloat(document.getElementById('orderValue').value); 
+    const userId = document.getElementById('userId').value;
 
-        try {
-            const response = await fetch('/apply-coupon', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId, couponCode, orderValue })
+    try {
+        const response = await fetch('/apply-coupon', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId, couponCode, orderValue })
+        });
+        const data = await response.json();
+
+        if (response.ok) {
+            // Update discount and final total on the page
+            document.getElementById("discountAmount").innerText = data.discount.toFixed(2);
+            document.getElementById("finalTotal").innerText = data.finalPrice.toFixed(2);
+            
+            Swal.fire({
+                icon: 'success',
+                title: `Discount Applied! You saved ${data.discount.toFixed(2)}`,
+                text: `Final Price: $${data.finalPrice.toFixed(2)}`,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
             });
-            const data = await response.json();
- 
-
-            if (response.ok) {
-                Swal.fire({
-                    icon: 'success',
-                    title: `Discount Applied! You saved ${data.discount.toFixed(2)}`,
-                    text: `Final Price: $${data.finalPrice.toFixed(2)}`,
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: data.message,
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true
-                });
-            }
-        } catch (error) {
-            console.error('Error:', error);
+        } else {
             Swal.fire({
                 icon: 'error',
-                title: 'Unexpected Error',
-                text: 'There was an error applying the coupon.',
+                title: 'Error',
+                text: data.message,
                 toast: true,
                 position: 'top-end',
                 showConfirmButton: false,
@@ -376,6 +393,72 @@
                 timerProgressBar: true
             });
         }
+    } catch (error) {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Unexpected Error',
+            text: 'There was an error applying the coupon.',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true
+        });
     }
+}
+
+
+async function removeCoupon(userId) {
+  try {
+    const response = await fetch('/delete-coupon', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: userId })  // Use `userId` passed as a parameter
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      document.getElementById("discountAmount").innerText = "0.00";
+      document.getElementById("finalTotal").innerText = result.newTotal.toFixed(2);
+
+      Swal.fire({
+        icon: 'success',
+        title: result.message || 'Coupon removed successfully',
+        text: `New total: ₹${result.newTotal.toFixed(2)}`,
+        toast: true,
+        position: 'top-end',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: result.message,
+        toast: true,
+        position: 'top-end',
+        timer: 3000,
+        timerProgressBar: true,
+        showConfirmButton: false
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Severe error occurred',
+      toast: true,
+      position: 'top-end',
+      timer: 3000,
+      timerProgressBar: true,
+      showConfirmButton: false
+    });
+  }
+}
+
+
 </script>
 

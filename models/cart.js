@@ -26,8 +26,15 @@ const cartSchema = new mongoose.Schema({
       isDeleted: {
         type: Boolean,
         default: false,
-      }
-    },
+      },
+      offerPrice:{
+        type:Number,
+        default:0
+      },
+
+
+    }
+
  
   ],
   totalAmount: {
@@ -35,10 +42,18 @@ const cartSchema = new mongoose.Schema({
 
     default: 0,
   },
+  discountAmount:{
+    type:Number,
+    set: val => parseFloat(val) || 0
+  },
   isCompleted: {
     type: Boolean,
 
     default: false,
+  },
+  couponCode: { 
+    type: String,
+    default: null,
   },
 });
 

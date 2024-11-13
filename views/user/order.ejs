@@ -135,6 +135,7 @@
             .sidebar {
                 width: 90%;
                 margin: 10px;
+                height:80vh;
             }
             .container {
                 width: 90%;
@@ -152,6 +153,7 @@
                 position: fixed;
                 left: 20px;
                 top: 20px;
+                height:80vh;
             }
             .container {
                 margin-left: 280px; /* Ensuring enough space for the sidebar */
@@ -202,11 +204,11 @@
                                 <p>₹ <%= order.products[0].price %></p>
                             </div>
                             <div class="buttons">
-                                <button class="view">View</button>
+                                
                                 <form action="/order/cancel" method="POST">
                                     <input type="hidden" name="orderId" value="<%= order.oid %>">
                                     <% if (order.status === 'Cancelled') { %>
-                                        <button type="submit" class="cancel" style="background-color: red;" disabled>Order Cancelled</button>
+                                        <button type="submit" class="cancel" disabled>Order Cancelled</button>
                                     <% } else { %>
                                         <button type="submit" class="cancel" style="background-color: red;">Cancel Order</button>
                                     <% } %>
@@ -228,7 +230,7 @@
                         <p>Subtotal: ₹ <%= order.total %></p>
                         <p>Shipping: Free</p>
                         <p>Total: ₹ <%= order.total %></p>
-                        <p>Status: <%= order.status %> </p>
+                        <p>Status: <%= order.status%> </p>
                     </div>
                 </div>
             <% }) %>
