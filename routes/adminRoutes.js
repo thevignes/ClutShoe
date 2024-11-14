@@ -9,6 +9,7 @@ const couponController = require('../controller/admin/couponControler')
 const uploads= multer({ storage: storage })
 const {UserAuth,AdminAuth} = require('../middlewares/auth')
 const OfferController = require('../controller/admin/offerController')
+const salesReportController = require('../controller/admin/sales')
 
 router.get('/dashboard',AdminController.Dashboard)
 
@@ -101,4 +102,7 @@ router.post('/addOffer/:productId',OfferController.ApplyOffer)
 
 router.post('/addCategoryOffer/:CateId', OfferController.CateOffer)
 
+router.get('/sales',salesReportController.salesReport )
+
+router.get('/sales-report', salesReportController.salesReport)
 module.exports = router 

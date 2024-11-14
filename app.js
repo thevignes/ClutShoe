@@ -8,7 +8,7 @@ const flash = require('connect-flash');
 require('dotenv').config();
 // const CheckRouter = require("./middlewares/checkBlockedStatus");
 require('./config/passport');
-
+const razorypay = require('razorpay')
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes")
 

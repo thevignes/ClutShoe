@@ -99,7 +99,7 @@
                     <div class="mb-3">
                         <h5>Payment</h5>
                         <div class="custome-radio">
-                            <input class="form-check-input" required type="radio" name="payment_option" value="wallet" id="exampleRadios3" checked>
+                            <input class="form-check-input" required type="radio" name="payment_option" value="wallet" id="exampleRadios3" >
                             <label class="form-check-label" for="exampleRadios3">Wallet</label>
                         </div>
                         <div class="custome-radio">
@@ -107,11 +107,12 @@
                             <label class="form-check-label" for="exampleRadios4">Cash on Delivery</label>
                         </div>
                         <div class="custome-radio">
-                            <input class="form-check-input" required type="radio" name="payment_option" id="exampleRadios5">
-                            <label class="form-check-label" for="exampleRadios5">Paypal</label>
+                            <input class="form-check-input" required type="radio" name="payment_option" id="exampleRadios5" value="razorpay" checked>
+                            <label class="form-check-label" for="exampleRadios5" id="" >Razorpay</label>
                         </div>
                     </div>
 
+                    <button type="submit" class="btn btn-fill-out btn-block mt-3" id="onlinePayment">Razorpay Place Order</button>
                     <button type="submit" class="btn btn-fill-out btn-block mt-3" id="placeOrderBtn">Place Order</button>
                 </div>
             </div>
@@ -132,7 +133,8 @@
         <td colspan="3">
             <div class="coupon_item">
             
-                <button class="btn btn-sm btn-danger" onclick="removeCoupon('<%= userId %>')">Remove Coupon</button>
+                <button class="btn btn-sm btn-danger" onclick="removeCoupon('<%= userId %>')"  position: relative;
+                    left: 51%;>Remove Coupon</button>
 
             </div>
         </td>
@@ -235,7 +237,7 @@
 
 <%- include('../../views/partial/user/footer') %>
 
-
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <!-- Bootstrap CSS -->
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 
@@ -290,6 +292,7 @@
         </script>
 
         <script>
+            async function placeOrder (){
             document.getElementById('placeOrderBtn').addEventListener('click', function () {
     const selectedAddress = document.querySelector('input[name="selected_address"]:checked');
     const selectedPaymentOption = document.querySelector('input[name="payment_option"]:checked');
@@ -349,15 +352,12 @@
             });
         });
 });
-
-        </script>
-
-<script>
+}
+placeOrder()
    async function applyCoupon() {
     const couponCode = document.getElementById('couponCode').value;
     const orderValue = parseFloat(document.getElementById('orderValue').value); 
     const userId = document.getElementById('userId').value;
-
     try {
         const response = await fetch('/apply-coupon', {
             method: 'POST',
@@ -408,7 +408,6 @@
     }
 }
 
-
 async function removeCoupon(userId) {
   try {
     const response = await fetch('/delete-coupon', {
@@ -458,7 +457,66 @@ async function removeCoupon(userId) {
     });
   }
 }
+document.getElementById('onlinePayment').addEventListener('click', async function(){
+    const selectedAddress = document.querySelector('input[name="selected_address"]:checked');
+    const selectedPaymentOption = document.querySelector('input[name="payment_option"]:checked');
+    const data = {
+        addressId: selectedAddress.value,
+        
+        // userId:user._id
 
+    };
 
+try{
+const orderResponse = await fetch("/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount:5000}) 
+      });
+      const order = await orderResponse.json();
+
+        // Initialize Razorpay payment
+        const options = {
+          key: "rzp_test_qT7pjheiiJYL7l", 
+          amount: order.amount,
+          currency: "INR",
+          name: "Test Company",
+          description: "Test Transaction",
+          order_id: order.id,
+          handler: async function (response) {
+          // Send the payment response to the server for verification
+          const verifyResponse = await fetch("/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              data      
+
+            }),
+          });
+          const verificationResult = await verifyResponse.json();
+          if (verificationResult.status === "success") {
+              alert("Payment verified and successful!");
+              placeOrder ()
+              
+            } else {
+                alert("Payment verification failed.");
+            }},
+            prefill: {
+                name: "vignesh",
+                email: "vigneshkdr777@gmail.com",
+                contact: "1234567890",
+            },
+        };
+
+        const rzp1 = new Razorpay(options);
+        rzp1.open();
+      } catch (error) {
+        console.error("Payment error:", error);
+        alert("Payment failed. Please try again.");
+      }
+})
 </script>
 

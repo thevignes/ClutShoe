@@ -6,7 +6,7 @@ require("dotenv").config();
 const  User = require('../../models/userModel')
 const Coupon = require('../../models/couponModels')
 const Cart = require('../../models/cart')
-
+const order = require('../../models/order')
 const ApplyCoupon = async (req, res) => {
     try {
       console.log('Starting coupon application...');
@@ -59,67 +59,65 @@ const ApplyCoupon = async (req, res) => {
       }
   
       let discount = 0;
-  
+
+      // Calculate initial discount based on coupon type
       if (coupon.discountType === 'percentage') {
         discount = orderValue * (coupon.amount / 100);
       } else if (coupon.discountType === 'fixed') {
         discount = coupon.amount;
       }
-
+      
+      // Cap the discount to the maximum allowed
       if (discount > coupon.maxDiscount) {
         discount = coupon.maxDiscount;
         console.log(`Discount capped at maximum allowed: ₹${discount}`);
-
       }
-  
-      let totalDiscount = 0;
-      let remainingDiscount = coupon.maxDiscount; 
-  
+      
+      let remainingDiscount = discount; // Initialize remaining discount for allocation
+      
+      // Calculate offer prices for each product and distribute the discount
       cart.products.forEach((product) => {
         let productDiscount = 0;
-  
+      
         if (remainingDiscount > 0) {
-  
+          // Calculate discount for the individual product
           if (coupon.discountType === 'percentage') {
             productDiscount = product.price * (coupon.amount / 100);
           } else if (coupon.discountType === 'fixed') {
-            productDiscount = coupon.amount / cart.products.length; 
+            productDiscount = coupon.amount / cart.products.length;
           }
-  
-     
+      
+          // Apply remaining discount cap to the product discount if needed
           if (productDiscount > remainingDiscount) {
             productDiscount = remainingDiscount;
           }
-  
+      
           remainingDiscount -= productDiscount;
         }
-  
+      
+        // Update offer price, ensuring it doesn't go below 0
         product.offerPrice = product.price - productDiscount;
         if (product.offerPrice < 0) {
           product.offerPrice = 0;
         }
-  
+      
         console.log('Product Price:', product.price);
         console.log('Product Discount:', productDiscount);
         console.log('Offer Price after discount:', product.offerPrice);
       });
-  
+      
+      // Calculate total original price and total discount
       cart.totalAmount = cart.products.reduce((acc, product) => acc + (product.price * product.quantity), 0);
-
-      cart.discountAmount = cart.products.reduce((acc,product)=> product.offerPrice+acc,0)
+      cart.discountAmount = cart.products.reduce((acc, product) => acc + ((product.price - product.offerPrice) * product.quantity), 0);
+      
       cart.couponCode = couponCode;
+      
+
       console.log('Total Cart Amount:', cart.totalAmount);
       console.log('Total Discount Amount:', cart.discountAmount);
-  
+      
       await cart.save();
-  
-      if (userUsage) {
-        userUsage.usageCount += 1;
-      } else {
-        coupon.usersUsed.push({ userId: user._id, usageCount: 1 });
-      }
-  
-      await coupon.save();
+      
   
       const finalPrice = orderValue - discount;
   

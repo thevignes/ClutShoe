@@ -57,6 +57,11 @@ const OrderSchema = new mongoose.Schema({
     appliedCoupon:{
         type: mongoose.Schema.Types.ObjectId,
         ref:'Coupon'
+    },
+    DiscountAmount:{
+        type:Number,
+        default:0
+
     }
 },{timestamps:true});
 

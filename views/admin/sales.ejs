@@ -98,37 +98,45 @@
 
   <!-- Orders Section -->
   <% if (orders && orders.length > 0) { %>
-    <% cart.forEach(carts => { %>
     <% orders.forEach(order => { %>
       <div class="order-card">
         <div class="header d-flex justify-content-between">
           <h5>Order ID: <%= order.oid %></h5>
-          <span class="badge-status bg-<%= order.paymentStatus === 'paid' ? 'success' : 'secondary' %>"><%= order.paymentStatus %></span>
+          <span class="badge-status bg-<%= order.paymentStatus === 'paid' ? 'success' : 'secondary' %>"><%= order.paymentMethod %></span>
         </div>
         <p><strong>Total Amount:</strong> $<%= order.total.toFixed(2) %></p>
-        <p><strong>Discount Amount:</strong> $<%= carts.discountAmount.toFixed(2) %></p>
-        <p><strong>Coupon Code:</strong> <%= carts.couponCode || 'N/A' %></p>
+  
+        <% if (cart && cart.length > 0) { %>
+          <% cart.forEach(carts => { %>
+            <p><strong>Discount Amount:</strong> $<%= carts.discountAmount ? carts.discountAmount.toFixed(2) : '0.00' %></p>
+            <p><strong>Coupon Code:</strong> <%= carts.couponCode || 'N/A' %></p>
+          <% }); %>
+        <% } %>
+  
         <h6>Products:</h6>
         <ul class="product-list">
           <% order.products.forEach(item => { %>
             <li class="product-item d-flex justify-content-between">
               <div>
-                <strong>Product:</strong> <%= item.products.productId %> <br>
-                <strong>Quantity:</strong> <%= item.product.productId.quantity %>
+                <% if (item.product && item.product.productId) { %>
+                  <strong>Product:</strong> <%= item.product.productId.name || 'Unknown' %> <br>
+                  <strong>Quantity:</strong> <%= item.quantity || 'N/A' %>
+                <% } else { %>
+                  <!-- <p>Product details are not available.</p> -->
+                <% } %>
               </div>
               <div>
-                <strong>Subtotal:</strong> $<%= item.subtotal.toFixed(2) %>
+                <strong>Subtotal:</strong> $<%= item.total ? item.subtotal.toFixed(2) : '0.00' %>
               </div>
             </li>
           <% }); %>
         </ul>
       </div>
     <% }); %>
-    <% }); %>
   <% } else { %>
     <p class="text-center">No orders found for the selected range.</p>
   <% } %>
-</div>
+  
 
 <script>
   function toggleCustomDateRange() {

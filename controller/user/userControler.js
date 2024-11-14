@@ -745,6 +745,7 @@ const AddToCart = async (req, res) => {
       (acc, product) => product.price + acc,
       0
     );
+    console.log('the total amount is?????????????????????? ', cart.totalAmount)
     cart.discountAmount = cart.products.reduce(
       (acc, product) => acc + (product.price - product.offerPrice),
       0

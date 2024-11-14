@@ -7,9 +7,13 @@ const checkBlockedStatus = require('../middlewares/checkBlockedStatus');
 const wishlistController = require('../controller/user/wishlist')
 const CouponController = require('../controller/user/coupon')
 const WalletController = require('../controller/user/wallet')
+const Cart = require('../models/categoryModel')
+const Order = require('../models/order')
+const User = require('../models/userModel')
+const Address = require('../models/address')
 // const { UserAuth} = require('../middlewares/auth')
 // router.get('/',userControler.HomePage)
-
+const crypto = require("crypto")
 router.get('/PageNotfound',userControler.PageNotFound)
 
 router.get('/',userControler.homePage)
@@ -157,5 +161,129 @@ router.post('/apply-coupon',CouponController.ApplyCoupon )
 router.get('/wallet', WalletController.LoadWallet );
 
 router.post('/delete-coupon', CouponController.removeCoupon)
+
+const Razorpay = require('razorpay')
+
+require('dotenv').config()
+
+
+
+const razorpay = new Razorpay({
+    key_id: process.env.RAZORPAY_ID,
+    key_secret: process.env.RAZORPAY_SECRET
+  });
+  
+  // Route to create a Razorpay order
+  router.post('/create-order', async (req, res) => {
+    console.log('helloooo')
+    const { amount } = req.body;
+    
+    const options = {
+      amount: amount * 100, // Convert amount to paise
+      currency: 'INR',
+      receipt: 'receipt#1',
+    };
+  
+    try {
+      const order = await razorpay.orders.create(options);
+      res.json({
+        key: process.env.RAZORPAY_SECRET, 
+        amount: order.amount,
+        currency: order.currency,
+        id: order.id
+      });
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  });
+  
+ 
+
+
+router.post('/verify', async (req, res) => {
+  console.log('Verifying Razorpay payment...');
+  
+  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, data } = req.body;
+  console.log('Received data:', { razorpay_order_id, razorpay_payment_id, razorpay_signature, data });
+
+  const key_secret = process.env.RAZORPAY_SECRET;
+  const userEmail = req.session.user.email;
+
+  try {
+   
+    const user = await User.findOne({ email: userEmail });
+    if (!user) {
+      return res.status(400).json({ message: 'User not found' });
+    }
+    
+    
+    const cart = await Cart.findOne({ userId: user._id }).populate('products.productId');
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',cart)
+    if (!cart) {
+      return res.status(400).json({ message: 'Cart is empty' });
+    }
+
+    const generated_signature = crypto
+      .createHmac('sha256', key_secret)
+      .update(razorpay_order_id + '|' + razorpay_payment_id)
+      .digest('hex');
+      
+      if (generated_signature !== razorpay_signature) {
+        return res.status(400).json({ status: 'failed', message: 'Invalid signature' });
+      }
+      
+      
+      const orderItems = [];
+      
+      const address = await Address.findOne({userId: user._id})
+      
+      let totalAmount = 0;
+      for (let item of cart.products) {
+        const product = item.productId;
+        const quantity = item.quantity;
+        const subtotal = product.salePrice * quantity;
+        totalAmount += subtotal;
+        
+        orderItems.push({
+          productId: product._id,
+          quantity,
+          price: product.salePrice,
+          subtotal,
+        });
+      }
+      
+      const order = new Order({
+        razorpay_order_id,
+        razorpay_payment_id,
+        total: totalAmount,
+        products: orderItems,
+        userId: user._id,
+        paymentStatus: 'paid', 
+        paymentMethod: 'razorpay',
+        address: {
+          street: data.street,
+          city: data.city,
+          state: data.state,
+          pin: data.pin,
+          country: data.country,
+        },
+      });
+
+
+    await order.save();
+    console.log('Order placed successfully:', order);
+
+    await Cart.findOneAndUpdate({ userId: user._id }, { $set: { products: [] } });
+
+
+    res.json({ status: 'success', message: 'Payment verified and order placed successfully' });
+
+  } catch (error) {
+    console.error('Error during payment verification or order processing:', error);
+    res.status(500).json({ status: 'failed', message: 'Error during payment verification or order processing' });
+  }
+});
+
+
 
 module.exports = router
