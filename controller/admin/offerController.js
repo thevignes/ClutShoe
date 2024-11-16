@@ -76,7 +76,8 @@ const CateOffer = async (req, res) => {
    
       const offerValue = Number(value);
 
-      console.log('///////', offerValue)
+      // console.log('///////', offerValue)
+      
       if (isNaN(offerValue)) {
         return res.status(400).json({ message: 'Offer value must be a valid number' });
       }
@@ -109,7 +110,7 @@ const CateOffer = async (req, res) => {
         };
         product.salePrice = salePrice;
       
-        // Push the updated product into the list
+        
         updatedProducts.push(product);
       });
       

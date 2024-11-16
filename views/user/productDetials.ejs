@@ -71,7 +71,7 @@
                                 <!-- Product Images Section -->
                                 <div class="col-md-6 col-sm-12">
                                     <div class="detail-gallery">
-                                        <!-- Product Image -->
+                                        <!-- main Product Image -->
                                         <div class="zoom-container" onmousemove="zoomIn(event)"
                                             onmouseleave="resetZoom()">
                                             <img id="zoomable-image" alt="zoomable-image" class="rounded-lg"
@@ -82,7 +82,7 @@
                                         <div class="slider-nav-thumbnails mt-3 d-flex">
                                             <% ProductData.images.forEach((image, index)=> { %>
                                                 <img alt="Thumbnail <% index %>" class="thumbnail rounded-lg me-2"
-                                                    height="70" width="70" src="/uploads/re-image/<%= image %>"
+                                                    height="100" width="100" src="/uploads/re-image/<%= image %>"
                                                     onclick="updateMainImage(this, '<%= image %>')" />
                                                 <% }); %>
                                         </div>
@@ -127,10 +127,20 @@
                                         </div>
                                         <div class="clearfix product-price-cover">
                                             <div class="product-price primary-color float-left">
-                                                <ins><span class="text-brand">$<%= ProductData.salePrice %></span></ins>
-                                                <ins><span class="old-price font-md ms-2">$<%= ProductData.regularPrice
+                                                <ins><span class="text-brand"><%= ProductData.salePrice %></span></ins>
+                                                <ins><span class="old-price font-md ms-2"><%= ProductData.regularPrice
                                                             %></span></ins>
-                                                <span class="save-price font-md color3 ms-2">25% Off</span>
+                                                            <% if (ProductData.offer) { %>
+                                                                <span class="hot"  color: white; padding: 3px 5px; font-size: 12px;">
+                                                                    <% if (ProductData.offer.type === 'percentage') { %>
+                                                                        <span class="save-price font-md color3 ms-2"><%= ProductData.offer.value %>% OFF</span>
+                                                                   
+                                                                    <% } else if (ProductData.offer.type === 'flat') { %>
+                                                                        <span class="save-price font-md color3 ms-2"> <%= ProductData.offer.value %> OFF</span>
+                                                             
+                                                                    <% } %>
+                                                                </span>
+                                                            <% } %>
                                             </div>
                                         </div>
                                         <div class="bt-1 border-color-1 mt-3 mb-3"></div>

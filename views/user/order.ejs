@@ -1,286 +1,429 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.1.9/sweetalert2.min.css" />
-        
-
-    
+    <%- include('../../views/partial/user/header', { user: user }) %>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.1.9/sweetalert2.min.css" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Summary & Profile Sidebar</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="/evara-frontend/assets/css/myorder.css">
     <style>
-        /* General Styling */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
+            background-color: #f5f5f5;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
         }
 
-        /* Sidebar Styling */
         .sidebar {
-            background-color: #fff;
-            width: 250px;
+    width: 250px;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: auto; /* Allow height to adjust */
+}
+.sidebar .profile {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.sidebar .profile img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #007bff;
+    display: block;
+    margin: 0 auto;
+}
+.sidebar .profile h2 {
+    margin: 10px 0;
+    color: #fff;
+    background-color: #6a0dad;
+    padding: 10px;
+    border-radius: 5px;
+}
+.sidebar .menu {
+    list-style: none;
+    padding: 0;
+}
+.sidebar .menu li {
+    margin: 10px 0;
+}
+.sidebar .menu li a {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+.sidebar .menu li a:hover,
+.sidebar .menu li a.active {
+    background-color: #f5f5f5;
+}
+.sidebar .menu li a i {
+    margin-right: 10px;
+}
+.sidebar .logout {
+    text-align: center;
+    margin-top: 20px;
+}
+.sidebar .logout button {
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+img{
+    float: left;
+}
+        /* Main content area */
+        /* .container {
+            flex-grow: 1;
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            text-align: center;
-            margin: 20px;
+            background-color: #fff;
+            margin-left: 250px;
+        } */
+
+        .order-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-        .profile-pic {
-            background-color: #007bff;
+
+        .product-image {
             width: 100px;
             height: 100px;
-            border-radius: 50%;
-            margin: 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .profile-pic i {
-            color: #fff;
-            font-size: 50px;
-        }
-        .username {
-            background-color: #6a0dad;
-            color: #fff;
-            padding: 10px;
-            border-radius: 20px;
-            margin: 10px 0;
-            font-size: 18px;
-        }
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .menu-item:hover {
-            background-color: #f0f0f0;
-        }
-        .menu-item i {
-            margin-right: 10px;
-            font-size: 18px;
-        }
-        .menu-item span {
-            font-size: 16px;
-        }
-        .logout-button {
-            background-color: #ff0000;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 20px;
-            width: 100%;
+            object-fit: cover;
+            margin-right: 15px;
+            position: relative;
         }
 
-        /* Main Content Styling */
-        .container {
-            max-width: 900px;
-            margin: 20px;
-            padding: 20px;
+        .product-details {
             flex-grow: 1;
         }
 
+        .product-title {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .product-info {
+            color: #666;
+            margin: 5px 0;
+        }
+
+        .product-price {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .cancellation-info {
+            text-align: right;
+        }
+
+        .cancellation-status {
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        .cancellation-reason {
+            color: #666;
+        }
+
+        .cancel {
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .cancel:disabled {
+            background-color: gray;
+        }
+ body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        /* .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        } */
         .order-item {
             display: flex;
-            flex-direction: column;
-            gap: 15px;
-            background-color: #f9f9f9;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        .product, .address, .total {
-            display: flex;
-            flex-direction: column;
-        }
-        .product-details, .buttons {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
         }
-
-        /* Footer Styling */
-        footer {
-            width: 100%;
-            background-color: #2d3e50;
-            color: #ffffff;
-            padding: 20px 0;
-            text-align: center;
-            margin-top: 40px;
+        .product-image {
+            width: 100px;
+            height: 100px;
+            margin-right: 15px;
         }
-
-        /* Responsive Design */
+        .product-details {
+            flex-grow: 1;
+        }
+        .product-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 0;
+        }
+        .product-info {
+            color: #666;
+            margin: 5px 0;
+        }
+        .product-price {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 15px;
+        }
+        .cancellation-info {
+            text-align: right;
+        }
+        .cancellation-status {
+            color: #ff0000;
+            font-weight: bold;
+        }
+        .cancellation-reason {
+            color: #666;
+        }
+        .cancel {
+            background-color: #ff4d4d;
+            color: #fff;
+            border: none;
+            padding: 5px 15px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .cancel:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        /* Responsive styles */
         @media (max-width: 768px) {
             body {
                 flex-direction: column;
                 align-items: center;
             }
-            .sidebar {
-                width: 90%;
-                margin: 10px;
-                height:80vh;
-            }
-            .container {
-                width: 90%;
-                margin: 10px;
-            }
-        }
 
-        @media (min-width: 769px) {
-            body {
-                display: flex;
-                flex-direction: row;
+            .sidebar {
+                width: 100%;
+                position: relative;
+                box-shadow: none;
+            }
+
+            .container {
+                margin-left: 0;
+                padding: 10px;
+                width: 100%;
+            }
+
+            .order-item {
+                flex-direction: column;
                 align-items: flex-start;
             }
-            .sidebar {
-                position: fixed;
-                left: 20px;
-                top: 20px;
-                height:80vh;
+
+            .product-image {
+                width: 80px;
+                height: 80px;
+                margin-right: 0;
+                margin-bottom: 10px;
             }
-            .container {
-                margin-left: 280px; /* Ensuring enough space for the sidebar */
+
+            .product-price {
+                margin-top: 10px;
+            }
+
+            .cancellation-info {
+                text-align: left;
             }
         }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="profile-pic">
-            <i class="fas fa-user"></i>
+    <!-- <div class="sidebar">
+        <div class="profile">
+            <img alt="Profile Picture" height="100" src="https://e7.pngegg.com/pngimages/136/22/png-clipart-user-profile-computer-icons-girl-customer-avatar-angle-heroes-thumbnail.png" width="100" />
+            <span>Hello</span>
+            <h4 class="p-1 text-black"><%= user.name %></h4>
         </div>
-        <div class="username"><%=user.name%></div>
-        <div class="menu-item">
-            <i class="fas fa-user-circle"></i>
-           <a href="/profile" style="text-decoration: none;">
-            <span style="color: black;">Account Overview</span>
-           </a>
+        <ul class="menu">
+            <li><a class="active" href="#"><i class="fas fa-user"></i> Account Overview</a></li>
+            <li><a href="/order"><i class="fas fa-box"></i> My Orders</a></li>
+            <li><a href="/manageAddress"><i class="fas fa-map-marker-alt"></i> Manage Addresses</a></li>
+            <li><a href="/wallet"><i class="fas fa-wallet"></i> Wallet</a></li>
+        </ul>
+        <div class="logout text-white">
+            <button><a href="/userLogout" class="border-rounded text-white">LOGOUT</a></button>
         </div>
-        <div class="menu-item">
-            <i class="fas fa-box"></i>
-          <a href="/order" style="text-decoration: none;"></a>
-            <span> My Orders</span>
-          </a>
-        </div>
-        <div class="menu-item">
-            <i class="fas fa-address-book"></i>
-            <a href="/viewAddress" style="text-decoration: none;">
-                <span style="color: black;">Manage Addresses</span>
-            </a>
-        </div>
-        <div class="menu-item">
-            <i class="fas fa-wallet"></i>
-            <span>Wallet</span>
-        </div>
-        <button class="logout-button">LOGOUT</button>
-    </div>
-
+    </div> -->
     <div class="container">
+
+        
         <% if (Orders && Orders.length > 0) { %> 
             <% Orders.forEach(order => { %>
                 <div class="order-item">
                     <div class="product">
                         <% if (order.products.length > 0 && order.products[0].productId) { %>
-                            <img src="<%= order.products[0].productId.images && order.products[0].productId.images.length > 0 ? '/uploads/re-image/' + order.products[0].productId.images[0] : 'default_image.jpg' %>" alt="<%= order.products[0].productId.productName || 'Product Name' %>"/>
+                            <img src="<%= order.products[0].productId.images && order.products[0].productId.images.length > 0 ? '/uploads/re-image/' + order.products[0].productId.images[0] : 'default_image.jpg' %>" alt="<%= order.products[0].productId.productName || 'Product Name' %>" class="product-image"/>
                             <div class="product-details">
-                                <h2><%= order.products[0].productId.productName || 'Product Name' %></h2>
-                                <p>₹ <%= order.products[0].price %></p>
+                                <p class="product-title"><%= order.products[0].productId.productName || 'Product Name' %></p>
+                                <p class="product-info">
+                                    Size: <%= order.products[0].size || 'Not Specified' %>
+                                </p>
                             </div>
-                            <div class="buttons">
+                            <% } else { %>
+                                <p>No product details available.</p>
+                                <% } %>
                                 
-                                <form action="/order/cancel" method="POST">
-                                    <input type="hidden" name="orderId" value="<%= order.oid %>">
+                                <p class="product-price">₹ <%= order.products[0].price %></p>
+                                
+                                <div class="cancellation-info">
                                     <% if (order.status === 'Cancelled') { %>
-                                        <button type="submit" class="cancel" disabled>Order Cancelled</button>
+                                      <p class="cancellation-status">Cancelled on <%= new Date(order.orderDate).toLocaleDateString() || 'Not Available' %></p>
                                     <% } else { %>
-                                        <button type="submit" class="cancel" style="background-color: red;">Cancel Order</button>
+                                      <form action="/order/cancel" method="POST">
+                                        <input type="hidden" name="orderId" value="<%= order.oid %>">
+                                        <button 
+                                          type="submit" 
+                                          class="cancel" 
+                                          <% if (order.status === 'Cancelled' || order.status === 'Returned') { %> 
+                                            disabled 
+                                          <% } %>>
+                                          <% if (order.status === 'Cancelled') { %>
+                                            Order Cancelled
+                                          <% } else { %>
+                                            Cancel Order
+                                          <% } %>
+                                        </button>
+                                      </form>
+                                      <% if (order.status === 'Delivered') { %>
+                                        <button 
+                                          style="background-color: aqua; border: none; width: 5vw; height: 5vh;"  
+                                          onclick="returnOrder('<%= order.oid %>')">
+                                          Return
+                                        </button>
+                                      <% } %>
                                     <% } %>
-                                </form>
-                                
-
-                            </div>
-                        <% } else { %>
-                            <p>No product details available.</p>
-                        <% } %>
-                    </div>
-                    <div class="address">
-                        <h3>Delivery Address</h3>
-                        <p><%= order.address.Firstname %> <%= order.address.Lastname %></p>
-                        <p><%= order.address.street %> <%= order.address.city %>, <%= order.address.state %> - <%= order.address.pin %></p>
-                    </div>
-                    <div class="total">
-                        <h3>Total</h3>
-                        <p>Subtotal: ₹ <%= order.total %></p>
-                        <p>Shipping: Free</p>
-                        <p>Total: ₹ <%= order.total %></p>
-                        <p>Status: <%= order.status%> </p>
+                                    <% if (order.status === 'Returned') { %>
+                                      <h4 class="text-danger">The order is returned!</h4>
+                                    <% } %>
+                                  </div>
+                                  
                     </div>
                 </div>
+                <p>status:<%=order.status%></p>
             <% }) %>
         <% } else { %>
             <p>No orders found.</p>
         <% } %>
     </div>
-
-
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.1.9/sweetalert2.all.min.js"></script>
-
 <script>
     async function cancelOrder(orderId) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, cancel it!'
-    }).then(async (result) => {
-        if (result.isConfirmed) {
-            try {
-                const response = await fetch(`/order/cancel`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ orderId: orderId })
-                });
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, cancel it!'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`/order/cancel`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ orderId: orderId })
+                    });
 
-                const data = await response.json();
+                    const data = await response.json();
 
-                if (response.ok) {
-                    Swal.fire('Cancelled!', data.message, 'success');
-                    // Display the cancellation details in the UI
-                    document.getElementById('orderStatus').textContent = `Status: ${data.order.status}`;
-                    document.getElementById('cancellationDate').textContent = `Cancelled On: ${new Date(data.order.canceledAt).toLocaleString()}`;
-                } else {
-                    Swal.fire('Error!', data.message, 'error');
+                    if (response.ok) {
+                        Swal.fire('Cancelled!', data.message, 'success');
+                        document.getElementById('orderStatus').innerText = 'Cancelled';
+                    } else {
+                        Swal.fire('Error!', data.message, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error canceling order:', error);
+                    Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                Swal.fire('Error!', 'An error occurred while cancelling the order.', 'error');
             }
-        }
+        });
+    }
+
+    async function returnOrder(orderId) {
+  try {
+    const response = await fetch('/return-order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ orderId }),
     });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      // Show success toast notification
+      Swal.fire({
+        toast: true, 
+        position: 'top-end', 
+        icon: 'success', 
+        title: result.message, 
+        showConfirmButton: false, 
+        timer: 1500,
+        timerProgressBar: true, 
+      });
+    } else {
+
+      Swal.fire({
+        toast: true, 
+        position: 'top-end',
+        icon: 'error', 
+        title: result.message ,
+        showConfirmButton: false,
+        timer: 1500,
+        timerProgressBar: true, 
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      toast: true,
+      position: 'top-end', 
+      icon: 'error', // Error icon
+      title: 'An error occurred. Please try again!', // General error message
+      showConfirmButton: false, // No confirm button
+      timer: 1500, // Show for 1.5 seconds
+      timerProgressBar: true, // Show progress bar
+    });
+  }
 }
 
-    </script>
-
-    </html>
-
+</script>
+<%- include('../../views/partial/user/footer') %>
+</html>

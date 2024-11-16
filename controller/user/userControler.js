@@ -891,14 +891,15 @@ const checkout = async (req, res) => {
 const shopPage = async (req, res) => {
   try {
     const sortOption = req.query.sort || "featured";
-    const sizeSortOption = req.query.sizeSort || ""; // New sizeSort query parameter
+    const sizeSortOption = req.query.sizeSort || ""; 
+    console.log('the size sortoption', sizeSortOption)
     const currentPage = parseInt(req.query.page) || 1;
     const itemsPerPage = parseInt(req.query.limit) || 5;
     const searchQuery = req.query.q || "";
     const categoryFilter = req.query.category || "";
 
     console.log("Sort option selected:", sortOption);
-    console.log("Size Sort option selected:", sizeSortOption); // Log size sort option
+    console.log("Size Sort option selected:", sizeSortOption);
     console.log("Current page:", currentPage);
     console.log("Items per page:", itemsPerPage);
     console.log("Category Filter:", categoryFilter);
@@ -969,18 +970,18 @@ const shopPage = async (req, res) => {
       .limit(itemsPerPage);
 
     const user = req.session.user || null;
-
     return res.render("shop", {
       user: user || "",
       ProductData,
       sortOption,
-      sizeSortOption,
+      sizeSortOption, // Ensure this variable is included
       currentPage,
       totalPages,
       itemsPerPage,
       searchQuery,
       categoryFilter,
     });
+    
   } catch (error) {
     console.error("Error in shopPage:", error);
     return res.status(500).send("Server error, please try again");
@@ -1179,18 +1180,15 @@ const cancelOrder = async (req, res) => {
     return res.status(500).send("Oops! Server error");
   }
 };
-
 const returnOrder = async (req, res) => {
   try {
     const orderId = req.body.orderId;
     const userEmail = req.session.user.email;
 
     const user = await User.findOne({ email: userEmail });
-    console.log("/////>>>>>>>>>>>", user);
 
     // Find the order
     const order = await Order.findOne({ oid: orderId });
-    console.log("Attempting to Returned order:", orderId);
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
@@ -1201,7 +1199,6 @@ const returnOrder = async (req, res) => {
     }
 
     const wallet = await Wallet.findOne({ userId: user?._id });
-    console.log("the wallet is", wallet, user._id);
 
     if (!wallet) {
       return res.status(404).json({ message: "Wallet not found" });
@@ -1209,22 +1206,20 @@ const returnOrder = async (req, res) => {
 
     const refundAmount = order.total;
     wallet.balance += refundAmount;
-    console.log("returned amount is ", refundAmount);
+
     wallet.transaction.push({
       type: "credit",
       amount: refundAmount,
       description: `Refund for canceled order ${orderId}`,
     });
-    console.log("the wallet:", wallet.balance, order.total);
 
     await Wallet.updateOne({ userId: user?._id }, wallet);
-
+console.log('the refund is', refundAmount)
     order.status = "Returned";
     await order.save();
 
-    res.redirect("/order");
+    return res.status(200).json({ message: 'The product was returned successfully!' });
   } catch (error) {
-    console.log(error);
     return res.status(500).send("Oops! Server error");
   }
 };

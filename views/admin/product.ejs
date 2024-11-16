@@ -44,71 +44,86 @@
   <%- include("../../views/partial/admin/header") %>
 
   <!-- Main Content -->
-  <div class="container table-container">
+<!-- Main Content -->
+<div class="container table-container">
     <form action="/admin/addProduct">
       <button type="submit" class="btn btn-success add-product-btn">Add Product</button>
     </form>
-    
+  
     <h2 class="page-header">Product List</h2>
     <% if (products.length > 0) { %>
       <table class="table table-bordered table-hover text-center align-middle">
-          <thead class="table-dark">
-              <tr>
-                  <th>Product Name</th>
-                  <th>Description</th>
-                  <th>Regular Price</th>
-                  <th>Sale Price</th>
-                  <th>Quantity</th>
-                  <th>Category</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                  <!-- Add a new column for the offer button -->
-                  <th>Offer</th>
-              </tr>
-          </thead>
-          <tbody>
-              <% products.forEach(product => { %>
-                  <tr>
-                      <td><%= product.productName %></td>
-                      <td><%= product.description %></td>
-                      <td><%= product.regularPrice %></td>
-                      <td><%= product.salePrice %></td>
-                      <td><%= product.quantity %></td>
-                      <td><%= product.category.name %></td>
-                      <td>
-                          <% if (product.isListed) { %>
-                              <span class="badge bg-success">Listed</span>
-                          <% } else { %>
-                              <span class="badge bg-secondary">Unlisted</span>
-                          <% } %>
-                      </td>
-                      <td>
-                          <a href="/admin/editProduct/<%= product._id %>" class="btn btn-warning btn-sm">Edit</a>
-                          <!-- <a href="/admin/deleteProduct/<%= product._id %>" class="btn btn-danger btn-sm">Delete</a> -->
-                          <% if (product.isListed) { %>
-                              <form action="/admin/unListProduct/<%= product._id %>" method="post" style="display: inline;">
-                                  <button type="submit" class="btn btn-danger btn-sm">unList</button>
-                              </form>
-                          <% } else { %>
-                              <form action="/admin/listProduct/<%= product._id %>" method="post" style="display: inline;">
-                                  <button type="submit" class="btn btn-success btn-sm">List</button>
-                              </form>
-                          <% } %>
-                      </td>
-                      <!-- Add the "Add Offer" button -->
-                      <td>
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#offerModal" data-product-id="<%= product._id %>">
-                            Add Offer
-                        </button>
-                    </td>
-                  </tr>
-              <% }) %>
-          </tbody>
+        <thead class="table-dark">
+          <tr>
+            <th>Product Name</th>
+            <th>Description</th>
+            <th>Regular Price</th>
+            <th>Sale Price</th>
+            <th>Quantity</th>
+            <th>Category</th>
+            <th>Offer</th>
+            <th>Status</th>
+            <th>Actions</th>
+            <th>Add Offer</th>
+            <th>Remove Offer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% products.forEach(product => { %>
+            <tr>
+              <td><%= product.productName %></td>
+              <td><%= product.description %></td>
+              <td><%= product.regularPrice %></td>
+              <td><%= product.salePrice %></td>
+              <td><%= product.quantity %></td>
+              <td><%= product.category.name %></td>
+              <td>
+                <% if (product.offer) { %>
+                  <% if (product.offer.type === 'percentage') { %>
+                    <%= product.offer.value %>% OFF
+                  <% } else if (product.offer.type === 'flat') { %>
+                    ₹<%= product.offer.value %> OFF
+                  <% } %>
+                <% } else { %>
+                  No Offer
+                <% } %>
+              </td>
+              <td>
+                <% if (product.isListed) { %>
+                  <span class="badge bg-success">Listed</span>
+                <% } else { %>
+                  <span class="badge bg-secondary">Unlisted</span>
+                <% } %>
+              </td>
+              <td>
+                <a href="/admin/editProduct/<%= product._id %>" class="btn btn-warning btn-sm">Edit</a>
+                <% if (product.isListed) { %>
+                  <form action="/admin/unListProduct/<%= product._id %>" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">Unlist</button>
+                  </form>
+                <% } else { %>
+                  <form action="/admin/listProduct/<%= product._id %>" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-success btn-sm">List</button>
+                  </form>
+                <% } %>
+              </td>
+              <td>
+                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#offerModal" data-product-id="<%= product._id %>">
+                  Add Offer
+                </button>
+              </td>
+              <td class="text-end">
+                <button class="btn btn-danger btn-sm">Remove Offer</button>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
       </table>
-  <% } else { %>
+    <% } else { %>
       <p class="text-center">No products found.</p>
-  <% } %>
+    <% } %>
   </div>
+  
   
   <div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalLabel" aria-hidden="true">
     <div class="modal-dialog">

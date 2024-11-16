@@ -167,60 +167,61 @@
                 <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one"> -->
                     <div class="row product-grid-4">
                         <% ProductData.forEach(product => { %>
-                        <div class="col-lg-3 col-md-4 col-12 col-sm-6 mt-5" >
-                            <div class="product-cart-wrap mb-30">
-                                <div class="product-img-action-wrap">
-                                    <div class="product-img product-img-zoom">
-                                        <a href="/ProducDetial/<%= product._id %>">
-                                            <img class="default-img" src="/uploads/re-image/<%= product.images[0] %>" alt="<%= product.name %>">
-                                            <img class="hover-img" src="/uploads/re-image/<%= product.images[1] %>" alt="<%= product.name %>">
-                                        </a>
-                                    </div>
-                                    <!-- <div class="product-action-1">
-                                        <a aria-label="Quick view" class="action-btn hover-up" data-bs-toggle="modal" data-bs-target="#quickViewModal">
-                                            <i class="fi-rs-eye"></i></a>
-                                        <a aria-label="Add To Wishlist" class="action-btn hover-up" href="shop-wishlist.html">
-                                            <i class="fi-rs-heart"></i></a>
-                                        <a aria-label="Compare" class="action-btn hover-up" href="shop-compare.html">
-                                            <i class="fi-rs-shuffle"></i></a>
-                                    </div> -->
-                                    <div class="product-badges product-badges-position product-badges-mrg">
-                                        <!-- <span class="hot">Hot</span>  -->
-                                    </div>
-                                </div>
-                                <div class="product-content-wrap">
-                                    <div class="product-category">
-                                        <a href="shop-grid-right.html" style="color: grey; font-size: 12px; display: block; margin-bottom: 5px;">
-                                            <%= product.category.name %>
-                                        </a>
-                                        <h2 style="font-size: 16px; font-weight: bold; margin: 0;">
-                                            <a href="shop-product-right.html" style="color: black; text-decoration: none;">
-                                                <%= product.productName %>
+                            <div class="col-lg-3 col-md-4 col-12 col-sm-6 mt-5">
+                                <div class="product-cart-wrap mb-30">
+                                    <div class="product-img-action-wrap">
+                                        <div class="product-img product-img-zoom">
+                                            <a href="/ProducDetial/<%= product._id %>">
+                                                <img class="default-img" src="/uploads/re-image/<%= product.images[0] %>" alt="<%= product.name %>">
+                                                <img class="hover-img" src="/uploads/re-image/<%= product.images[1] %>" alt="<%= product.name %>">
                                             </a>
-                                        </h2>
-                                    </div>
-                                    <div style="display: flex; align-items: center; margin: 8px 0;">
-                                        <div class="rating-result" title="90%" style="color: orange; font-size: 14px; margin-right: 10px;">
                                         </div>
-                                        <span style="color: grey; font-size: 14px;">70%</span>
+                                        <div class="product-badges product-badges-position product-badges-mrg">
+                                            <% if (product.offer) { %>
+                                                <span class="hot" style="background-color: red; color: white; padding: 3px 5px; font-size: 12px;">
+                                                    <% if (product.offer.type === 'percentage') { %>
+                                                        <%= product.offer.value %>% OFF
+                                                    <% } else if (product.offer.type === 'flat') { %>
+                                                        ₹<%= product.offer.value %> OFF
+                                                    <% } %>
+                                                </span>
+                                            <% } %>
+                                        </div>
                                     </div>
-                                    <div style="font-size: 18px; margin: 8px 0;">
-                                        <span style="color: green; font-weight: bold;"><%= product.salePrice %></span>
-                                        <span style="text-decoration: line-through; color: grey; font-size: 14px;">$<%= product.regularPrice %></span>
-                                    </div>
-                                    <div class="product-action-1 show" style="text-align: right; margin-top: 10px;">
-                                        <a aria-label="Add To Cart" class="action-btn hover-up" href="shop-cart.html" style="font-size: 20px; color: #007BFF;">
-                                            <i class="fi-rs-shopping-bag-add"></i>
-                                        </a>
+                                    <div class="product-content-wrap">
+                                        <div class="product-category">
+                                            <a href="/category/<%= product.category._id %>" style="color: grey; font-size: 12px; display: block; margin-bottom: 5px;">
+                                                <%= product.category.name %>
+                                            </a>
+                                            <h2 style="font-size: 16px; font-weight: bold; margin: 0;">
+                                                <a href="/ProducDetial/<%= product._id %>" style="color: black; text-decoration: none;">
+                                                    <%= product.productName %>
+                                                </a>
+                                            </h2>
+                                        </div>
+                                        <div style="display: flex; align-items: center; margin: 8px 0;">
+                                      
+                                            
+                                        </div>
+                                        <div style="font-size: 18px; margin: 8px 0;">
+                                            <% if (product.offer) { %>
+                                                <span style="color: green; font-weight: bold;">₹<%= product.salePrice.toFixed(2) %></span>
+                                                <span style="text-decoration: line-through; color: grey; font-size: 14px;">₹<%= product.regularPrice.toFixed(2) %></span>
+                                            <% } else { %>
+                                                <span style="color: black; font-weight: bold;">₹<%= product.regularPrice.toFixed(2) %></span>
+                                            <% } %>
+                                        </div>
+                                        <div class="product-action-1 show" style="text-align: right; margin-top: 10px;">
+                                            <a aria-label="Add To Cart" class="action-btn hover-up" href="/add-to-cart/<%= product._id %>" style="font-size: 20px; color: #007BFF;">
+                                                <i class="fi-rs-shopping-bag-add"></i>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         <% }) %>
                     </div>
-
-
-
+                    
 
 
 
