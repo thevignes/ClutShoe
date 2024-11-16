@@ -77,7 +77,7 @@ const CateOffer = async (req, res) => {
       const offerValue = Number(value);
 
       // console.log('///////', offerValue)
-      
+
       if (isNaN(offerValue)) {
         return res.status(400).json({ message: 'Offer value must be a valid number' });
       }
@@ -126,9 +126,46 @@ const CateOffer = async (req, res) => {
       return res.status(500).json({ message: 'Server error' });
     }
   };
-  
+
+  const removeOffer = async (req, res) => {
+    console.log('Request received to remove offer');
+
+    try {
+        const { productId } = req.body;
+
+        if (!productId) {
+            return res.status(400).json({ message: 'Product ID is required' });
+        }
+
+        console.log(productId);
+        const product = await Product.findById(productId);
+        console.log(product, '>>>>>>>>>>>>>>>>>>>>>');
+
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        if (!product.offer) {
+            return res.status(404).json({ message: 'No active offer found for this product' });
+        }
+
+        // Retain the original sale price if necessary
+        product.offer = null; // Clear the offer details
+        product.salePrice = product.salePrice || product.finalPrice; // Retain salePrice if it exists
+        product.finalPrice = product.salePrice || product.regularPrice; // Default to salePrice or regularPrice
+
+        await product.save();
+
+        return res.status(200).json({ message: 'Offer removed successfully', product });
+    } catch (error) {
+        console.error('Error while removing offer:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
 
 module.exports = {
     ApplyOffer,
-    CateOffer
+    CateOffer,
+    removeOffer
 }

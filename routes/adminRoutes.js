@@ -102,7 +102,13 @@ router.post('/addOffer/:productId',OfferController.ApplyOffer)
 
 router.post('/addCategoryOffer/:CateId', OfferController.CateOffer)
 
+router.post('/offer-remove', OfferController.removeOffer)
+
+// sales report routes
+
 router.get('/sales',salesReportController.salesReport )
 
 router.get('/sales-report', salesReportController.salesReport)
+
+
 module.exports = router 

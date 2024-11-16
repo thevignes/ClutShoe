@@ -71,6 +71,7 @@
 
         offer: {
             type: {
+                _id: mongoose.Schema.Types.ObjectId,
                 type: String,
                 enum: ['percentage', 'flat'], 
                 default: 'percentage'

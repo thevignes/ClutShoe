@@ -113,7 +113,13 @@
                 </button>
               </td>
               <td class="text-end">
-                <button class="btn btn-danger btn-sm">Remove Offer</button>
+                <button 
+                class="btn btn-danger btn-sm" 
+                onclick="removeOffer('<%= product._id %>')">
+                Remove Offer
+              </button>
+              
+              
               </td>
             </tr>
           <% }) %>
@@ -211,7 +217,56 @@
               timer: 2000
           });
       }
-  });
+  })
+  async function removeOffer(productId) {
+    try {
+        console.log('sathanam kitti', productId
+            
+        )
+        const response = await fetch('/admin/offer-remove', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ productId }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Offer Removed',
+                text: result.message || 'Offer removed successfully.',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: result.message || 'Failed to remove the offer.',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        }
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred while removing the offer.',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+        });
+    }
+}
+
 </script>
 
 

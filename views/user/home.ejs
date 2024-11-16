@@ -205,12 +205,15 @@
                                         </div>
                                         <div style="font-size: 18px; margin: 8px 0;">
                                             <% if (product.offer) { %>
-                                                <span style="color: green; font-weight: bold;">₹<%= product.salePrice.toFixed(2) %></span>
-                                                <span style="text-decoration: line-through; color: grey; font-size: 14px;">₹<%= product.regularPrice.toFixed(2) %></span>
+                                                <% if (product.salePrice) { %>
+                                                    <span style="color: green; font-weight: bold;">₹<%= (product.salePrice || 0).toFixed(2) %></span>
+                                                <% } %>
+                                                <span style="text-decoration: line-through; color: grey; font-size: 14px;">₹<%= (product.regularPrice || 0).toFixed(2) %></span>
                                             <% } else { %>
-                                                <span style="color: black; font-weight: bold;">₹<%= product.regularPrice.toFixed(2) %></span>
+                                                <span style="color: black; font-weight: bold;">₹<%= (product.regularPrice || 0).toFixed(2) %></span>
                                             <% } %>
                                         </div>
+                                        
                                         <div class="product-action-1 show" style="text-align: right; margin-top: 10px;">
                                             <a aria-label="Add To Cart" class="action-btn hover-up" href="/add-to-cart/<%= product._id %>" style="font-size: 20px; color: #007BFF;">
                                                 <i class="fi-rs-shopping-bag-add"></i>
