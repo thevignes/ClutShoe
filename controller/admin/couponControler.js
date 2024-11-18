@@ -88,11 +88,80 @@ const addCoupon = async (req, res) => {
             return res.status(500).json({ message: 'Internal Server Error' });
         }
     };
+const editCouponPage = async(req,res)=>{
+    try {
+        const couponId = req.params.id;
+        const coupon = await Coupon.findById(couponId);
+        console.log(coupon,'?????????????????????????????//')
+        res.render('editCoupon',{coupon});
+    } catch (error) {
+        console.log(error, 'server error')
+        return res.status(500).send('server error oops!')
+        
+    }
+}
+    const editCoupon = async (req, res) => {
+        try {
+            const { couponId } = req.body;
+            const {
+                couponCode,
+                amount,
+                description,
+                limit,
+                userLimit,
+                expiryDate,
+                maxDiscount,
+                minOrderValue,
+                discountType,
+            } = req.body;
+    
+          
+            if (!couponId) {
+                return res.status(400).json({ error: "Coupon ID is required" });
+            }
+    
+            
+            const updatedCoupon = await Coupon.findByIdAndUpdate(
+                couponId, 
+                {
+                    $set: {
+                        couponCode,
+                        amount,
+                        description,
+                        limit,
+                        userLimit,
+                        expiryDate,
+                        maxDiscount,
+                        minOrderValue,
+                        discountType,
+                    },
+                },
+                { new: true }
+            );
+    
+   
+            if (!updatedCoupon) {
+                return res.status(404).json({ error: "Coupon not found" });
+            }
+    
+        
+            res.status(200).json({
+                message: "Coupon updated successfully",
+                coupon: updatedCoupon,
+            });
+        } catch (error) {
+  console.log(error)
+  return res.status(500).json({message: 'server error'})
+        }
+    }
+    
     
 module.exports = {
     couponPage,
     addCoupon,
     couponList,
-    DeleteCoupon
+    DeleteCoupon,
+    editCoupon,
+    editCouponPage
 
 }

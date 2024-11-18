@@ -110,5 +110,10 @@ router.get('/sales',salesReportController.salesReport )
 
 router.get('/sales-report', salesReportController.salesReport)
 
+//edit coupon 
+
+router.get('/editCoupon/:id',couponController.editCouponPage )
+router.post('/updateCoupon',couponController.editCoupon)
+
 
 module.exports = router 

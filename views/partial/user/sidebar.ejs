@@ -1,0 +1,117 @@
+
+
+
+
+<div class="sidebar">
+    <style>
+        /* Sidebar container */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Profile Section */
+.profile-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.profile-avatar img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.profile-name {
+    font-size: 18px;
+    color: #6c63ff;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+/* Menu */
+.sidebar-menu {
+    list-style: none;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.sidebar-menu li a {
+    text-decoration: none;
+    font-size: 16px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.sidebar-menu li a .icon {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.sidebar-menu li a:hover,
+.sidebar-menu li a.active {
+    background-color: #f0f0ff;
+    color: #6c63ff;
+    font-weight: bold;
+}
+
+/* Logout Section */
+.logout-section {
+    margin-top: auto;
+    width: 100%;
+    text-align: center;
+}
+
+.logout-btn {
+    display: inline-block;
+    width: 90%;
+    text-align: center;
+    padding: 10px 20px;
+    background-color: #ff4d4d;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #e60000;
+}
+
+    </style>
+    <div class="profile-section">
+        <div class="profile-avatar">
+            <img src="https://via.placeholder.com/80" alt="User Avatar" />
+        </div>
+        <h3 class="profile-name">vignesh</h3>
+    </div>
+    <ul class="sidebar-menu">
+        <li><a href="/account"><i class="icon">👤</i> Account Overview</a></li>
+        <li><a href="/orders"><i class="icon">📦</i> My Orders</a></li>
+        <li><a href="/addresses" class="active"><i class="icon">📍</i> Manage Addresses</a></li>
+        <li><a href="/wallet"><i class="icon">💳</i> Wallet</a></li>
+    </ul>
+    <div class="logout-section">
+        <a href="/logout" class="logout-btn">LOGOUT</a>
+    </div>
+</div>

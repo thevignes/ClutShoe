@@ -215,13 +215,14 @@
 <body>
   <div class="container">
     <div class="sidebar">
-      <img alt="User profile picture" height="100" src="" width="100"/>
-      <div >vignesh</div>
+      <img alt="User profile picture" height="100" src="https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg" width="100"/>
+      <h4 class="text-dark">Hello</h4>
+      <h5 > <%=user.name%></h5>
       <ul class="menu">
-        <li><i class="fas fa-user"></i>Account Overview</li>
-        <li><i class="fas fa-box"></i>My Orders</li>
-        <li><i class="fas fa-map-marker-alt"></i>Manage Addresses</li>
-        <li class="active"><i class="fas fa-wallet"></i>Wallet</li>
+        <li><i class="fas fa-user"></i><a href="/profile" class="text-dark">Account Overview</a></li>
+        <li><i class="fas fa-box"></i><a href="/order"class="text-dark">My Orders</a></li>
+        <li><i class="fas fa-map-marker-alt"></i><a href="/manageAddress" class="text-dark">Manage Addresses</a></li>
+        <li class="active"><i class="fas fa-wallet"></i><a href="/wallet"class="text-dark">Wallet</a></li>
       </ul>
       <div class="logout">LOGOUT</div>
     </div>
@@ -233,7 +234,7 @@
       
         <div class="transaction-history">
           <h3>Transaction History</h3>
-          <div class="filters" style="width: 10%; gap: 7px;">
+          <!-- <div class="filters" style="width: 10%; gap: 7px;">
             <select>
               <option>Debited</option>
               <option>Credited</option>
@@ -241,7 +242,7 @@
             <select>
               <option>Sort</option>
             </select>
-          </div>
+          </div> -->
       
           <table style="color: black; border: #333;">
             <thead>

@@ -1048,12 +1048,12 @@ const PlaceOrder = async (req, res) => {
       await walletBalance.save();
       console.log(">>>>>>>>>>", walletBalance);
     }
-
+const cart = await Cart.findOne({userId: user._id})
     const order = new Order({
       oid,
       userId: user._id,
       products: productDetails,
-      total,
+      total:total-cart.discountAmount,
       paymentMethod: paymentOption,
       address: {
         Firstname: address.Firstname,
@@ -1180,6 +1180,7 @@ const cancelOrder = async (req, res) => {
     return res.status(500).send("Oops! Server error");
   }
 };
+
 const returnOrder = async (req, res) => {
   try {
     const orderId = req.body.orderId;

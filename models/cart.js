@@ -11,32 +11,26 @@ const cartSchema = new mongoose.Schema({
       productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
-
         required: true,
-      }, 
-
+      },
       quantity: {
         type: Number,
         default: 1,
       },
       price: {
         type: Number,
-        // required: true,
       },
       isDeleted: {
         type: Boolean,
         default: false,
       },
-      offerPrice:{
-        type:Number,
-        default:0
+      offerPrice: {
+        type: Number,
+        default: 0,
       },
-
-
-    }
-
- 
+    },
   ],
+  
   totalAmount: {
     type: Number,
 

@@ -39,6 +39,12 @@
                 position: relative;
                 /* Required for positioning */
             }
+            #wish{
+                background-color: #45a049;
+                border: none;
+                padding: 5px;
+                
+            }
 
             #zoomable-image {
                 transition: transform 0.2s ease;
@@ -177,13 +183,14 @@
                                                         <!-- <button class="btn btn-success mt-2" type="submit">Add to Cart</button> -->
                                                         <button
                                                             class="<%= ProductData.quantity !== 0 ? 'btn btn-success mt-2' : 'd-none' %>"
-                                                            type="button" onclick="addToCart('<%= ProductData._id %>')">
+                                                            type="button" id="add" onclick="addToCart('<%= ProductData._id %>')">
                                                             Add to Cart
                                                         </button>
 
                                                     </form>
                                                     <form id="wishlistForm" data-product-id="<%= ProductData._id %>">
-                                                        <button type="button" onclick="addToWishlist('<%= ProductData._id %>')">Add to Wishlist</button>
+                                                        <button type="button" class="wish" id="wish"
+                                                         onclick="addToWishlist('<%= ProductData._id %>')">Add to Wishlist</button>
                                                     </form>
                                                     
                                                     <!-- Dropdown to select quantity -->

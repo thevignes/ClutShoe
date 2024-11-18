@@ -23,7 +23,8 @@
     "passport-google-oidc": "^0.1.0",
     "razorpay": "^2.9.5",
     "sharp": "^0.33.5",
-    "sweetalert2": "^11.14.3"
+    "sweetalert2": "^11.14.3",
+    "uuid": "^11.0.3"
   },
   "name": "myproject",
   "version": "1.0.0",

@@ -44,7 +44,8 @@ const {Schema} = mongoose
 isDeleted:{
     type:Boolean,
     default:false
-}
+},
+oid: { type: String, required: true }, 
 
     },{timestamps:true}) 
 

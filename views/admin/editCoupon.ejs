@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include("../../views/partial/admin/header") %>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Coupon</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5 ">
+        <h1 class="text-center">Edit Coupon</h1>
+        <form id="editCouponForm" method="POST" action="/admin/updateCoupon">
+            <input type="hidden" name="couponId" value="<%= coupon._id %>">
+        
+            <div class="mb-3">
+                <label for="couponCode" class="form-label">Coupon Code</label>
+                <input type="text" class="form-control" id="couponCode" name="couponCode" value="<%= coupon.couponCode %>" required>
+            </div>
+        
+            <div class="mb-3">
+                <label for="amount" class="form-label">Amount</label>
+                <input type="number" class="form-control" id="amount" name="amount" value="<%= coupon.amount %>" required>
+            </div>
+        
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3" required><%= coupon.description %></textarea>
+            </div>
+        
+            <div class="mb-3">
+                <label for="limit" class="form-label">Limit</label>
+                <input type="number" class="form-control" id="limit" name="limit" value="<%= coupon.limit %>" required>
+            </div>
+        
+            <div class="mb-3">
+                <label for="userLimit" class="form-label">User Limit</label>
+                <input type="number" class="form-control" id="userLimit" name="userLimit" value="<%= coupon.userLimit %>" required>
+            </div>
+        
+            <div class="mb-3">
+                <label for="expiryDate" class="form-label">Expiry Date</label>
+                <input type="date" class="form-control" id="expiryDate" name="expiryDate" value="<%= coupon.expiryDate.toISOString().split('T')[0] %>" required>
+            </div>
+        
+            <div class="mb-3">
+                <label for="maxDiscount" class="form-label">Max Discount</label>
+                <input type="number" class="form-control" id="maxDiscount" name="maxDiscount" value="<%= coupon.maxDiscount %>" required>
+            </div>
+        
+            <div class="mb-3">
+                <label for="minOrderValue" class="form-label">Minimum Order Value</label>
+                <input type="number" class="form-control" id="minOrderValue" name="minOrderValue" value="<%= coupon.minOrderValue %>" required>
+            </div>
+        
+            <div class="mb-3">
+                <label for="discountType" class="form-label">Discount Type</label>
+                <select class="form-select" id="discountType" name="discountType" required>
+                    <option value="percentage" <%= coupon.discountType === 'percentage' ? 'selected' : '' %>>Percentage</option>
+                    <option value="flat" <%= coupon.discountType === 'flat' ? 'selected' : '' %>>Flat</option>
+                </select>
+            </div>
+        
+            <div class="text-center">
+                <button type="button" class="btn btn-primary" onclick="submitCouponForm()">Update Coupon</button>
+            </div>
+        </form>
+        
+    </div>
+    <%- include("../../views/partial/admin/footer") %>
+
+    <script>
+ function submitCouponForm() {
+    const form = document.getElementById('editCouponForm');
+    const formData = new FormData(form);
+
+    // Send the data to the server using Fetch API
+    fetch('/admin/updateCoupon', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Use SweetAlert2 for success notification
+        if (data.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Coupon Updated Successfully',
+                text: 'The coupon has been updated.',
+                confirmButtonText: 'OK'
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'There was an error updating the coupon.',
+                confirmButtonText: 'OK'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Server Error',
+            text: 'An error occurred while updating the coupon.',
+            confirmButtonText: 'OK'
+        });
+    });
+}
+    </script>
+</body>
+</html>

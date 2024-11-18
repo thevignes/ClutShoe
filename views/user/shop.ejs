@@ -131,12 +131,11 @@
                     <div class="sort-by-product-area">      
                       
                         <div class="sort-by-cover">
-                            <form method="get" action="/shop" class="d-flex align-items-center">
-                            <!-- here is size -->
-
+                            <!-- <form method="get" action="/shop" class="d-flex align-items-center"> -->
+                            <!-- here is sie -->
                                 <!-- Submit Button -->
-                                <button type="submit" class="btn btn-primary">Apply</button>
-                              </form>
+                                <!-- <button type="submit" class="btn btn-primary">Apply</button>
+                              </form> -->
                               
                             <div class="sort-by-product-wrap">
                                 <div class="sort-by">
@@ -193,6 +192,9 @@
                                     <form  action="/add-to-cart/<%= product._id %>" method="post">
                                         <i class="fi-rs-shopping-bag-add me-2"></i>
                                         <button  class="btn btn-success mt-2" type="submit">Add to Cart</button>
+                                    </form>
+                                    <form action="/add-to-cart/<%= product._id %>"method="post">
+                                        <i class="fa-regular fa-heart"></i>
                                     </form>
                                 </div>
                             </div>

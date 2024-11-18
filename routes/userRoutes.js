@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid');
 const express = require('express')
 const router = express.Router();
 const userControler = require('../controller/user/userControler');
@@ -7,7 +8,7 @@ const checkBlockedStatus = require('../middlewares/checkBlockedStatus');
 const wishlistController = require('../controller/user/wishlist')
 const CouponController = require('../controller/user/coupon')
 const WalletController = require('../controller/user/wallet')
-const Cart = require('../models/categoryModel')
+const Cart = require('../models/cart')
 const Order = require('../models/order')
 const User = require('../models/userModel')
 const Address = require('../models/address')
@@ -179,7 +180,7 @@ const razorpay = new Razorpay({
     const { amount } = req.body;
     
     const options = {
-      amount: amount * 100, // Convert amount to paise
+      amount: amount * 100, 
       currency: 'INR',
       receipt: 'receipt#1',
     };
@@ -198,11 +199,9 @@ const razorpay = new Razorpay({
   });
   
  
-
-
 router.post('/verify', async (req, res) => {
   console.log('Verifying Razorpay payment...');
-  
+
   const { razorpay_order_id, razorpay_payment_id, razorpay_signature, data } = req.body;
   console.log('Received data:', { razorpay_order_id, razorpay_payment_id, razorpay_signature, data });
 
@@ -210,82 +209,104 @@ router.post('/verify', async (req, res) => {
   const userEmail = req.session.user.email;
 
   try {
-   
-    const user = await User.findOne({ email: userEmail });
-    if (!user) {
-      return res.status(400).json({ message: 'User not found' });
-    }
-    
-    
-    const cart = await Cart.findOne({ userId: user._id }).populate('products.productId');
-    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>',cart)
-    if (!cart) {
-      return res.status(400).json({ message: 'Cart is empty' });
-    }
+      const user = await User.findOne({ email: userEmail });
+      if (!user) {
+          return res.status(400).json({ message: 'User not found' });
+      }
 
-    const generated_signature = crypto
-      .createHmac('sha256', key_secret)
-      .update(razorpay_order_id + '|' + razorpay_payment_id)
-      .digest('hex');
-      
+      const cart = await Cart.findOne({ userId: user._id })
+          .populate({
+              path: 'products.productId',
+              model: 'Product',
+              strictPopulate: false,
+          })
+          .exec();
+
+      console.log('>>>>>>>>>>>>>>>>>>>>>', cart);
+
+      if (!cart) {
+          return res.status(400).json({ message: 'Cart is empty' });
+      }
+
+      const generated_signature = crypto
+          .createHmac('sha256', key_secret)
+          .update(razorpay_order_id + '|' + razorpay_payment_id)
+          .digest('hex');
+
       if (generated_signature !== razorpay_signature) {
-        return res.status(400).json({ status: 'failed', message: 'Invalid signature' });
+          return res.status(400).json({ status: 'failed', message: 'Invalid signature' });
       }
-      
-      
-      const orderItems = [];
-      
-      const address = await Address.findOne({userId: user._id})
-      
+
       let totalAmount = 0;
-      for (let item of cart.products) {
-        const product = item.productId;
-        const quantity = item.quantity;
-        const subtotal = product.salePrice * quantity;
-        totalAmount += subtotal;
-        
-        orderItems.push({
-          productId: product._id,
-          quantity,
-          price: product.salePrice,
-          subtotal,
-        });
+      const orderItems = [];
+
+      // Calculate total amount and populate orderItems
+      for (let i = 0; i < cart.products.length; i++) {
+          const product = cart.products[i].productId;
+          const quantity = cart.products[i].quantity;
+          const subtotal = product.salePrice * quantity;
+          totalAmount += subtotal;
+
+          orderItems.push({
+              productId: product._id,
+              quantity,
+              price: product.salePrice,
+              subtotal,
+              image: product.images,
+              productName: product.productName
+          });
       }
-      
+      console.log('order items', orderItems);
+
+      // Fetch the user's address
+      const address = await Address.findOne({ userId: user._id });
+
+      console.log('the address', address);
+
+      const generatedOid = uuidv4(); 
+
+      // Create the order
       const order = new Order({
-        razorpay_order_id,
-        razorpay_payment_id,
-        total: totalAmount,
-        products: orderItems,
-        userId: user._id,
-        paymentStatus: 'paid', 
-        paymentMethod: 'razorpay',
-        address: {
-          street: data.street,
-          city: data.city,
-          state: data.state,
-          pin: data.pin,
-          country: data.country,
-        },
+          razorpay_order_id,
+          razorpay_payment_id,
+          total: totalAmount,
+          products: orderItems,
+          userId: user._id,
+          paymentStatus: 'paid',
+          paymentMethod: 'razorpay',
+          address: {
+              street: address.street,
+              city: address.city,
+              state: address.state,
+              pin: address.pin,
+              country: address.country,
+              Firstname: address.Firstname,  // Ensure Firstname is included
+              Lastname: address.Lastname,    // Ensure Lastname is included
+          },
+          oid: generatedOid,  // Assign the generated Order ID
       });
 
+      console.log('the order is ', order);
 
-    await order.save();
-    console.log('Order placed successfully:', order);
+      // Save the order to the database
+      await order.save();
+      
+      console.log('Order placed successfully:', order);
 
-    await Cart.findOneAndUpdate({ userId: user._id }, { $set: { products: [] } });
+      // Clear cart after successful order
+      await Cart.findOneAndUpdate({ userId: user._id }, { $set: { products: [] } });
 
-
-    res.json({ status: 'success', message: 'Payment verified and order placed successfully' });
+      res.json({ status: 'success', message: 'Payment verified and order placed successfully' });
 
   } catch (error) {
-    console.error('Error during payment verification or order processing:', error);
-    res.status(500).json({ status: 'failed', message: 'Error during payment verification or order processing' });
+      console.error('Error during payment verification or order processing:', error);
+      res.status(500).json({ status: 'failed', message: 'Error during payment verification or order processing' });
   }
 });
 
 ///return route 
 
 router.post('/return-order', userControler.returnOrder)
+
 
 module.exports = router

@@ -279,66 +279,70 @@ img{
         </div>
     </div> -->
     <div class="container">
-
-        
-        <% if (Orders && Orders.length > 0) { %> 
-            <% Orders.forEach(order => { %>
-                <div class="order-item">
-                    <div class="product">
-                        <% if (order.products.length > 0 && order.products[0].productId) { %>
-                            <img src="<%= order.products[0].productId.images && order.products[0].productId.images.length > 0 ? '/uploads/re-image/' + order.products[0].productId.images[0] : 'default_image.jpg' %>" alt="<%= order.products[0].productId.productName || 'Product Name' %>" class="product-image"/>
-                            <div class="product-details">
-                                <p class="product-title"><%= order.products[0].productId.productName || 'Product Name' %></p>
-                                <p class="product-info">
-                                    Size: <%= order.products[0].size || 'Not Specified' %>
-                                </p>
-                            </div>
-                            <% } else { %>
-                                <p>No product details available.</p>
-                                <% } %>
-                                
-                                <p class="product-price">₹ <%= order.products[0].price %></p>
-                                
-                                <div class="cancellation-info">
-                                    <% if (order.status === 'Cancelled') { %>
-                                      <p class="cancellation-status">Cancelled on <%= new Date(order.orderDate).toLocaleDateString() || 'Not Available' %></p>
-                                    <% } else { %>
-                                      <form action="/order/cancel" method="POST">
-                                        <input type="hidden" name="orderId" value="<%= order.oid %>">
-                                        <button 
-                                          type="submit" 
-                                          class="cancel" 
-                                          <% if (order.status === 'Cancelled' || order.status === 'Returned') { %> 
-                                            disabled 
-                                          <% } %>>
-                                          <% if (order.status === 'Cancelled') { %>
-                                            Order Cancelled
-                                          <% } else { %>
-                                            Cancel Order
-                                          <% } %>
-                                        </button>
-                                      </form>
-                                      <% if (order.status === 'Delivered') { %>
-                                        <button 
-                                          style="background-color: aqua; border: none; width: 5vw; height: 5vh;"  
-                                          onclick="returnOrder('<%= order.oid %>')">
-                                          Return
-                                        </button>
-                                      <% } %>
-                                    <% } %>
-                                    <% if (order.status === 'Returned') { %>
-                                      <h4 class="text-danger">The order is returned!</h4>
-                                    <% } %>
-                                  </div>
-                                  
-                    </div>
-                </div>
-                <p>status:<%=order.status%></p>
-            <% }) %>
+        <% if (Orders && Orders.length > 0) { %>
+          <% Orders.forEach(order => { %>
+            <div class="order-item">
+              <div class="product">
+                <% if (order.products && order.products.length > 0 && order.products[0].productId) { %>
+                  <img 
+                    src="<%= order.products[0].productId.images && order.products[0].productId.images.length > 0 
+                      ? '/uploads/re-image/' + order.products[0].productId.images[0] 
+                      : 'default_image.jpg' %>" 
+                    alt="<%= order.products[0].productId.productName || 'Product Name' %>" 
+                    class="product-image"/>
+                  <div class="product-details">
+                    <p class="product-title"><%= order.products[0].productId.productName || 'Product Name' %></p>
+                    <p class="product-info">
+                      Size: <%= order.products[0].size || 'Not Specified' %>
+                    </p>
+                  </div>
+                  <p class="product-price">
+                    ₹ <%= order.products[0].price || 'N/A' %>
+                  </p>
+                <% } else { %>
+                  <p>No product details available.</p>
+                <% } %>
+              </div>
+      
+              <p>Status: <%= order.status %></p>
+      
+              <% if (order.discount > 0) { %>
+                <p><strong>Discount Applied: ₹ <%= order.discount %></strong></p>
+              <% } %>
+              
+              <p><strong>Total Amount: ₹ <%= order.total %></strong></p>
+      
+              <div class="cancellation-info">
+                <% if (order.status === 'Cancelled') { %>
+                  <p class="cancellation-status">
+                    Cancelled on <%= new Date(order.orderDate).toLocaleDateString() || 'Not Available' %>
+                  </p>
+                <% } else { %>
+                  <form action="/order/cancel" method="POST">
+                    <input type="hidden" name="orderId" value="<%= order.oid %>">
+                    <button 
+                      type="submit" 
+                      class="cancel" 
+                      <% if (order.status === 'Cancelled' || order.status === 'Returned') { %> 
+                        disabled 
+                      <% } %>>
+                      <% if (order.status === 'Cancelled') { %>
+                        Order Cancelled
+                      <% } else { %>
+                        Cancel Order
+                      <% } %>
+                    </button>
+                  </form>
+                <% } %>
+              </div>
+            </div>
+          <% }) %>
         <% } else { %>
-            <p>No orders found.</p>
+          <p>No orders found.</p>
         <% } %>
-    </div>
+      </div>
+      
+        
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.1.9/sweetalert2.all.min.js"></script>
 <script>
