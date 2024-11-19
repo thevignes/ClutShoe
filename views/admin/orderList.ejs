@@ -1,191 +1,210 @@
 <%- include("../../views/partial/admin/header") %>
 
 <style>
-  .glass-container {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-    border-radius: 16px;
-    padding: 2rem;
-    margin: 2rem 0;
+  .gradient-bg {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1e1e2c 0%, #2a2a3c 100%);
+    padding: 2rem 0;
   }
 
-  .gradient-bg {
-    background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(103, 178, 111, 0.05));
-    min-height: 100vh;
+  .glass-container {
+    width: calc(100% - 280px);
+    margin-left: 260px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     padding: 2rem;
+    color: #f8f9fa;
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .modern-table {
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    overflow: hidden;
-    border: none;
     width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+    color: #f8f9fa;
   }
 
-  .modern-table th {
-    background: rgba(74, 144, 226, 0.1);
-    color: #333;
+  .modern-table thead th {
+    background: rgba(67, 97, 238, 0.1);
+    padding: 1rem;
     font-weight: 600;
-    padding: 1.2rem 1rem !important;
-    border: none;
     text-transform: uppercase;
     font-size: 0.85rem;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    color: #4cc9f0;
+    border: none;
   }
 
-  .modern-table td {
-    padding: 1rem !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    vertical-align: middle;
-  }
-
-  .modern-table tr:hover {
-    background: rgba(255, 255, 255, 0.1);
+  .modern-table tbody tr {
+    background: rgba(255, 255, 255, 0.03);
     transition: all 0.3s ease;
   }
 
+  .modern-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .modern-table td {
+    padding: 1rem;
+    border: none;
+    vertical-align: middle;
+  }
+
   .order-id {
-    font-family: monospace;
-    background: rgba(74, 144, 226, 0.1);
-    padding: 0.3rem 0.6rem;
-    border-radius: 4px;
-    font-size: 0.9rem;
-    color: #4a90e2;
+    font-weight: 600;
+    color: #4361ee;
   }
 
   .customer-name {
-    font-weight: 600;
-    color: #2d3436;
+    font-weight: 500;
   }
 
   .price-amount {
     font-weight: 600;
-    color: #4a90e2;
+    color: #4cc9f0;
   }
 
   .status-badge {
     padding: 0.5rem 1rem;
-    border-radius: 20px;
+    border-radius: 6px;
     font-weight: 500;
-    font-size: 0.85rem;
+    display: inline-block;
   }
 
   .status-completed {
-    background: linear-gradient(135deg, #00b894, #00cec9);
+    background: linear-gradient(45deg, #2ec4b6, #00f5d4);
     color: white;
   }
 
   .status-pending {
-    background: linear-gradient(135deg, #fdcb6e, #ffeaa7);
-    color: #2d3436;
+    background: linear-gradient(45deg, #f72585, #b5179e);
+    color: white;
   }
 
   .action-btn {
+    background: rgba(67, 97, 238, 0.1);
+    border: none;
     padding: 0.5rem 1rem;
     border-radius: 8px;
-    transition: all 0.3s ease;
+    color: #4cc9f0;
+    font-weight: 500;
     text-decoration: none;
+    transition: all 0.3s ease;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.9rem;
-    background: linear-gradient(135deg, #4a90e2, #67b26f);
-    color: white;
-    border: none;
   }
 
   .action-btn:hover {
+    background: rgba(67, 97, 238, 0.2);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(74, 144, 226, 0.2);
+    color: #4cc9f0;
   }
 
   .dropdown-menu {
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(30, 30, 44, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-    border-radius: 8px;
-    overflow: hidden;
   }
 
   .dropdown-item {
-    padding: 0.8rem 1.2rem;
+    color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
     transition: all 0.3s ease;
   }
 
   .dropdown-item:hover {
-    background: rgba(74, 144, 226, 0.1);
+    background: rgba(67, 97, 238, 0.1);
+    color: #4cc9f0;
   }
 
   .dropdown-item.text-danger:hover {
-    background: rgba(255, 107, 107, 0.1);
+    background: rgba(239, 35, 60, 0.1);
+    color: #ef233c;
   }
 
-  .order-date {
-    color: #666;
-    font-size: 0.9rem;
+  @media (max-width: 991.98px) {
+    .glass-container {
+      width: 95%;
+      margin: 1rem auto;
+      padding: 1rem;
+    }
   }
 </style>
 
 <div class="gradient-bg">
-  <div class="container">
-    <div class="glass-container">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h3>Order Management</h3>
-      </div>
+  <div class="glass-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h3 class="page-header">Order Management</h3>
+    </div>
 
-      <div class="table-responsive">
-        <table class="modern-table">
-          <thead>
+    <div class="table-responsive">
+      <table class="modern-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% Orders.forEach(order => { %>
             <tr>
-              <th>Order ID</th>
-              <th>Customer</th>
-              <th>Total</th>
-              <th>Status</th>
-              <th>Date</th>
-              <th class="text-end">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% Orders.forEach(order => { %>
-              <tr>
-                <td><span class="order-id">#<%= order.oid %></span></td>
-                <td><span class="customer-name"><%= order.userId.name + ' ' + order.address.Lastname %></span></td>
-                <td><span class="price-amount">$<%= order.total.toFixed(2) %></span></td>
-                <td>
-                  <span class="status-badge <%= order.status === 'Completed' ? 'status-completed' : 'status-pending' %>">
-                    <%= order.status %>
-                  </span>
-                </td>
-                <td><span class="order-date"><%= order.orderDate ? order.orderDate.toLocaleDateString() : 'N/A' %></span></td>
-                <td class="text-end">
-                  <a href="/admin/orderDetails/<%= order._id %>" class="action-btn">
-                    <i class="material-icons md-visibility"></i>
-                    View Details
-                  </a>
-                  <div class="dropdown d-inline-block ms-2">
-                    <button class="action-btn" type="button" data-bs-toggle="dropdown">
-                      <i class="material-icons md-more_horiz"></i>
-                    </button>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" href="/admin/orderDetails/<%= order._id %>">
-                        <i class="material-icons md-visibility me-2"></i>View Details
-                      </a>
-                      <a class="dropdown-item text-danger" href="#">
-                        <i class="material-icons md-delete me-2"></i>Delete
-                      </a>
-                    </div>
+              <td><span class="order-id">#<%= order.oid %></span></td>
+              <td><span class="customer-name"><%= order.userId.name + ' ' + order.address.Lastname %></span></td>
+              <td><span class="price-amount">$<%= order.total.toFixed(2) %></span></td>
+              <td>
+                <span class="status-badge <%= order.status === 'Completed' ? 'status-completed' : 'status-pending' %>">
+                  <%= order.status %>
+                </span>
+              </td>
+              <td><span class="order-date"><%= order.orderDate ? order.orderDate.toLocaleDateString() : 'N/A' %></span></td>
+              <td class="text-end">
+                <a href="/admin/orderDetails/<%= order._id %>" class="action-btn">
+                  <i class="material-icons md-visibility"></i>
+                  View Details
+                </a>
+                <div class="dropdown d-inline-block ms-2">
+                  <button class="action-btn" type="button" data-bs-toggle="dropdown">
+                    <i class="material-icons md-more_horiz"></i>
+                  </button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/admin/orderDetails/<%= order._id %>">
+                      <i class="material-icons md-visibility me-2"></i>View Details
+                    </a>
+                    <a class="dropdown-item text-danger" href="#">
+                      <i class="material-icons md-delete me-2"></i>Delete
+                    </a>
                   </div>
-                </td>
-              </tr>
-            <% }); %>
-          </tbody>
-        </table>
-      </div>
+                </div>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

@@ -12,6 +12,7 @@ const Cart = require('../models/cart')
 const Order = require('../models/order')
 const User = require('../models/userModel')
 const Address = require('../models/address')
+const ContactController = require('../controller/user/contact')
 // const { UserAuth} = require('../middlewares/auth')
 // router.get('/',userControler.HomePage)
 const crypto = require("crypto")
@@ -308,5 +309,6 @@ router.post('/verify', async (req, res) => {
 
 router.post('/return-order', userControler.returnOrder)
 
-
+router.get('/contact',ContactController.ContactPage)
+router.get('/about', ContactController.about)
 module.exports = router

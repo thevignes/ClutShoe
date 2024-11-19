@@ -1,44 +1,415 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en">
-
+<html lang="en">
 <head>
     <meta charset="utf-8">
-    <!-- <title>Evara - eCommerce HTML Template</title> -->
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta property="og:title" content="">
-    <meta property="og:type" content="">
-    <meta property="og:url" content="">
-    <meta property="og:image" content="">
     <title>ClutchShoe</title>
     
-    <link rel="stylesheet" href="">
-    <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="/public/public/evara-frontend/assets/imgs/theme/favicon.svg">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.0/dist/sweetalert2.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css  ">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/zoom.js/1.7.0/zoom.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/zoom.js/1.7.0/zoom.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet" href="/evara-frontend/assets/css/editadd.css">
-    <link rel="stylesheet" href="/public/public/evara-backend/assets/css/vendors/wishlist.css">
-    <link rel="stylesheet" href="/public/public/evara-frontend/assets/css/wallet.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
-    <!-- <link rel="shortcut icon" type="image/x-icon" href="/evara-frontend/assets/imgs/theme/favicon.svg"> -->
-    <!-- Template CSS -->
-    <!-- <link rel="stylesheet" href="/evara-fronte/assets/css/main.css?v=3.4"> -->
     <link rel="stylesheet" href="/evara-frontend/assets/css/main.css?v=3.4">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
 
-    <link rel="stylesheet" href="/evara-frontend/assets/css/main.css.map">
-    <link rel="stylesheet" href="/evara-frontend/assets/css/button.css">
+        :root {
+            --primary: #00878a;
+            --primary-dark: #006d6f;
+            --text: #2d3436;
+            --text-light: #90a4ae;
+            --bg-light: #f8f9fa;
+            --shadow: 0 2px 20px rgba(0,0,0,0.08);
+        }
 
+        .modern-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-flex {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+        }
+
+        .brand-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            flex-shrink: 0;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .brand-logo::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: all 0.3s ease;
+        }
+
+        .brand-logo:hover::after {
+            width: 100%;
+            height: 3px;
+            border-radius: 4px;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .nav-link {
+            color: var(--text);
+            font-weight: 500;
+            text-decoration: none;
+            font-size: 0.95rem;
+            padding: 0.5rem 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+            margin: 0 2rem;
+        }
+
+        .search-form {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 48px;
+            padding: 0.9rem 1.2rem;
+            padding-right: 50px;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            background: var(--bg-light);
+            font-size: 0.95rem;
+            color: var(--text);
+            transition: all 0.3s ease;
+        }
+
+        .search-input::placeholder {
+            color: var(--text-light);
+            transition: color 0.3s ease;
+        }
+
+        .search-input:focus::placeholder {
+            color: transparent;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(0,135,138,0.1);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 6px;
+            background: var(--primary);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .search-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,135,138,0.2);
+        }
+
+        .search-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .search-form:focus-within .search-btn i {
+            animation: pulse 1s ease infinite;
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: var(--bg-light);
+            color: var(--text);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .action-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .action-btn::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            background: var(--primary);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .action-btn:hover::after {
+            opacity: 0.2;
+            transform: scale(1.2);
+        }
+
+        .auth-btn {
+            padding: 0.7rem 1.4rem;
+            border-radius: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .login-btn {
+            color: var(--primary);
+            background: transparent;
+            border: 2px solid var(--primary);
+        }
+
+        .login-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .signup-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .signup-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,135,138,0.2);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        @media (max-width: 992px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .nav-menu.active {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: white;
+                padding: 1rem;
+                box-shadow: var(--shadow);
+            }
+
+            .search-container {
+                order: 1;
+                max-width: 100%;
+                margin: 1rem 0;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .nav-flex {
+                flex-wrap: wrap;
+            }
+
+            .action-buttons {
+                gap: 0.8rem;
+            }
+
+            .auth-btn {
+                padding: 0.6rem 1.2rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
+    <nav class="modern-nav">
+        <div class="nav-container">
+            <div class="nav-flex">
+                <a href="/" class="brand-logo">ClutchShoe</a>
+
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                <ul class="nav-menu">
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/about" class="nav-link">About</a></li>
+                    <li><a href="/contact" class="nav-link">Contact</a></li>
+                </ul>
+
+                <div class="search-container">
+                    <form action="/search" method="GET" class="search-form">
+                        <input 
+                            type="search" 
+                            name="q" 
+                            class="search-input" 
+                            placeholder="Search for products..." 
+                            autocomplete="off"
+                            required
+                        >
+                        <button type="submit" class="search-btn" title="Search">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="/cart" class="action-btn" title="Cart">
+                        <i class="fas fa-shopping-bag"></i>
+                    </a>
+                    <a href="/wishlist" class="action-btn" title="Wishlist">
+                        <i class="fas fa-heart"></i>
+                    </a>
+                    
+                    <% if (user) { %>
+                        <div class="dropdown">
+                            <button class="action-btn" type="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="/profile">My Profile</a></li>
+                                <li><a class="dropdown-item" href="/order">My Orders</a></li>
+                                <li><a class="dropdown-item" href="/wishlist">My Wishlist</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                            </ul>
+                        </div>
+                    <% } else { %>
+                        <a href="/login" class="auth-btn login-btn">Login</a>
+                        <a href="/register" class="auth-btn signup-btn">Sign up</a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Add spacing after fixed navbar -->
+    <div style="height: 80px;"></div>
+
+    <!-- Quick View Modal -->
+    <div class="modal fade quick-view-modal" id="quickViewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-body p-4">
+                    <!-- Quick view content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
+        <i class="fas fa-bars"></i>
+    </button>
 
     <!-- Quick view -->
     <div class="modal fade custom-modal" id="quickViewModal" tabindex="-1" aria-labelledby="quickViewModalLabel"
@@ -189,443 +560,4 @@
             </div>
         </div>
     </div>
-<!-- 
-    <header class="header-area header-style-1 header-height-2">
-        <div class="header-top p-2 container-fluid">
-            <div class="container-fluid">
-                <div class="row">
-  
-                    <div class="col-6 col-lg-3">
-                        <div class="logo text-start">
-            
-                        </div>
-                    </div>
-    
-
-                    <div class="col-6 text-end d-lg-none">
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-                            aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                    </div> -->
-                    <div class="col-lg-12">
-                        <nav class="navbar navbar-expand-lg navbar-light" style="background-color:#00878a; font-weight: bold;">
-                            <div class="container-fluid">
-                                <!-- Navbar Brand or Logo -->
-                                <a class="navbar-brand text-white" href="/" style="font-family: Spartan, sans-serif;">ClutchShoe</a>
-                    
-                                <!-- Navbar Toggler for Mobile View -->
-                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                                    <span class="navbar-toggler-icon"></span>
-                                </button>
-                    
-                                <!-- Navbar Links -->
-                                <div class="collapse navbar-collapse" id="navbarNav">
-                                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                                        <li class="nav-item">
-                                            <a class="nav-link text-white" href="page-about.html">About</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link text-white" href="/shop">Shop</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link text-white" href="page-about.html">About Us</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link text-white" href="page-contact.html">Contact</a>
-                                        </li>
-                                    </ul>
-                    
-                                    <form class="d-flex" action="/search" method="GET" style="flex-grow: 1;">
-                                        <input class="form-control rounded-pill me-2" name="q" type="search" placeholder="Search" aria-label="Search" required>
-                                        <button class="btn btn-light rounded-pill" type="submit">Search</button>
-                                    </form>
-                    
-                                    <!-- User Account Links -->
-                                    <ul class="navbar-nav">
-                                        <li class="nav-item">
-                                            <a class="nav-link text-white" href="/cart">
-                                                <i class="fa-solid fa-cart-shopping"></i>
-                                            </a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link text-white" href="/wishlist">
-                                                <i class="fa-solid fa-heart"></i> 
-                                            </a>
-                                        </li>
-                                        <% if (user) { %>
-                                            <li class="nav-item">
-                                                <a class="nav-link text-white" href="/profile">
-                                                    <i class="fa-solid fa-user"></i> My account
-                                                </a>
-                                            </li>
-                                        <% } else { %>
-                                            <li class="nav-item">
-                                                <a class="nav-link text-white" href="/login">Login</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link text-white" href="/register">Sign Up</a>
-                                            </li>
-                                        <% } %>
-                                    </ul>
-                                </div>
-                            </div>
-                        </nav>
-                    </div>
-                    
-
-                <!-- </div>
-            </div>
-        </div>
-    </header>
-     -->
-<!-- 
-        <div class="header-middle header-middle-ptb-1 d-none d-lg-block">
-            <div class="container">
-                <div class="header-wrap">
-
-                    <div class="header-right">
-
-                        <div class="header-action-right">
-                            <div class="header-action-2">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        </div>
-
-
-
-                                                         href="#">Shorts</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Jeans</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Pants & Capris</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Bikini Sets</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Cover-Ups</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Swimwear</a></li>
-                                                            </ul>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                <li class="mega-menu-col col-lg-5">
-                                                    <div class="header-banner2">
-                                                        <img src="assets/imgs/banner/menu-banner-2.jpg"
-                                                            alt="menu_banner1">
-                                                        <div class="banne_info">
-                                                            <h6>10% Off</h6>
-                                                            <h4>New Arrival</h4>
-                                                            <a href="#">Shop now</a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="header-banner2">
-                                                        <img src="assets/imgs/banner/menu-banner-3.jpg"
-                                                            alt="menu_banner2">
-                                                        <div class="banne_info">
-                                                            <h6>15% Off</h6>
-                                                            <h4>Hot Deals</h4>
-                                                            <a href="#">Shop now</a>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li class="has-children">
-                                        <a href="shop-grid-right.html"><i class="evara-font-tshirt"></i>Men's
-                                            Clothing</a>
-                                        <div class="dropdown-menu">
-                                            <ul class="mega-menu d-lg-flex">
-                                                <li class="mega-menu-col col-lg-7">
-                                                    <ul class="d-lg-flex">
-                                                        <li class="mega-menu-col col-lg-6">
-                                                            <ul>
-
-
-                        
-        <div class="header-bottom header-bottom-bg-color sticky-bar">
-            <div class="container">
-                <div class="header-wrap header-space-between position-relative">
-                    <div class="logo logo-width-1 d-block d-lg-none">
-                        <a href="index.html"><img src="assets/imgs/theme/logo.svg" alt="logo"></a>
-                    </div>
-                    <div class="header-nav d-none d-lg-flex">
-                        <div class="main-categori-wrap d-none d-lg-block">
-
-                            <div class="categori-dropdown-wrap categori-dropdown-active-large">
-                                <ul>
-                                    <li class="has-children">
-                                        <a href="shop-grid-right.html"><i class="evara-font-dress"></i>Women's
-                                            Clothing</a>
-                                        <div class="dropdown-menu">
-                                            <ul class="mega-menu d-lg-flex">
-                                                <li class="mega-menu-col col-lg-7">
-                                                    <ul class="d-lg-flex">
-                                                        <li class="mega-menu-col col-lg-6">
-                                                            <ul>
-                                                                <li><span class="submenu-title">Hot & Trending</span>
-                                                                </li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Dresses</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Blouses & Shirts</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Hoodies & Sweatshirts</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Women's Sets</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Suits & Blazers</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Bodysuits</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Tanks & Camis</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Coats & Jackets</a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li class="mega-menu-col col-lg-6">
-                                                            <ul>
-                                                                <li><span class="submenu-title">Bottoms</span></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Leggings</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Skirts</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                               <li><span class="submenu-title">Jackets & Coats</span>
-                                                                </li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Down Jackets</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Jackets</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Parkas</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Faux Leather Coats</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Trench</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Wool & Blends</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Vests & Waistcoats</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Leather Coats</a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li class="mega-menu-col col-lg-6">
-                                                            <ul>
-                                                                <li><span class="submenu-title">Suits & Blazers</span>
-                                                                </li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Blazers</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Suit Jackets</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Suit Pants</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Suits</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Vests</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Tailor-made Suits</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Cover-Ups</a></li>
-                                                            </ul>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                <li class="mega-menu-col col-lg-5">
-                                                    <div class="header-banner2">
-                                                        <img src="assets/imgs/banner/menu-banner-4.jpg"
-                                                            alt="menu_banner1">
-                                                        <div class="banne_info">
-                                                            <h6>10% Off</h6>
-                                                            <h4>New Arrival</h4>
-                                                            <a href="#">Shop now</a>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li class="has-children">
-                                        <a href="shop-grid-right.html"><i class="evara-font-smartphone"></i>
-                                            Cellphones</a>
-                                        <div class="dropdown-menu">
-                                            <ul class="mega-menu d-lg-flex">
-                                                <li class="mega-menu-col col-lg-7">
-                                                    <ul class="d-lg-flex">
-                                                        <li class="mega-menu-col col-lg-6">
-                                                            <ul>
-                                                                <li><span class="submenu-title">Hot & Trending</span>
-                                                                </li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Cellphones</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">iPhones</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Refurbished Phones</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Mobile Phone</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Mobile Phone Parts</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Phone Bags & Cases</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Communication Equipments</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Walkie Talkie</a></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li class="mega-menu-col col-lg-6">
-                                                            <ul>
-                                                                <li><span class="submenu-title">Accessories</span></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Screen Protectors</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Wire Chargers</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Wireless Chargers</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Car Chargers</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Power Bank</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Armbands</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Dust Plug</a></li>
-                                                                <li><a class="dropdown-item nav-link nav_item"
-                                                                        href="#">Signal Boosters</a></li>
-                                                            </ul>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                <li class="mega-menu-col col-lg-5">
-                                                    <div class="header-banner2">
-                                                        <img src="assets/imgs/banner/menu-banner-5.jpg"
-                                                            alt="menu_banner1">
-                                                        <div class="banne_info">
-                                                            <h6>10% Off</h6>
-                                                            <h4>New Arrival</h4>
-                                                            <a href="#">Shop now</a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="header-banner2">
-                                                        <img src="assets/imgs/banner/menu-banner-6.jpg"
-                                                            alt="menu_banner2">
-                                                        <div class="banne_info">
-                                                            <h6>15% Off</h6>
-                                                            <h4>Hot Deals</h4>
-                                                            <a href="#">Shop now</a>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                    <li><a href="shop-grid-right.html"><i class="evara-font-desktop"></i>Computer &
-                                            Office</a></li>
-                                    <li><a href="shop-grid-right.html"><i class="evara-font-cpu"></i>Consumer
-                                            Electronics</a></li>
-                                    <li><a href="shop-grid-right.html"><i class="evara-font-diamond"></i>Jewelry &
-                                            Accessories</a></li>
-                                    <li><a href="shop-grid-right.html"><i class="evara-font-home"></i>Home & Garden</a>
-                                    </li>
-                                    <li><a href="shop-grid-right.html"><i class="evara-font-high-heels"></i>Shoes</a>
-                                    </li>
-                                    <li><a href="shop-grid-right.html"><i class="evara-font-teddy-bear"></i>Mother &
-                                            Kids</a></li>
-                                    <li><a href="shop-grid-right.html"><i class="evara-font-kite"></i>Outdoor fun</a>
-                                    </li>
-                                    <li>
-                                        <ul class="more_slide_open" style="display: none;">
-                                            <li><a href="shop-grid-right.html"><i class="evara-font-desktop"></i>Beauty,
-                                                    Health</a></li>
-                                            <li><a href="shop-grid-right.html"><i class="evara-font-cpu"></i>Bags and
-                                                    Shoes</a></li>
-                                            <li><a href="shop-grid-right.html"><i
-                                                        class="evara-font-diamond"></i>Consumer Electronics</a></li>
-                                            <li><a href="shop-grid-right.html"><i
-                                                        class="evara-font-home"></i>Automobiles & Motorcycles</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                                <div class="more_categories">Show more...</div>
-                            </div>
-                        </div>
-                        <div class="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block">
-                            <nav>
-                         
-                            </nav>
-                        </div>
-                    </div>
-
-                    <p class="mobile-promotion">Happy <span class="text-brand">Mother's Day</span>. Big Sale Up to 40%
-                    </p>
-                    <div class="header-action-right d-block d-lg-none">
-                        <div class="header-action-2">
-
-                            <div class="header-action-icon-2">
-                                <a class="mini-cart-icon" href="shop-cart.html">
-                                    <img alt="Evara" src="assets/imgs/theme/icons/icon-cart.svg">
-                                    <span class="pro-count white">2</span>
-                                </a>
-                                <div class="cart-dropdown-wrap cart-dropdown-hm2">
-                                    <ul>
-                                        <li>
-                                            <div class="shopping-cart-img">
-                                                <a href="shop-product-right.html"><img alt="Evara"
-                                                        src="assets/imgs/shop/thumbnail-3.jpg"></a>
-                                            </div>
-                                            <div class="shopping-cart-title">
-                                                <h4><a href="shop-product-right.html">Plain Striola Shirts</a></h4>
-                                                <h3><span>1 × </span>$800.00</h3>
-                                            </div>
-                                            <div class="shopping-cart-delete">
-                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="shopping-cart-img">
-                                                <a href="shop-product-right.html"><img alt="Evara"
-                                                        src="assets/imgs/shop/thumbnail-4.jpg"></a>
-                                            </div>
-                                            <div class="shopping-cart-title">
-                                                <h4><a href="shop-product-right.html">Macbook Pro 2022</a></h4>
-                                                <h3><span>1 × </span>$3500.00</h3>
-                                            </div>
-                                            <div class="shopping-cart-delete">
-                                                <a href="#"><i class="fi-rs-cross-small"></i></a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                    <div class="shopping-cart-footer">
-                                        <div class="shopping-cart-total">
-                                            <h4>Total <span>$383.00</span></h4>
-                                        </div>
-                                        <div class="shopping-cart-button">
-                                            <a href="shop-cart.html">View cart</a>
-                                            <a href="shop-checkout.html">Checkout</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- <div class="header-action-icon-2 d-block d-lg-none"> -->
-                                <!-- <div class="burger-icon burger-icon-white">
-                                    <span class="burger-icon-top"></span>
-                                    <span class="burger-icon-mid"></span>
-                                    <span class="burger-icon-bottom"></span>
-                                </div>
-                            </div> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-    </header>
+</body>

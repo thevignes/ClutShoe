@@ -129,6 +129,46 @@
         border-color: #ccc;
         background-color: #e9e9e9;
       }
+
+      .main-content {
+        margin-left: 260px;
+        width: calc(100% - 260px);
+        min-height: 100vh;
+        padding: 2rem;
+        background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(103, 178, 111, 0.05));
+      }
+
+      .content-main {
+        padding: 30px 15px;
+      }
+
+      .card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        border-radius: 16px;
+        margin-bottom: 2rem;
+      }
+
+      .search-container {
+        max-width: 500px;
+        margin: 0 auto;
+      }
+
+      .table-container {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      @media (max-width: 991.98px) {
+        .main-content {
+          margin-left: 0;
+          width: 100%;
+          padding: 1rem;
+        }
+      }
     </style>
     </head>
 
@@ -168,111 +208,112 @@
     </div>
   </div>
 </div>
-      <section class="content-main">
-        <div class="content-header">
-          <div>
-            <h2 class="content-title card-title">Category</h2>
-          </div>
-        </div>
-        <header class="card-header text-center mb-20">
-          <form action="/admin/category" method="get" class="d-inline">
-            <div class="input-group input-group-sm border border-1 border-grey rounded-pill"
-              style="width: 500px; margin-left: 230px">
-              <input type="text" class="form-control border-0 rounded-pill mt-3" placeholder="Search categories"
-                name="search">
-              <button class="btn" type="submit">Search</button>
+      <div class="main-content">
+        <section class="content-main">
+          <div class="content-header">
+            <div>
+              <h2 class="content-title card-title">Category</h2>
             </div>
-          </form>
-        </header>
-        <div class="card">
-          <div class="card-body">
-            <div class="row">
-              <!-- Form for Adding Category -->
-              <div class="col-md-3">
-                <form method="post" action="/admin/addCategory" onsubmit="return validateForm();">
-                  <div class="mb-4">
-                    <label for="name" class="form-label">Name</label>
-                    <input type="text" id="name" name="name" placeholder="Type here" class="form-control">
-                    <div id="name-error" class="error-message"></div>
-                  </div>
-                  <div class="mb-4">
-                    <label for="description" class="form-label">Description</label>
-                    <textarea id="description" name="description" placeholder="Type here" class="form-control"></textarea>
-                    <div id="description-error" class="error-message"></div>
-                  </div>
-                  <div class="d-grid">
-                    <button class="btn btn-primary" type="submit">Create category</button>
-                  </div>
-                </form>
+          </div>
+          <header class="card-header text-center mb-20">
+            <form action="/admin/category" method="get" class="d-inline">
+              <div class="input-group input-group-sm border border-1 border-grey rounded-pill"
+                style="width: 500px; margin-left: 230px">
+                <input type="text" class="form-control border-0 rounded-pill mt-3" placeholder="Search categories"
+                  name="search">
+                <button class="btn" type="submit">Search</button>
               </div>
-        
-              <!-- Category Table -->
-              <div class="col-md-8 ml-10">
-                <div class="table-responsive">
-                  <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th class="text-center"></th>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Offer</th>
-                        <th>Status</th>
-                        <th>List/Unlist</th>
-                        <th class="text-start">Edit</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <% cate.forEach(function (Category) { %>
-                        <tr>
-                          <td></td>
-                          <td class="text-start"><%= Category.name %></td>
-                          <td class="text-start"><%= Category.description %></td>
-                          <td class="text-start">
-                            <% if (Category.offer) { %>
-                              <% if (Category.offer.type === 'percentage') { %>
-                                <span><%= Category.offer.value %>% OFF</span>
-                              <% } else if (Category.offer.type === 'flat') { %>
-                                <span>₹<%= Category.offer.value %> OFF</span>
-                              <% } %>
-                            <% } else { %>
-                              <span>No Offer</span>
-                            <% } %>
-                          </td>
-                          <td class="text-start">
-                            <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#offerModal">Add Offer</button>
-              
-                            <form action="/admin/CategoryDelete/<%= Category._id %>?_method=PUT" method="POST" class="mt-2">
-                              <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this category?');">
-                                Delete
-                              </button>
-                            </form>
-                          </td>
-                          <td class="text-start">
-                            <% if (Category.isListed) { %>
-                              <span class="badge rounded-pill bg-success">Listed</span>
-                              <form action="/admin/UnCategoryList/<%= Category._id %>" method="POST" style="display: inline;">
-                                <button type="submit" class="btn btn-danger btn-sm">Unlist</button>
-                              </form>
-                            <% } else { %>
-                              <span class="badge rounded-pill bg-danger">Unlisted</span>
-                              <form action="/admin/CategoryList/<%= Category._id %>" method="POST" style="display: inline;">
-                                <button type="submit" class="btn btn-success btn-sm">List</button>
-                              </form>
-                            <% } %>
-                          </td>
-                          <td class="text-start">
-                            <a href="/admin/editCategory/<%= Category._id %>" class="btn btn-info btn-sm text-white">Edit</a>
-                          </td>
-                        </tr>
-                      <% }); %>
-                    </tbody>
-                  </table>
+            </form>
+          </header>
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <!-- Form for Adding Category -->
+                <div class="col-md-3">
+                  <form method="post" action="/admin/addCategory" onsubmit="return validateForm();">
+                    <div class="mb-4">
+                      <label for="name" class="form-label">Name</label>
+                      <input type="text" id="name" name="name" placeholder="Type here" class="form-control">
+                      <div id="name-error" class="error-message"></div>
+                    </div>
+                    <div class="mb-4">
+                      <label for="description" class="form-label">Description</label>
+                      <textarea id="description" name="description" placeholder="Type here" class="form-control"></textarea>
+                      <div id="description-error" class="error-message"></div>
+                    </div>
+                    <div class="d-grid">
+                      <button class="btn btn-primary" type="submit">Create category</button>
+                    </div>
+                  </form>
                 </div>
-              </div>
+        
+                <!-- Category Table -->
+                <div class="col-md-8 ml-10">
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th class="text-center"></th>
+                          <th>Name</th>
+                          <th>Description</th>
+                          <th>Offer</th>
+                          <th>Status</th>
+                          <th>List/Unlist</th>
+                          <th class="text-start">Edit</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% cate.forEach(function (Category) { %>
+                          <tr>
+                            <td></td>
+                            <td class="text-start"><%= Category.name %></td>
+                            <td class="text-start"><%= Category.description %></td>
+                            <td class="text-start">
+                              <% if (Category.offer) { %>
+                                <% if (Category.offer.type === 'percentage') { %>
+                                  <span><%= Category.offer.value %>% OFF</span>
+                                <% } else if (Category.offer.type === 'flat') { %>
+                                  <span>₹<%= Category.offer.value %> OFF</span>
+                                <% } %>
+                              <% } else { %>
+                                <span>No Offer</span>
+                              <% } %>
+                            </td>
+                            <td class="text-start">
+                              <button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#offerModal">Add Offer</button>
               
+                              <form action="/admin/CategoryDelete/<%= Category._id %>?_method=PUT" method="POST" class="mt-2">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this category?');">
+                                  Delete
+                                </button>
+                              </form>
+                            </td>
+                            <td class="text-start">
+                              <% if (Category.isListed) { %>
+                                <span class="badge rounded-pill bg-success">Listed</span>
+                                <form action="/admin/UnCategoryList/<%= Category._id %>" method="POST" style="display: inline;">
+                                  <button type="submit" class="btn btn-danger btn-sm">Unlist</button>
+                                </form>
+                              <% } else { %>
+                                <span class="badge rounded-pill bg-danger">Unlisted</span>
+                                <form action="/admin/CategoryList/<%= Category._id %>" method="POST" style="display: inline;">
+                                  <button type="submit" class="btn btn-success btn-sm">List</button>
+                                </form>
+                              <% } %>
+                            </td>
+                            <td class="text-start">
+                              <a href="/admin/editCategory/<%= Category._id %>" class="btn btn-info btn-sm text-white">Edit</a>
+                            </td>
+                          </tr>
+                        <% }); %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              
+              </div>
             </div>
           </div>
-        </div>
         
 
         <!-- Pagination -->
@@ -301,6 +342,7 @@
 
 
       </section>
+    </div>
     </body>
     <!-- SweetAlert2 CDN -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

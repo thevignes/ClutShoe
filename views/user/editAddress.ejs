@@ -1,79 +1,313 @@
 <%-include('../../views/partial/user/header',{user:user})%>
 <html>
-
 <head>
     <title>Manage Addresses</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #006A67;
+            --secondary: #00857f;
+            --dark: #2d3436;
+            --light: #ffffff;
+            --shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
 
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            min-height: calc(100vh - 60px); /* Adjust based on your footer height */
+            position: relative;
+            padding-bottom: 60px; /* Space for footer */
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            box-shadow: var(--shadow);
+            overflow-y: auto;
+        }
+
+        .profile-pic {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-pic::after {
+            content: '\f007';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            font-size: 2rem;
+            color: var(--light);
+        }
+
+        .username {
+            text-align: center;
+        }
+
+        .username p {
+            color: var(--dark);
+            font-size: 1.2rem;
+            margin: 1rem 0;
+            font-weight: 500;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            text-decoration: none;
+            color: var(--dark);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item i {
+            width: 24px;
+            margin-right: 1rem;
+            color: var(--primary);
+        }
+
+        .menu-item:hover {
+            background: rgba(0, 106, 103, 0.1);
+            transform: translateX(5px);
+        }
+
+        .menu-item.active {
+            background: var(--primary);
+            color: var(--light);
+        }
+
+        .menu-item.active i {
+            color: var(--light);
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            padding: 1rem;
+            border: none;
+            background: rgba(255, 59, 48, 0.1);
+            color: #ff3b30;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 59, 48, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            margin-bottom: 2rem;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: var(--shadow);
+        }
+
+        .form-container h2 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid rgba(0,0,0,0.1);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(0, 106, 103, 0.1);
+        }
+
+        .form-actions {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .save-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 106, 103, 0.2);
+        }
+
+        footer {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 100;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+                padding-bottom: 80px; /* More space for footer on mobile */
+            }
+
+            .sidebar {
+                position: relative;
+                width: auto;
+                height: auto;
+                padding: 1rem;
+            }
+
+            .content {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <div class="sidebar">
-        <div class="profile-pic"></div>
-        <div class="username">
-            <p class="text-white"><%=addresses.Firstname %></p>
+    <div class="main-container">
+        <div class="sidebar" data-aos="fade-right">
+            <div class="profile-pic"></div>
+            <div class="username">
+                <p><%=addresses.Firstname %></p>
+            </div>
+            <div class="menu">
+                <a href="/profile" class="menu-item">
+                    <i class="fas fa-user"></i> Account Overview
+                </a>
+                <a href="/orders" class="menu-item">
+                    <i class="fas fa-box"></i> My Orders
+                </a>
+                <a href="/addresses" class="menu-item active">
+                    <i class="fas fa-address-book"></i> Manage Addresses
+                </a>
+                <a href="/wallet" class="menu-item">
+                    <i class="fas fa-wallet"></i> Wallet
+                </a>
+            </div>
+            <button class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> LOGOUT
+            </button>
         </div>
-        <div class="menu">
-            <a href="#" class="menu-item">
-                <i class="fas fa-user"></i> Account Overview
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-box"></i> My Orders
-            </a>
-            <a href="#" class="menu-item active">
-                <i class="fas fa-address-book"></i> Manage Addresses
-            </a>
-            <a href="#" class="menu-item">
-                <i class="fas fa-wallet"></i> Wallet
-            </a>
+
+        <div class="content" data-aos="fade-up">
+            <div class="form-container">
+                <h2>Edit Address</h2>
+                <form action="/edit-address/<%= addresses._id %>" method="post">
+                    <div class="form-group" data-aos="fade-up" data-aos-delay="100">
+                        <label>First Name</label>
+                        <input type="text" name="Firstname" value="<%= addresses.Firstname %>" required>
+                    </div>
+                    <div class="form-group" data-aos="fade-up" data-aos-delay="200">
+                        <label>Last Name</label>
+                        <input type="text" name="Lastname" value="<%= addresses.Lastname %>" required>
+                    </div>
+                    <div class="form-group" data-aos="fade-up" data-aos-delay="300">
+                        <label>City</label>
+                        <input type="text" name="city" value="<%= addresses.city %>" required>
+                    </div>
+                    <div class="form-group" data-aos="fade-up" data-aos-delay="400">
+                        <label>State</label>
+                        <input type="text" name="state" value="<%= addresses.state %>" required>
+                    </div>
+                    <div class="form-group" data-aos="fade-up" data-aos-delay="500">
+                        <label>Country</label>
+                        <input type="text" name="country" value="<%= addresses.country %>" required>
+                    </div>
+                    <div class="form-group" data-aos="fade-up" data-aos-delay="600">
+                        <label>Pin Code</label>
+                        <input type="text" name="pin" value="<%= addresses.pin %>" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="save-btn" data-aos="fade-up" data-aos-delay="700">
+                            <i class="fas fa-check"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <button class="logout-btn">LOGOUT</button>
     </div>
-
-    <div class="content">
-      <div class="form-container">
-        <h2>Edit Address</h2>
-        <!-- Form starts here -->
-        <form action="/edit-address/<%= addresses._id %>" method="post">
-          <div class="form-group">
-            <label>Firstname</label>
-            <input type="text" name="Firstname" value="<%= addresses.Firstname %>" required>
-          </div>
-          <div class="form-group">
-            <label>Last Name</label>
-            <input type="text" name="Lastname" value="<%= addresses.Lastname %>" required>
-          </div>
-         
-          <div class="form-group">
-            <label>City</label>
-            <input type="text" name="city" value="<%= addresses.city %>" required>
-          </div>
-          <div class="form-group">
-            <label>State</label>
-            <input type="text" name="state" value="<%= addresses.state %>" required>
-          </div>
-          <div class="form-group">
-            <label>Country</label>
-            <input type="text" name="country" value="<%= addresses.country %>" required>
-          </div>
-          <div class="form-group">
-            <label>Pin Code</label>
-            <input type="text" name="pin" value="<%= addresses.pin %>" required>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="save-btn">Save Changes</button>
-          </div>
-        </form>
-        <!-- Form ends here -->
-      </div>
-    </div>
-    <%-include('../../views/partial/user/footer')%>
-    </div>
-
+    
+    <footer>
+   
+    </footer>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
 </html>
-
-

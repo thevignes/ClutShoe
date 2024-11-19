@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign Up</title>
@@ -8,80 +9,350 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.0/dist/sweetalert2.min.css">
+  <style>
+    :root {
+      --glass-bg: rgba(255, 255, 255, 0.15);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --primary-color: #00878a;
+      --primary-dark: #006d6f;
+    }
+
+    * {
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: -0.2px;
+    }
+
+    .register-container {
+      min-height: 100vh;
+      background: linear-gradient(45deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+      display: flex;
+      align-items: stretch;
+    }
+
+    .brand-section {
+      flex: 1;
+      background: linear-gradient(135deg, rgba(0, 135, 138, 0.9), rgba(0, 109, 111, 0.95)), 
+                  url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .brand-content {
+      max-width: 500px;
+      padding: 1rem;
+    }
+
+    .website-name {
+      font-size: 4.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 1.5rem;
+      letter-spacing: -2px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    .website-name::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 2px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .brand-tagline {
+      font-size: 1.4rem;
+      color: rgba(255, 255, 255, 0.95);
+      line-height: 1.6;
+      margin: 0;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+      font-weight: 500;
+    }
+
+    .brand-section::before {
+      display: none;
+    }
+
+    .form-section {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .form-wrapper {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .register-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 2.5rem;
+      width: 100%;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+
+    .register-title {
+      color: white;
+      font-size: 2.2rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .register-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: var(--primary-color);
+      border-radius: 3px;
+      box-shadow: 0 0 10px var(--primary-color);
+    }
+
+    .form-label {
+      font-weight: 500;
+      color: white;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-control {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 1rem 1.2rem;
+      color: white;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    .form-control:focus {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 4px rgba(0, 135, 138, 0.15);
+      color: white;
+    }
+
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .btn {
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 500;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: var(--primary-color);
+      border: none;
+      color: white;
+    }
+
+    .btn-primary:before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 300px;
+      height: 300px;
+      background: var(--primary-dark);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 0;
+    }
+
+    .btn-primary:hover:before {
+      transform: translate(-50%, -50%) scale(2);
+    }
+
+    .btn-primary span {
+      position: relative;
+      z-index: 1;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-primary:hover span {
+      transform: scale(1.05);
+    }
+
+    .btn-google {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+    }
+
+    .btn-google:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      color: white;
+    }
+
+    .btn-google i {
+      font-size: 1.2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .btn-google:hover i {
+      transform: rotate(360deg);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 1.5rem 0;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .divider span {
+      padding: 0 1rem;
+    }
+
+    .text-danger {
+      color: #ff6b6b !important;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 992px) {
+      .register-container {
+        flex-direction: column;
+      }
+
+      .brand-section {
+        padding: 2rem;
+        min-height: 300px;
+      }
+
+      .website-name {
+        font-size: 2.5rem;
+      }
+
+      .brand-tagline {
+        font-size: 1rem;
+      }
+
+      .form-section {
+        padding: 1.5rem;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container mt-5">
-      <div class="row justify-content-center">
-        <div class="col-md-6">
-          <div class="card">
-            <div class="card-body">
-              <h3 class="text-center mb-4">Sign Up</h3>
-              <form id="signupForm" action="/register" method="POST" onsubmit="return validateForm()">
-                <!-- General error message for empty fields -->
-                <div id="allFieldsError" class="text-danger text-center mb-3"></div>
-
-                <!-- Name field -->
-                <div class="mb-3">
-                  <label for="name" class="form-label">Name</label>
-                  <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" >
-                  <div id="nameError" class="text-danger"></div>
-                </div>
-
-                <!-- Email  -->
-                <div class="mb-3">
-                  <label for="email" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" >
-                  <div id="emailError" class="text-danger"></div>
-                </div>
-
-                <!-- Password -->
-                <div class="mb-3">
-                  <label for="password" class="form-label">Password</label>
-                  <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" >
-                  <div id="passwordError" class="text-danger"></div>
-                </div>
-
-                <!-- Confirm Password -->
-                <div class="mb-3">
-                  <label for="confirmPassword" class="form-label">Confirm Password</label>
-                  <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" >
-                  <div id="confirmPasswordError" class="text-danger"></div>
-                </div>
-
-                <!-- Submit -->
-                <div class="d-grid">
-                  <button type="submit" class="btn btn-primary">Sign Up</button>
-                </div>
-              </form>
-
-              <!-- Divider -->
-              <div class="text-center my-3">
-                <span>or</span>
-              </div>
-
-              <!-- Google Sign Up -->
-              <div class="d-grid">
-                <button class="btn btn-danger" onclick="window.location.href='/auth/google'">
-                  <i class="fa-brands fa-google"></i> Sign Up with Google
-                </button>
-              </div>
-
-            </div>
-          </div>
-        </div>
+  <div class="register-container">
+    <div class="brand-section">
+      <div class="brand-content">
+        <h1 class="website-name">ClutchShoe</h1>
+        <p class="brand-tagline">Step into style with our premium collection of footwear. Your perfect pair awaits.</p>
       </div>
     </div>
 
+    <div class="form-section">
+      <div class="form-wrapper">
+        <div class="register-card">
+          <h3 class="register-title">Create Account</h3>
+          <form id="signupForm" action="/register" method="POST" onsubmit="return validateForm()">
+            <div id="allFieldsError" class="text-danger text-center mb-3"></div>
+
+            <div class="mb-3">
+              <label for="name" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="name" name="name" placeholder="Enter your full name">
+              <div id="nameError" class="text-danger"></div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address">
+              <div id="emailError" class="text-danger"></div>
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input type="password" class="form-control" id="password" name="password" placeholder="Choose a strong password">
+              <div id="passwordError" class="text-danger"></div>
+            </div>
+
+            <div class="mb-4">
+              <label for="confirmPassword" class="form-label">Confirm Password</label>
+              <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password">
+              <div id="confirmPasswordError" class="text-danger"></div>
+            </div>
+
+            <div class="d-grid mb-3">
+              <button type="submit" class="btn btn-primary">
+                <span>Create Account</span>
+              </button>
+            </div>
+
+            <div class="divider">
+              <span>or continue with</span>
+            </div>
+
+            <div class="d-grid">
+              <button type="button" class="btn btn-google" onclick="window.location.href='/auth/google'">
+                <i class="fa-brands fa-google"></i>
+                <span>Google</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
+  <script src="/evara-frontend/assets/js/userValidate.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <script>
+    
+  </script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-  
-<script src="/evara-frontend/assets/js/userValidate.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script>
-  
-</script>
 </html>

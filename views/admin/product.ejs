@@ -11,23 +11,11 @@
       background-color: #f7f9fc;
     }
     .table-container {
-      animation: fadeIn 0.5s ease-out;
-      width: calc(100% - 280px); /* Increased spacing for sidebar */
-      margin-left: 260px; /* Add margin to account for sidebar */
-      padding: 2rem;
-      overflow-x: auto;
       background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
       border-radius: 20px;
+      padding: 2rem;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    }
-
-    @media (max-width: 991.98px) {
-      .table-container {
-        width: 95%;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 1rem;
-      }
+      margin: 2rem auto;
     }
 
     .page-header {
@@ -182,6 +170,118 @@
         transform: translateY(0);
       }
     }
+
+    .table-container {
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    .main-content {
+      margin-left: 260px;
+      width: calc(100% - 260px);
+      min-height: 100vh;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(103, 178, 111, 0.05));
+    }
+
+    .table-container {
+      max-width: 100%;
+      padding: 0 1rem;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+
+    .add-product-btn {
+      background: linear-gradient(135deg, #4a90e2, #67b26f);
+      color: white;
+      border: none;
+      padding: 0.5rem 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .add-product-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      color: white;
+    }
+
+    .page-header {
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+
+    .table {
+      margin-bottom: 0;
+    }
+
+    .table th {
+      background: rgba(74, 144, 226, 0.1);
+      border: none;
+      padding: 1rem;
+      font-weight: 600;
+    }
+
+    .table td {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .badge {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    .btn-sm {
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      margin: 0.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .btn-sm:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Modal styling */
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .modal-header {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+    }
+
+    .modal-footer {
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 991.98px) {
+      .main-content {
+        margin-left: 0;
+        width: 100%;
+        padding: 1rem;
+      }
+
+      .table-container {
+        padding: 1rem;
+      }
+
+      .table-responsive {
+        border-radius: 12px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -189,8 +289,8 @@
   <%- include("../../views/partial/admin/header") %>
 
   <!-- Main Content -->
-  <main>
-    <div class="table-container">
+  <div class="main-content">
+    <div class="container table-container">
       <form action="/admin/addProduct">
         <button type="submit" class="btn add-product-btn">
           <i class="fas fa-plus me-2"></i>Add Product
@@ -282,7 +382,7 @@
         </div>
       <% } %>
     </div>
-  </main>
+  </div>
 
   <!-- Offer Modal -->
   <div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalLabel" aria-hidden="true">

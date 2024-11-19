@@ -8,58 +8,265 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="/evara-frontend/assets/css/address.css">
+    <style>
+        :root {
+            --primary: #2874f0;
+            --secondary: #1a237e;
+            --text: #2c3e50;
+            --bg: #f8f9fa;
+            --glass: rgba(255, 255, 255, 0.98);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --navbar-height: 60px;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Main Layout */
+        .main-wrapper {
+            padding-top: calc(var(--navbar-height) + 5px);
+            min-height: calc(100vh - var(--navbar-height));
+            display: flex;
+        }
+
+        /* Sidebar adjustments */
+        .sidebar {
+            width: 240px;
+            padding: 1rem;
+            background: white;
+            border-right: 1px solid var(--glass-border);
+        }
+
+        .profile {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .profile img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid var(--glass-border);
+        }
+
+        .profile h2 {
+            color: var(--text);
+            margin: 1rem 0;
+            font-size: 1.1rem;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            padding: 0.4rem 0.75rem;
+            color: var(--text);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: 0.3s;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .menu a:hover, .menu a.active {
+            background: var(--bg);
+            color: var(--primary);
+        }
+
+        .menu i {
+            width: 20px;
+            color: var(--primary);
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 1rem;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--glass);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 2px 8px var(--glass-border);
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .form-header h3 {
+            margin: 0;
+            color: var(--text);
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.5rem 0.75rem;
+            height: 36px;
+            background: white;
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            box-sizing: border-box;
+            color: var(--text);
+        }
+
+        input:hover {
+            border-color: var(--primary);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(40, 116, 240, 0.1);
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .btn {
+            height: 32px;
+            padding: 0 1.25rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(40, 116, 240, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .cancel {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--glass-border);
+        }
+
+        .cancel:hover {
+            background: var(--bg);
+            transform: translateY(-2px);
+        }
+
+        .save {
+            background: var(--primary);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(40, 116, 240, 0.2);
+        }
+
+        .save:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .main-wrapper {
+                padding-top: calc(var(--navbar-height) + 5px);
+            }
+            .sidebar {
+                display: none;
+            }
+            .content {
+                padding: 0.75rem;
+            }
+            .form-container {
+                padding: 0.75rem;
+            }
+            .form-group {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+                margin-bottom: 0.5rem;
+            }
+            .form-actions {
+                flex-direction: column;
+            }
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <style>
-        .form-group {
-    position: relative;
-    margin-bottom: 15px; /* Add spacing between input fields */
-}
-
-input {
-    width: 100%; /* Ensure inputs take up full width */
-    padding: 8px;
-    margin: 5px 0; /* Add space between input fields and error messages */
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.error-message {
-    color: red;
-    font-size: 12px;
-    margin-top: 5px; /* Space between input and error message */
-    display: block; /* Ensure error message is displayed as block, below the input */
-}
-
-/* Optional: Change border color when there is an error */
-input.error {
-    border-color: red;
-}
-
-    </style>
-    <div class="sidebar">
-        <div class="profile">
-            <img alt="Profile Picture" src="https://e7.pngegg.com/pngimages/136/22/png-clipart-user-profile-computer-icons-girl-customer-avatar-angle-heroes-thumbnail.png"/>
-            <h2><%= user ? user.name : 'Guest' %></h2>
-        </div>
-        <ul class="menu">
-            <li><a href="/profile"><i class="fas fa-user"></i> Account Overview</a></li>
-            <li><a href="/order"><i class="fas fa-box"></i> My Orders</a></li>
-            <li><a class="active" href="/manageAddress"><i class="fas fa-address-book"></i> Manage Addresses</a></li>
-            <li><a href="#"><i class="fas fa-wallet"></i> Wallet</a></li>
-        </ul>
-        <a class="logout" href="/">LOGOUT</a>
-    </div>
-    
-    <div class="content">
-        <div class="form-container">
-            <div class="d-flex justify-content-between align-items-center text-right mb-3">
-                <h3 class="mb-0">Add Address</h3>
-                <button class="btn btn-primary">
-                    <a href="/viewAddress" class="text-white text-decoration-none">View Address</a>
-                </button>
+    <div class="main-wrapper">
+        <div class="sidebar">
+            <div class="profile">
+                <img alt="Profile Picture" src="https://e7.pngegg.com/pngimages/136/22/png-clipart-user-profile-computer-icons-girl-customer-avatar-angle-heroes-thumbnail.png"/>
+                <h2><%= user ? user.name : 'Guest' %></h2>
             </div>
+            <ul class="menu">
+                <li><a href="/profile"><i class="fas fa-user"></i> Account Overview</a></li>
+                <li><a href="/order"><i class="fas fa-box"></i> My Orders</a></li>
+                <li><a class="active" href="/manageAddress"><i class="fas fa-address-book"></i> Manage Addresses</a></li>
+                <li><a href="#"><i class="fas fa-wallet"></i> Wallet</a></li>
+            </ul>
+            <a class="logout" href="/">LOGOUT</a>
+        </div>
+        
+        <div class="content">
+            <div class="form-container">
+                <div class="form-header">
+                    <h3 class="mb-0">Add Address</h3>
+                    <button class="btn btn-primary">
+                        <a href="/viewAddress" class="text-white text-decoration-none">View Address</a>
+                    </button>
+                </div>
                 <form action="/address/addAddress" method="POST" id="addressForm">
                     <div class="form-group">
                         <input name="Firstname" id="Firstname" placeholder="First Name" type="text">
@@ -95,6 +302,7 @@ input.error {
                     </div>
                 </form>
                 
+            </div>
         </div>
     </div>
 <script>

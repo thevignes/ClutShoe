@@ -2,7 +2,347 @@
 <link rel="stylesheet" href="/evara-frontend/assets/css/blender.css">
 <!-- <link rel="stylesheet" href="/public/public/evara-frontend/assets/css/zoom.css"> -->
 <main class="main">  
+     <style>
+   
+        /* Modern Product Grid Styling */
+        .product-grid-4 {
+            padding: 20px 0;
+        }
+        
+        .product-cart-wrap {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 15px;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            overflow: hidden;
+        }
+        
+        .product-cart-wrap:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(31, 38, 135, 0.2);
+        }
+        
+        /* Image Container */
+        .product-img-action-wrap {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+        }
+        
+        .product-img {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+        }
+        
+        .product-img img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+        
+        .product-img:hover img.default-img {
+            transform: scale(0);
+            opacity: 0;
+        }
+        
+        .product-img:hover img.hover-img {
+            transform: scale(1);
+            opacity: 1;
+        }
+        
+        .hover-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transform: scale(1.2);
+        }
+        
+        /* Product Badges */
+        .product-badges {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 2;
+        }
+        
+        .hot {
+            background: linear-gradient(45deg, #ff4757, #ff6b81);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 12px;
+            box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Product Content */
+        .product-content-wrap {
+            padding: 15px 10px;
+        }
+        
+        .product-category {
+            margin-bottom: 10px;
+        }
+        
+        .product-category a {
+            color: #006A67 !important;
+            font-size: 14px !important;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        
+        .product-category a:hover {
+            color: #00857f !important;
+        }
+        
+        .product-category h2 {
+            font-size: 18px !important;
+            margin: 10px 0;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        
+        .product-category h2 a {
+            color: #2d3436 !important;
+            transition: all 0.3s ease;
+        }
+        
+        .product-category h2 a:hover {
+            color: #006A67 !important;
+        }
+        
+        /* Price Styling */
+        .price-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .sale-price {
+            color: #006A67 !important;
+            font-size: 22px !important;
+            font-weight: 700;
+        }
+        
+        .regular-price {
+            color: #a4b0be !important;
+            font-size: 16px !important;
+            text-decoration: line-through;
+        }
+        
+        /* Add to Cart Button */
+        .product-action-1 {
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .product-cart-wrap:hover .product-action-1 {
+            bottom: 0;
+        }
+        
+        .action-btn {
+            background: linear-gradient(45deg, #006A67, #00857f);
+            color: white !important;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 106, 103, 0.2);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px) rotate(360deg);
+            box-shadow: 0 8px 20px rgba(0, 106, 103, 0.3);
+        }
+        
+        .action-btn i {
+            font-size: 20px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .product-img img {
+                height: 200px;
+            }
+            
+            .product-category h2 {
+                font-size: 16px !important;
+            }
+            
+            .sale-price {
+                font-size: 18px !important;
+            }
+        }
      
+        /* Enhanced Glass Effect Styling */
+        .product-cart-wrap {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 8px 32px rgba(31, 38, 135, 0.15),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+            border-radius: 24px;
+            padding: 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-cart-wrap::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+        
+        .product-cart-wrap:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 
+                0 15px 40px rgba(31, 38, 135, 0.2),
+                inset 0 0 0 2px rgba(255, 255, 255, 0.6);
+        }
+        
+        .product-cart-wrap:hover::before {
+            left: 100%;
+        }
+        
+        /* Enhanced Image Container */
+        .product-img-action-wrap {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            border-radius: 20px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .product-img {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        /* Enhanced Product Content */
+        .product-content-wrap {
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Enhanced Price Container */
+        .price-container {
+            background: rgba(255, 255, 255, 0.4);
+            padding: 10px 15px;
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Enhanced Action Button */
+        .product-action-1 {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .action-btn {
+            background: linear-gradient(135deg, #006A67, #00857f);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 8px 20px rgba(0, 106, 103, 0.2),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Enhanced Offer Badge */
+        .hot {
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 4px 15px rgba(255, 71, 87, 0.3),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Add a subtle gradient background to the page */
+        .main {
+            background: linear-gradient(135deg, #f5f7fa, #e3e6e8);
+            min-height: 100vh;
+        }
+        
+        /* Enhanced hover effects */
+        .product-category a:hover {
+            text-shadow: 0 0 10px rgba(0, 106, 103, 0.3);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px) rotate(360deg);
+            box-shadow: 
+                0 12px 25px rgba(0, 106, 103, 0.3),
+                inset 0 0 0 2px rgba(255, 255, 255, 0.4);
+        }
+        
+        /* Shimmer effect on hover */
+        @keyframes shimmer {
+            0% {
+                background-position: -100% 0;
+            }
+            100% {
+                background-position: 100% 0;
+            }
+        }
+        
+        .product-cart-wrap:hover .product-content-wrap {
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.5),
+                rgba(255, 255, 255, 0.8),
+                rgba(255, 255, 255, 0.5)
+            );
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+       
+     </style>
     <section class="home-slider position-relative pt-50">
         <div class="hero-slider-1 dot-style-1 dot-style-1-position-1">
             <div class="single-hero-slider single-animation-wrap">
@@ -165,65 +505,60 @@
 
              <!-- <div class="tab-content wow fadeIn animated" id="myTabContent">
                 <div class="tab-pane fade show active" id="tab-one" role="tabpanel" aria-labelledby="tab-one"> -->
-                    <div class="row product-grid-4">
-                        <% ProductData.forEach(product => { %>
-                            <div class="col-lg-3 col-md-4 col-12 col-sm-6 mt-5">
-                                <div class="product-cart-wrap mb-30">
-                                    <div class="product-img-action-wrap">
-                                        <div class="product-img product-img-zoom">
-                                            <a href="/ProducDetial/<%= product._id %>">
-                                                <img class="default-img" src="/uploads/re-image/<%= product.images[0] %>" alt="<%= product.name %>">
-                                                <img class="hover-img" src="/uploads/re-image/<%= product.images[1] %>" alt="<%= product.name %>">
-                                            </a>
-                                        </div>
-                                        <div class="product-badges product-badges-position product-badges-mrg">
-                                            <% if (product.offer) { %>
-                                                <span class="hot" style="background-color: red; color: white; padding: 3px 5px; font-size: 12px;">
-                                                    <% if (product.offer.type === 'percentage') { %>
-                                                        <%= product.offer.value %>% OFF
-                                                    <% } else if (product.offer.type === 'flat') { %>
-                                                        ₹<%= product.offer.value %> OFF
-                                                    <% } %>
-                                                </span>
-                                            <% } %>
-                                        </div>
-                                    </div>
-                                    <div class="product-content-wrap">
-                                        <div class="product-category">
-                                            <a href="/category/<%= product.category._id %>" style="color: grey; font-size: 12px; display: block; margin-bottom: 5px;">
-                                                <%= product.category.name %>
-                                            </a>
-                                            <h2 style="font-size: 16px; font-weight: bold; margin: 0;">
-                                                <a href="/ProducDetial/<%= product._id %>" style="color: black; text-decoration: none;">
-                                                    <%= product.productName %>
-                                                </a>
-                                            </h2>
-                                        </div>
-                                        <div style="display: flex; align-items: center; margin: 8px 0;">
-                                      
-                                            
-                                        </div>
-                                        <div style="font-size: 18px; margin: 8px 0;">
-                                            <% if (product.offer) { %>
-                                                <% if (product.salePrice) { %>
-                                                    <span style="color: green; font-weight: bold;">₹<%= (product.salePrice || 0).toFixed(2) %></span>
-                                                <% } %>
-                                                <span style="text-decoration: line-through; color: grey; font-size: 14px;">₹<%= (product.regularPrice || 0).toFixed(2) %></span>
-                                            <% } else { %>
-                                                <span style="color: black; font-weight: bold;">₹<%= (product.regularPrice || 0).toFixed(2) %></span>
-                                            <% } %>
-                                        </div>
-                                        
-                                        <div class="product-action-1 show" style="text-align: right; margin-top: 10px;">
-                                            <a aria-label="Add To Cart" class="action-btn hover-up" href="/add-to-cart/<%= product._id %>" style="font-size: 20px; color: #007BFF;">
-                                                <i class="fi-rs-shopping-bag-add"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        <% }) %>
-                    </div>
+              <div class="row product-grid-4">
+                  <% ProductData.forEach(product => { %>
+                      <div class="col-lg-3 col-md-4 col-12 col-sm-6 mt-5">
+                          <div class="product-cart-wrap mb-30">
+                              <div class="product-img-action-wrap">
+                                  <div class="product-img product-img-zoom">
+                                      <a href="/ProducDetial/<%= product._id %>">
+                                          <img class="default-img" src="/uploads/re-image/<%= product.images[0] %>" alt="<%= product.name %>">
+                                          <img class="hover-img" src="/uploads/re-image/<%= product.images[1] %>" alt="<%= product.name %>">
+                                      </a>
+                                  </div>
+                                  <% if (product.offer) { %>
+                                      <div class="product-badges">
+                                          <span class="hot">
+                                              <% if (product.offer.type === 'percentage') { %>
+                                                  <%= product.offer.value %>% OFF
+                                              <% } else if (product.offer.type === 'flat') { %>
+                                                  ₹<%= product.offer.value %> OFF
+                                              <% } %>
+                                          </span>
+                                      </div>
+                                  <% } %>
+                              </div>
+                              <div class="product-content-wrap">
+                                  <div class="product-category">
+                                      <a href="/category/<%= product.category._id %>">
+                                          <%= product.category.name %>
+                                      </a>
+                                      <h2>
+                                          <a href="/ProducDetial/<%= product._id %>">
+                                              <%= product.productName %>
+                                          </a>
+                                      </h2>
+                                  </div>
+                                  <div class="price-container">
+                                      <% if (product.offer) { %>
+                                          <% if (product.salePrice) { %>
+                                              <span class="sale-price">₹<%= (product.salePrice || 0).toFixed(2) %></span>
+                                          <% } %>
+                                          <span class="regular-price">₹<%= (product.regularPrice || 0).toFixed(2) %></span>
+                                      <% } else { %>
+                                          <span class="sale-price">₹<%= (product.regularPrice || 0).toFixed(2) %></span>
+                                      <% } %>
+                                  </div>
+                                  <div class="product-action-1">
+                                      <a aria-label="Add To Cart" class="action-btn" href="/add-to-cart/<%= product._id %>">
+                                          <i class="fi-rs-shopping-bag-add"></i>
+                                      </a>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  <% }) %>
+              </div>>
                     
 
 

@@ -63,7 +63,302 @@
                 width: 80px;
                 /* Adjust the width as needed */
             }
-        </style>
+            
+            /* Product Details Styling */
+            .detail-info {
+                padding: 2rem;
+                background: #fff;
+                border-radius: 20px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+                transition: all 0.3s ease;
+            }
+            
+            .title-detail {
+                font-size: 2.5rem;
+                font-weight: 700;
+                color: #2d3436;
+                margin-bottom: 1.5rem;
+                font-family: 'Segoe UI', sans-serif;
+                line-height: 1.2;
+            }
+            
+            /* Category and Rating */
+            .product-detail-rating {
+                background: #f8f9fa;
+                padding: 1rem 1.5rem;
+                border-radius: 15px;
+                margin-bottom: 1.5rem;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .pro-details-brand {
+                background: #006A67;
+                padding: 0.5rem 1.5rem;
+                border-radius: 50px;
+                transition: all 0.3s ease;
+            }
+            
+            .pro-details-brand span, .pro-details-brand a {
+                color: white;
+                text-decoration: none;
+                font-weight: 500;
+            }
+            
+            .pro-details-brand:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0,106,103,0.2);
+            }
+            
+            /* Price Styling */
+            .product-price {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                margin: 1.5rem 0;
+            }
+            
+            .text-brand {
+                font-size: 2rem;
+                color: #006A67;
+                font-weight: 700;
+            }
+            
+            .old-price {
+                text-decoration: line-through;
+                color: #999;
+                font-size: 1.2rem;
+            }
+            
+            .save-price {
+                background: linear-gradient(45deg, #006A67, #00857f);
+                color: white;
+                padding: 0.5rem 1.5rem;
+                border-radius: 50px;
+                font-weight: 500;
+                animation: pulseSave 2s infinite;
+            }
+            
+            @keyframes pulseSave {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.05); }
+                100% { transform: scale(1); }
+            }
+            
+            /* Description */
+            .short-desc {
+                background: #f8f9fa;
+                padding: 1.5rem;
+                border-radius: 15px;
+                margin: 1.5rem 0;
+                transition: all 0.3s ease;
+            }
+            
+            .short-desc:hover {
+                transform: translateY(-2px);
+                background: #f1f3f5;
+            }
+            
+            /* Product Features */
+            .product_sort_info ul {
+                list-style: none;
+                padding: 0;
+            }
+            
+            .product_sort_info li {
+                padding: 1rem 1.5rem;
+                background: #f8f9fa;
+                border-radius: 10px;
+                margin-bottom: 0.8rem;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .product_sort_info li i {
+                color: #006A67;
+                font-size: 1.2rem;
+            }
+            
+            .product_sort_info li:hover {
+                transform: translateX(10px);
+                background: #f1f3f5;
+            }
+            
+            /* Stock Status */
+            .product-meta {
+                background: #f8f9fa;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                margin-top: 1.5rem;
+            }
+            
+            .in-stock {
+                background: #00b894;
+                color: white;
+                padding: 0.3rem 1rem;
+                border-radius: 50px;
+                font-size: 0.9rem;
+                font-weight: 500;
+            }
+            
+            /* Buttons Container */
+            .detail-extralink {
+                display: flex;
+                gap: 1rem;
+                margin-top: 2rem;
+            }
+            
+            /* Action Buttons */
+            .action-btn {
+                width: 45px;
+                height: 45px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                background: #f8f9fa;
+                color: #006A67;
+                transition: all 0.3s ease;
+            }
+            
+            .action-btn:hover {
+                background: #006A67;
+                color: white;
+                transform: rotate(360deg);
+            }
+            
+            /* Responsive Design */
+            @media (max-width: 768px) {
+                .detail-info {
+                    padding: 1rem;
+                }
+                
+                .title-detail {
+                    font-size: 1.8rem;
+                }
+                
+                .product-price {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+                
+                .detail-extralink {
+                    flex-direction: column;
+                }
+            }
+            
+/* Add to Cart Button */
+#add {
+    background: linear-gradient(45deg, #006A67, #00857f);
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,106,103,0.2);
+}
+
+#add:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(0,106,103,0.3);
+}
+
+#add span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#add i {
+    transition: transform 0.3s ease;
+}
+
+#add:hover i {
+    transform: translateX(5px);
+}
+
+/* Wishlist Button */
+.wish {
+    background: transparent;
+    color: #006A67;
+    border: 2px solid #006A67;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.wish span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.wish:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #006A67, #00857f);
+    transition: all 0.5s ease;
+    z-index: 0;
+}
+
+.wish:hover {
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,106,103,0.2);
+}
+
+.wish:hover:before {
+    left: 0;
+}
+
+.wish i {
+    transition: transform 0.3s ease;
+}
+
+.wish:hover i {
+    transform: scale(1.2);
+}
+
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.wish.clicked i {
+    animation: heartBeat 0.3s ease;
+    color: #ff4757;
+}
+
+/* Action Buttons Container */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+</style>
+          
+        
 
         <section class="mt-50 mb-50">
             <div class="container">
@@ -172,39 +467,32 @@
                                                             Return Policy</li>
                                                         <li><i class="fi-rs-credit-card me-2"></i> Cash on Delivery
                                                             available</li>
-                                                    </ul>
-                                                </div>
-
-                                                <div class="detail-extralink">
-
-
-                                                    <form class="add-to-cart">
-                                                        <!-- Quantity input -->
-                                                        <!-- <button class="btn btn-success mt-2" type="submit">Add to Cart</button> -->
-                                                        <button
-                                                            class="<%= ProductData.quantity !== 0 ? 'btn btn-success mt-2' : 'd-none' %>"
-                                                            type="button" id="add" onclick="addToCart('<%= ProductData._id %>')">
-                                                            Add to Cart
-                                                        </button>
-
-                                                    </form>
-                                                    <form id="wishlistForm" data-product-id="<%= ProductData._id %>">
-                                                        <button type="button" class="wish" id="wish"
-                                                         onclick="addToWishlist('<%= ProductData._id %>')">Add to Wishlist</button>
-                                                    </form>
-                                                    
-                                                    <!-- Dropdown to select quantity -->
-                                                    <!-- <select id="quantityDropdown" class="form-select" onchange="updateQuantity(this, 'PRODUCT_ID_HERE')">
-    <% for (let i = 1; i <= MAX_QUANTITY_PER_PRODUCT; i++) { %>
-      <option value="<%= i %>"><%= i %></option>
-    <% } %>
-  </select>
-   -->
-                                                    <a aria-label="Add To Wishlist" class="action-btn hover-up ms-2"
-                                                        href=""><i class="fi-rs-heart"></i></a>
-                                                    <a aria-label="Compare" class="action-btn hover-up ms-2"
-                                                        href="shop-compare.html"><i class="fi-rs-shuffle"></i></a>
-                                                </div>
+   <div class="detail-extralink">
+       <form class="add-to-cart">
+           <button class="<%= ProductData.quantity !== 0 ? 'btn mt-2' : 'd-none' %>" type="button" id="add" onclick="addToCart('<%= ProductData._id %>')">
+               <span>
+                   <i class="fas fa-shopping-cart"></i>
+                   Add to Cart
+               </span>
+           </button>
+       </form>
+       <form id="wishlistForm" data-product-id="<%= ProductData._id %>">
+           <button type="button" class="wish" id="wish" onclick="addToWishlist('<%= ProductData._id %>')">
+               <span>
+                   <i class="fas fa-heart"></i>
+                   Add to Wishlist
+               </span>
+           </button>
+       </form>
+       <div class="action-buttons">
+           <a aria-label="Add To Wishlist" class="action-btn hover-up ms-2" href="#">
+               <i class="fi-rs-heart"></i>
+           </a>
+           <a aria-label="Compare" class="action-btn hover-up ms-2" href="shop-compare.html">
+               <i class="fi-rs-shuffle"></i>
+           </a>
+       </div>
+   </div>
                                                 <ul class="product-meta font-xs color-grey mt-3 text-dark">
                                                     <li>
                                                         <%= ProductData.status %>: <span
@@ -726,7 +1014,12 @@
             zoomableImage.style.transform = 'scale(1)';
         }
     </script>
-
+<script>
+document.getElementById('wish').addEventListener('click', function() {
+    this.classList.add('clicked');
+    setTimeout(() => this.classList.remove('clicked'), 300);
+});
+</script>
 
 
     <%-include('../../views/partial/user/footer')%>

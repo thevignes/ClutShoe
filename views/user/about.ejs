@@ -1,0 +1,294 @@
+<%- include('../../views/partial/user/header',{user:user}) %>
+
+<style>
+/* Modern About Page Styling */
+.about-section {
+    background: linear-gradient(135deg, #f5f7fa, #e3e6e8);
+    padding: 80px 0;
+    overflow: hidden;
+}
+
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Hero Section */
+.about-hero {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(15px);
+    border-radius: 30px;
+    padding: 60px;
+    margin-bottom: 80px;
+    text-align: center;
+    transform: translateY(50px);
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards;
+}
+
+.about-hero h1 {
+    font-size: 3.5rem;
+    color: #006A67;
+    margin-bottom: 20px;
+    font-weight: 800;
+}
+
+.about-hero p {
+    font-size: 1.2rem;
+    color: #666;
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.8;
+}
+
+/* Story Section */
+.story-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 40px;
+    margin-bottom: 80px;
+}
+
+.story-card {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: 40px;
+    transform: translateY(30px);
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards;
+    transition: all 0.3s ease;
+}
+
+.story-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 106, 103, 0.1);
+}
+
+.story-card h3 {
+    color: #006A67;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.story-card h3::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(45deg, #006A67, #00857f);
+    border-radius: 3px;
+}
+
+/* Values Section */
+.values-section {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 30px;
+    padding: 60px;
+    margin-bottom: 80px;
+    transform: translateY(30px);
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards 0.3s;
+}
+
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.value-card {
+    text-align: center;
+    padding: 30px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.value-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 15px 30px rgba(0, 106, 103, 0.1);
+}
+
+.value-card i {
+    font-size: 2.5rem;
+    color: #006A67;
+    margin-bottom: 20px;
+}
+
+/* Team Section */
+.team-section {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.team-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    overflow: hidden;
+    transform: translateY(30px);
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards 0.6s;
+}
+
+.team-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: all 0.3s ease;
+}
+
+.team-card:hover .team-image {
+    transform: scale(1.1);
+}
+
+.team-info {
+    padding: 20px;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .story-grid, .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .values-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .story-grid, .values-grid, .team-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .about-hero {
+        padding: 40px 20px;
+    }
+    
+    .about-hero h1 {
+        font-size: 2.5rem;
+    }
+}
+</style>
+
+<div class="about-section">
+    <div class="about-container">
+        <!-- Hero Section -->
+        <div class="about-hero">
+            <h1>Our Story</h1>
+            <p>Welcome to ZARA, where style meets innovation. We're more than just a fashion store; we're a community of fashion enthusiasts dedicated to bringing you the latest trends and timeless classics.</p>
+        </div>
+
+        <!-- Story Grid -->
+        <div class="story-grid">
+            <div class="story-card">
+                <h3>Our Mission</h3>
+                <p>To provide our customers with high-quality, trendy fashion that empowers them to express their unique style. We believe that everyone deserves to look and feel their best without compromising on quality or sustainability.</p>
+            </div>
+            <div class="story-card">
+                <h3>Our Vision</h3>
+                <p>To become the leading sustainable fashion destination, where style meets responsibility. We envision a future where fashion is accessible, sustainable, and empowering for all.</p>
+            </div>
+        </div>
+
+        <!-- Values Section -->
+        <div class="values-section">
+            <h2 class="text-center mb-4">Our Values</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <i class="fi-rs-star"></i>
+                    <h4>Quality First</h4>
+                    <p>We never compromise on the quality of our products and services.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fi-rs-heart"></i>
+                    <h4>Customer Focus</h4>
+                    <p>Your satisfaction is our top priority in everything we do.</p>
+                </div>
+                <div class="value-card">
+                    <i class="fi-rs-leaf"></i>
+                    <h4>Sustainability</h4>
+                    <p>Committed to environmentally responsible fashion practices.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Section -->
+        <div class="team-section">
+            <h2 class="mb-4">Meet Our Team</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <img src="/path-to-image/team1.jpg" alt="Team Member" class="team-image">
+                    <div class="team-info">
+                        <h4>John Doe</h4>
+                        <p>Founder & CEO</p>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="/path-to-image/team2.jpg" alt="Team Member" class="team-image">
+                    <div class="team-info">
+                        <h4>Jane Smith</h4>
+                        <p>Creative Director</p>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="/path-to-image/team3.jpg" alt="Team Member" class="team-image">
+                    <div class="team-info">
+                        <h4>Mike Johnson</h4>
+                        <p>Head of Design</p>
+                    </div>
+                </div>
+                <div class="team-card">
+                    <img src="/path-to-image/team4.jpg" alt="Team Member" class="team-image">
+                    <div class="team-info">
+                        <h4>Sarah Wilson</h4>
+                        <p>Marketing Director</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Intersection Observer for scroll animations
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = 1;
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, {
+    threshold: 0.1
+});
+
+// Observe all animated elements
+document.querySelectorAll('.story-card, .value-card, .team-card').forEach((el) => {
+    observer.observe(el);
+});
+</script>
+
+<%- include('../../views/partial/user/footer') %>

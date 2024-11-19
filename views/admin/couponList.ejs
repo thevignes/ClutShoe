@@ -7,107 +7,127 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-      .glass-container {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-        border-radius: 16px;
-        padding: 2rem;
-        margin: 2rem 0;
-      }
+        .main-content {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            min-height: 100vh;
+            padding: 2rem;
+        }
 
-      .gradient-bg {
-        background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(103, 178, 111, 0.05));
-        min-height: 100vh;
-        padding: 2rem;
-      }
+        .gradient-bg {
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(103, 178, 111, 0.05));
+            min-height: 100vh;
+        }
 
-      .modern-table {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        border-radius: 16px;
-        overflow: hidden;
-        border: none;
-        width: 100%;
-      }
+        .glass-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
 
-      .modern-table th {
-        background: rgba(74, 144, 226, 0.1);
-        color: #333;
-        font-weight: 600;
-        padding: 1rem !important;
-        border: none;
-        text-transform: uppercase;
-        font-size: 0.9rem;
-      }
+        .modern-btn {
+            background: linear-gradient(135deg, #4a90e2, #67b26f);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+        }
 
-      .modern-table td {
-        padding: 1rem !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        vertical-align: middle;
-      }
+        .modern-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
 
-      .modern-table tr:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transition: all 0.3s ease;
-      }
+        .modern-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 1rem;
+        }
 
-      .modern-btn {
-        background: linear-gradient(135deg, #4a90e2, #67b26f) !important;
-        border: none !important;
-        color: white !important;
-        padding: 0.8rem 1.5rem !important;
-        border-radius: 8px !important;
-        transition: all 0.3s ease !important;
-        text-decoration: none;
-        display: inline-block;
-        margin-bottom: 1rem;
-      }
+        .modern-table th {
+            background: rgba(74, 144, 226, 0.1);
+            color: #333;
+            font-weight: 600;
+            padding: 1rem;
+            text-align: left;
+            border: none;
+        }
 
-      .modern-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      }
+        .modern-table td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            vertical-align: middle;
+        }
 
-      .action-btn {
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.9rem;
-      }
+        .coupon-code {
+            background: rgba(74, 144, 226, 0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-family: monospace;
+            font-weight: 500;
+        }
 
-      .delete-btn {
-        background: linear-gradient(135deg, #ff6b6b, #ee5253);
-        color: white;
-      }
+        .coupon-amount {
+            color: #2ecc71;
+            font-weight: 500;
+        }
 
-      .delete-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.2);
-      }
+        .expiry-date {
+            color: #e74c3c;
+            font-weight: 500;
+        }
 
-      .coupon-code {
-        font-family: monospace;
-        background: rgba(74, 144, 226, 0.1);
-        padding: 0.3rem 0.6rem;
-        border-radius: 4px;
-        font-weight: 500;
-      }
+        .action-btn {
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
 
-      .coupon-amount {
-        font-weight: 600;
-        color: #4a90e2;
-      }
+        .delete-btn {
+            background: linear-gradient(135deg, #ff6b6b, #ee5253);
+            color: white;
+        }
 
-      .expiry-date {
-        color: #666;
-        font-size: 0.9rem;
-      }
+        .delete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 991.98px) {
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 1rem;
+            }
+
+            .glass-container {
+                padding: 1rem;
+            }
+
+            .modern-table {
+                font-size: 0.9rem;
+            }
+
+            .action-btn {
+                padding: 0.3rem 0.8rem;
+            }
+        }
     </style>
 </head>
 <body class="bg-white text-black">
@@ -115,51 +135,53 @@
     <!-- Include Header -->
     <%- include("../../views/partial/admin/header") %>
 
-    <div class="gradient-bg">
-      <div class="container mx-auto px-4 py-8">
-        <div class="glass-container">
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3>Coupon Management</h3>
-            <a href="/admin/coupon" class="modern-btn">
-              <i class="fas fa-plus-circle me-2"></i>Add New Coupon
-            </a>
-          </div>
+    <div class="main-content">
+        <div class="gradient-bg">
+            <div class="container mx-auto px-4 py-8">
+                <div class="glass-container">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3>Coupon Management</h3>
+                        <a href="/admin/coupon" class="modern-btn">
+                            <i class="fas fa-plus-circle me-2"></i>Add New Coupon
+                        </a>
+                    </div>
 
-          <div class="table-responsive">
-            <table class="modern-table">
-              <thead>
-                <tr>
-                  <th>Code</th>
-                  <th>Coupon Code</th>
-                  <th>Amount</th>
-                  <th>Description</th>
-                  <th>Usage Limit</th>
-                  <th>Expiry Date</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% coupons.forEach(coupon => { %>
-                <tr>
-                  <td><%= coupon.name %></td>
-                  <td><span class="coupon-code"><%= coupon.couponCode %></span></td>
-                  <td><span class="coupon-amount">₹<%= coupon.amount %></span></td>
-                  <td><%= coupon.description %></td>
-                  <td><%= coupon.limit %> uses</td>
-                  <td><span class="expiry-date"><%= new Date(coupon.expiryDate).toLocaleDateString() %></span></td>
-                  <td>
-                    <a href="#" onclick="confirmDelete(event, '<%= coupon._id %>');" class="action-btn delete-btn">
-                      <i class="fas fa-trash-alt"></i>
-                      Delete
-                    </a>
-                  </td>
-                </tr>
-                <% }); %>
-              </tbody>
-            </table>
-          </div>
+                    <div class="table-responsive">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Coupon Code</th>
+                                    <th>Amount</th>
+                                    <th>Description</th>
+                                    <th>Usage Limit</th>
+                                    <th>Expiry Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% coupons.forEach(coupon => { %>
+                                <tr>
+                                    <td><%= coupon.name %></td>
+                                    <td><span class="coupon-code"><%= coupon.couponCode %></span></td>
+                                    <td><span class="coupon-amount">₹<%= coupon.amount %></span></td>
+                                    <td><%= coupon.description %></td>
+                                    <td><%= coupon.limit %> uses</td>
+                                    <td><span class="expiry-date"><%= new Date(coupon.expiryDate).toLocaleDateString() %></span></td>
+                                    <td>
+                                        <a href="#" onclick="confirmDelete(event, '<%= coupon._id %>');" class="action-btn delete-btn">
+                                            <i class="fas fa-trash-alt"></i>
+                                            Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
     <!-- Include Footer -->

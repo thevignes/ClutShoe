@@ -1,157 +1,290 @@
 <%- include('../../views/partial/user/header', { user: user }) %>
 
-<div class="container mt-4">
-    <div class="row">
+<div class="container mt-5">
+    <div class="checkout-progress mb-5">
+        <div class="progress-step active">
+            <div class="step-icon">📦</div>
+            <span>Cart Review</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step">
+            <div class="step-icon">🏠</div>
+            <span>Address</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step">
+            <div class="step-icon">💳</div>
+            <span>Payment</span>
+        </div>
+    </div>
+
+    <div class="row g-4">
         <!-- Left Column for Address -->
         <div class="col-md-5">
-            <div class="address_section p-3 border border-dark rounded">
-                <h5>Shipping Address</h5>
-                <!-- List of Addresses with Radio Buttons to Choose an Address -->
-                <% addresses.forEach(function(address, index) { %>
-                    <div class="mb-2 small-radio"> 
-                        <input type="radio" name="selected_address" id="address<%= index %>" value="<%= address._id %>" <%=index === 0 ? 'checked' : '' %>>
-                        <label for="address<%= index %>">
-                            <span>Delivery to: <%= address.Firstname %></span>
-                            <p><%= address.street %> <%= address.city %>, <%= address.state %> <%= address.pin %> <span> To: <%= address.type %></span></p>
-                        </label>
-                    </div>
-                    <button class="edit-btn btn btn-link" style="background-color:#006A67; text-decoration: none; border: none;">
-                        <a href="/editAddressPage/<%= address._id %>" class="text-white">Edit</a>
-                    </button>
-                <% }) %>
+            <div class="checkout-card address-section">
+                <div class="card-header">
+                    <h5><i class="fas fa-map-marker-alt me-2"></i>Shipping Address</h5>
+                </div>
+                <div class="card-body">
+                    <!-- List of Addresses with Radio Buttons -->
+                    <% addresses.forEach(function(address, index) { %>
+                        <div class="address-card mb-3" data-aos="fade-right" data-aos-delay="<%= index * 100 %>">
+                            <div class="address-radio">
+                                <input type="radio" name="selected_address" id="address<%= index %>" value="<%= address._id %>" <%=index === 0 ? 'checked' : '' %>>
+                                <label for="address<%= index %>" class="address-content">
+                                    <div class="address-type"><%= address.type %></div>
+                                    <div class="recipient"><%= address.Firstname %></div>
+                                    <div class="address-details">
+                                        <%= address.street %><br>
+                                        <%= address.city %>, <%= address.state %> <%= address.pin %>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="address-actions">
+                                <a href="/editAddressPage/<%= address._id %>" class="btn btn-edit">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                            </div>
+                        </div>
+                    <% }) %>
 
-                <a href="/manageAddress">
-                    <button class="btn btn-primary btn-sm mt-3">Add New Address</button>
-                </a>
+                    <a href="/manageAddress" class="btn btn-add-address mt-3">
+                        <i class="fas fa-plus me-2"></i>Add New Address
+                    </a>
+                </div>
             </div>
         </div>
 
         <!-- Right Column for Order Review -->
-        <div class="col-md-6 offset-md-1">
-            <div class="order_review p-3 border border-dark rounded">
-                <h4>Your Orders</h4>
-                <div class="table-responsive order_table text-center">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th colspan="2">Product</th>
-                          <th>Total</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <% if (products && products.length > 0) { %>
-                          <% products.forEach(productEntry => { %>
+        <div class="col-md-7">
+            <div class="checkout-card order-review">
+                <div class="card-header">
+                    <h4><i class="fas fa-shopping-bag me-2"></i>Your Orders</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive order-table">
+                        <table class="table">
+                          <thead>
                             <tr>
-                              <td class="image product-thumbnail">
-                                <img src="/uploads/re-image/<%= productEntry.productId.images[0] %>" alt="<%= productEntry.productId.productName %>">
-                              </td>
-                              <td>
-                                <h5><a href="shop-product-full.html"><%= productEntry.productId.productName %></a></h5>
-                                <span class="product-qty">x <%= productEntry.quantity %></span>
-                              </td>
-                              <td><%= productEntry.subtotal.toFixed(2) %></td>
+                              <th colspan="2">Product</th>
+                              <th>Total</th>
                             </tr>
+                          </thead>
+                          <tbody>
+                            <% if (products && products.length > 0) { %>
+                              <% products.forEach(productEntry => { %>
+                                <tr>
+                                  <td class="image product-thumbnail">
+                                    <img src="/uploads/re-image/<%= productEntry.productId.images[0] %>" alt="<%= productEntry.productId.productName %>">
+                                  </td>
+                                  <td>
+                                    <h5><a href="shop-product-full.html"><%= productEntry.productId.productName %></a></h5>
+                                    <span class="product-qty">x <%= productEntry.quantity %></span>
+                                  </td>
+                                  <td><%= productEntry.subtotal.toFixed(2) %></td>
+                                </tr>
 
-                            <script>
-                                const totalAmount = '<%= cart.totalAmount %>';
-                                console.log("Grand Total:", totalAmount);
-                            </script>
-                          <% }) %>
-                        <% } else { %>
-                          <tr>
-                            <td colspan="3">Your cart is empty.</td>
-                          </tr>
-                        <% } %>
-                        
-                        <tr>
-                          <th>SubTotal</th>
-                          <td class="product-subtotal" colspan="2"><span id="subtotal"><%= cartTotals.total.toFixed(2) %></span></td>
-                        </tr>
-                        
-                        <tr>
-                          <th>Discount</th>
-                          <td colspan="2"><span id="discountAmount"><%= cart.discountAmount ? cart.discountAmount.toFixed(2) : '0.00' %></span></td>
-                        </tr>
-                  
-                        <tr>
-                          <th>Final Total</th>
-                          <td colspan="2">
-                            <span id="finalTotal">
-                              <%= cartTotals && cartTotals.finalTotal ? cartTotals.finalTotal.toFixed(2) : '0.00' %>
-                            </span>
-                          </td>
-                        </tr>
-                        
-                        <tr>
-                          <th>Shipping</th>
-                          <td colspan="2"><em>Free Shipping</em></td>
-                        </tr>
-                  
-                 
-                      </tbody>
-                    </table>
-                  </div>
-                  
-                <!-- Coupons Section -->
-                <div class="coupon_section">
-                    <h5>Available Coupons</h5>
-                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#couponModal">View Coupons</button>
+                                <script>
+                                    const totalAmount = '<%= cart.totalAmount %>';
+                                    console.log("Grand Total:", totalAmount);
+                                </script>
+                              <% }) %>
+                            <% } else { %>
+                              <tr>
+                                <td colspan="3">Your cart is empty.</td>
+                              </tr>
+                            <% } %>
+                            
+                            <tr>
+                              <th>SubTotal</th>
+                              <td class="product-subtotal" colspan="2"><span id="subtotal"><%= cartTotals.total.toFixed(2) %></span></td>
+                            </tr>
+                            
+                            <tr>
+                              <th>Discount</th>
+                              <td colspan="2"><span id="discountAmount"><%= cart.discountAmount ? cart.discountAmount.toFixed(2) : '0.00' %></span></td>
+                            </tr>
+                      
+                            <tr>
+                              <th>Final Total</th>
+                              <td colspan="2">
+                                <span id="finalTotal">
+                                  <%= cartTotals && cartTotals.finalTotal ? cartTotals.finalTotal.toFixed(2) : '0.00' %>
+                                </span>
+                              </td>
+                            </tr>
+                            
+                            <tr>
+                              <th>Shipping</th>
+                              <td colspan="2"><em>Free Shipping</em></td>
+                            </tr>
+                      
+                     
+                          </tbody>
+                        </table>
+                      </div>
+                      
+                    <!-- Coupons Section -->
+                    <div class="coupon-container">
+                        <form id="couponForm">
+                            <div class="coupon-input-group">
+                                <input type="text" id="couponCode" name="couponCode" class="form-control" placeholder="Enter Coupon Code" required>
+                                <input type="hidden" id="orderValue" name="orderValue" value="<%= cartTotals.total.toFixed(2) %>">
+                                <input type="hidden" id="userId" name="userId" value="<%= userId %>">
+                            </div>
+                            <div class="coupon-button-group">
+                                <button type="button" class="btn-coupon btn-apply" onclick="applyCoupon()">
+                                    <i class="fas fa-check"></i> Apply Coupon
+                                </button>
+                                <% if (cart.discountAmount) { %>
+                                <button type="button" class="btn-coupon btn-remove" onclick="removeCoupon('<%= userId %>')">
+                                    <i class="fas fa-times"></i> Remove Coupon
+                                </button>
+                                <% } %>
+                            </div>
+                        </form>
+                        <button type="button" class="btn-view-all-coupons" data-toggle="modal" data-target="#couponModal">
+                            <i class="fas fa-tags"></i> View Available Coupons
+                        </button>
+                    </div>
+
+                    <style>
+                    .coupon-container {
+                        background: white;
+                        border-radius: 12px;
+                        padding: 20px;
+                        margin: 20px 0;
+                        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+                    }
+
+                    .coupon-input-group {
+                        margin-bottom: 15px;
+                    }
+
+                    .coupon-input-group input {
+                        width: 100%;
+                        padding: 12px 15px;
+                        border: 2px solid #e2e8f0;
+                        border-radius: 8px;
+                        font-size: 14px;
+                        transition: all 0.3s ease;
+                    }
+
+                    .coupon-input-group input:focus {
+                        border-color: #006A67;
+                        box-shadow: 0 0 0 3px rgba(0,106,103,0.1);
+                        outline: none;
+                    }
+
+                    .coupon-button-group {
+                        display: flex;
+                        gap: 10px;
+                        margin-bottom: 15px;
+                    }
+
+                    .btn-coupon {
+                        flex: 1;
+                        padding: 10px 20px;
+                        border: none;
+                        border-radius: 8px;
+                        font-weight: 500;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 8px;
+                        transition: all 0.3s ease;
+                    }
+
+                    .btn-apply {
+                        background: linear-gradient(135deg, #006A67, #00857f);
+                        color: white;
+                    }
+
+                    .btn-remove {
+                        background: linear-gradient(135deg, #dc3545, #e74c3c);
+                        color: white;
+                    }
+
+                    .btn-coupon:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                    }
+
+                    .btn-view-all-coupons {
+                        width: 100%;
+                        padding: 12px;
+                        background: transparent;
+                        border: 2px dashed #006A67;
+                        color: #006A67;
+                        border-radius: 8px;
+                        font-weight: 500;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 8px;
+                        transition: all 0.3s ease;
+                    }
+
+                    .btn-view-all-coupons:hover {
+                        background: rgba(0,106,103,0.1);
+                    }
+
+                    @media (max-width: 768px) {
+                        .coupon-button-group {
+                            flex-direction: column;
+                        }
+                    }
+                    </style>
+
+                    <div class="bt-1 border-color-1 mt-3 mb-3"></div>
+
+                    <div class="payment_method">
+                        <div class="mb-3">
+                            <h5>Payment</h5>
+                            <!-- Wallet Payment Option -->
+                            <div class="custome-radio">
+                                <input class="form-check-input" required type="radio" name="payment_option" value="wallet" id="exampleRadios3">
+                                <label class="form-check-label" for="exampleRadios3">Wallet</label>
+                            </div>
+                            <!-- Cash on Delivery Option -->
+                            <div class="custome-radio">
+                                <input class="form-check-input" required type="radio" name="payment_option" value="COD" id="exampleRadios4" checked>
+                                <label class="form-check-label" for="exampleRadios4">Cash on Delivery</label>
+                            </div>
+                            <!-- Razorpay Option -->
+                            <div class="custome-radio">
+                                <input class="form-check-input" required type="radio" name="payment_option" id="exampleRadios5" value="razorpay">
+                                <label class="form-check-label" for="exampleRadios5">Razorpay</label>
+                            </div>
+                        </div>
+                        <!-- Buttons -->
+                        <div id="razorpayButtonContainer" class="hidden">
+                            <button type="submit" class="btn btn-fill-out btn-block mt-3" id="onlinePayment">Place Order</button>
+                        </div>
+                        <div id="codButtonContainer">
+                            <button type="submit" class="btn btn-fill-out btn-block mt-3" id="placeOrderBtn">Place Order</button>
+                        </div>
+                    </div>
+                    
                 </div>
 
-                <div class="bt-1 border-color-1 mt-3 mb-3"></div>
-
-                <div class="payment_method">
-                    <div class="mb-3">
-                        <h5>Payment</h5>
-                        <!-- Wallet Payment Option -->
-                        <div class="custome-radio">
-                            <input class="form-check-input" required type="radio" name="payment_option" value="wallet" id="exampleRadios3">
-                            <label class="form-check-label" for="exampleRadios3">Wallet</label>
-                        </div>
-                        <!-- Cash on Delivery Option -->
-                        <div class="custome-radio">
-                            <input class="form-check-input" required type="radio" name="payment_option" value="COD" id="exampleRadios4" checked>
-                            <label class="form-check-label" for="exampleRadios4">Cash on Delivery</label>
-                        </div>
-                        <!-- Razorpay Option -->
-                        <div class="custome-radio">
-                            <input class="form-check-input" required type="radio" name="payment_option" id="exampleRadios5" value="razorpay">
-                            <label class="form-check-label" for="exampleRadios5">Razorpay</label>
-                        </div>
-                    </div>
-                    <!-- Buttons -->
-                    <div id="razorpayButtonContainer" class="hidden">
-                        <button type="submit" class="btn btn-fill-out btn-block mt-3" id="onlinePayment">Place Order</button>
-                    </div>
-                    <div id="codButtonContainer">
-                        <button type="submit" class="btn btn-fill-out btn-block mt-3" id="placeOrderBtn">Place Order</button>
-                    </div>
-                </div>
+                <!-- Coupon Form -->
                 
             </div>
-
-            <!-- Coupon Form -->
-            <form id="couponForm" class="mt-3">
-                <label for="couponCode">Enter Coupon Code:</label>
-                <input type="text" id="couponCode" name="couponCode" class="form-control" required>
-                <input type="hidden" id="orderValue" name="orderValue" value="<%= cartTotals.total.toFixed(2) %>">
-                <input type="hidden" id="userId" name="userId" value="<%= userId %>">
-                <button type="button" class="btn btn-primary mt-2" onclick="applyCoupon()">Apply Coupon</button>
-            </form>
         </div>
     </div>
 </div>
 
         <tr>
         <td colspan="3">
-            <div class="coupon_item" >
+            <!-- <div class="coupon_item" >
             
                 <button class="btn btn-sm btn-danger" onclick="removeCoupon('<%= userId %>')" 
                 style="position: absolute;
                   right: 20%;
                   bottom: -2%;">Remove Coupon</button>
 
-            </div>
+            </div> -->
         </td>
         </tr>
 
@@ -183,74 +316,488 @@
 </div>
 
 <style>
-    .address_section,
-    .order_review {
-        border: 2px solid #333;
-        padding: 20px;
-        margin-bottom: 20px;
+    /* Modern Checkout Styles */
+    .checkout-progress {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 3rem;
+    }
+
+    .progress-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .step-icon {
+        width: 50px;
+        height: 50px;
+        background: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+
+    .progress-step.active .step-icon {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(0,106,103,0.2);
+    }
+
+    .progress-line {
+        flex: 1;
+        height: 3px;
+        background: linear-gradient(90deg, #006A67 50%, #e2e8f0 50%);
+        margin: 0 1rem;
+        position: relative;
+        max-width: 100px;
+    }
+
+    .checkout-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .checkout-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    }
+
+    .card-header {
+        background: linear-gradient(135deg, #006A67, #00857f);
+        padding: 1.5rem;
+        color: white;
+        border: none;
+    }
+
+    .card-header h4, .card-header h5 {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    /* Address Card Styles */
+    .address-card {
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 1.2rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        border: 2px solid transparent;
+    }
+
+    .address-card:hover {
+        border-color: #006A67;
+        transform: translateX(5px);
+    }
+
+    .address-radio {
+        display: flex;
+        gap: 1rem;
+        flex: 1;
+    }
+
+    .address-radio input[type="radio"] {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #006A67;
+        border-radius: 50%;
+        appearance: none;
+        position: relative;
+        margin-top: 0.2rem;
+    }
+
+    .address-radio input[type="radio"]:checked {
+        background: #006A67;
+    }
+
+    .address-radio input[type="radio"]:checked::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 8px;
+        height: 8px;
+        background: white;
+        border-radius: 50%;
+    }
+
+    .address-content {
+        flex: 1;
+        cursor: pointer;
+    }
+
+    .address-type {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        background: rgba(0,106,103,0.1);
+        color: #006A67;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .recipient {
+        font-weight: 600;
+        color: #1a202c;
+        margin-bottom: 0.3rem;
+    }
+
+    .address-details {
+        color: #64748b;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .address-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .btn-edit {
+        padding: 0.5rem 1rem;
         border-radius: 8px;
+        background: white;
+        color: #006A67;
+        border: 2px solid #006A67;
+        transition: all 0.3s ease;
     }
 
-    .address_section h5,
-    .order_review h4 {
-        margin-bottom: 15px;
-        color: #333;
-        font-weight: bold;
-    }
-
-    .small-radio input[type="radio"] {
-        width: 15px;
-        height: 15px;
-    }
-
-    .coupon_section {
-        margin-top: 20px;
-    }
-
-    .btn-fill-out {
-        background-color: #006A67;
+    .btn-edit:hover {
+        background: #006A67;
         color: white;
     }
 
-    .modal-body {
-        max-height: 400px;
-        overflow-y: auto;
-    }
-
-    .modal-dialog {
-        max-width: 600px;
-    }
-
-    footer {
+    .btn-add-address {
         width: 100%;
-        background-color: #f8f9fa;
-        padding: 20px 0;
+        padding: 1rem;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #006A67, #00857f);
+        color: white;
+        border: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
     }
 
-    footer .footer-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 10px;
-        text-align: center;
+    .btn-add-address:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,106,103,0.2);
     }
 
-    .container-fluid {
-        width: 100%;
-        padding-left: 0;
-        padding-right: 0;
+    @media (max-width: 768px) {
+        .checkout-progress {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .progress-line {
+            width: 3px;
+            height: 30px;
+            margin: 0.5rem 0;
+        }
+
+        .address-card {
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .address-actions {
+            width: 100%;
+        }
+
+        .btn-edit {
+            width: 100%;
+        }
     }
 
-    footer a {
-        color: #006A67;
+    /* Animation Classes */
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-slide-in {
+        animation: slideIn 0.5s ease forwards;
+    }
+
+    [data-aos] {
+        opacity: 0;
+        transition: all 0.6s ease;
+    }
+
+    [data-aos].aos-animate {
+        opacity: 1;
+    }
+
+    /* Modern Order Table Styles */
+    .order-table {
+        margin: 2rem 0;
+    }
+
+    .table {
+        border-collapse: separate;
+        border-spacing: 0 0.5rem;
+        background: transparent;
+    }
+
+    .table thead th {
+        background: linear-gradient(135deg, #006A67, #00857f);
+        color: white;
+        padding: 1.2rem 1.5rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+        border: none;
+    }
+
+    .table thead th:first-child {
+        border-radius: 12px 0 0 12px;
+    }
+
+    .table thead th:last-child {
+        border-radius: 0 12px 12px 0;
+    }
+
+    .table tbody tr {
+        background: white;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .table td {
+        padding: 1.2rem 1.5rem;
+        border: none;
+        vertical-align: middle;
+    }
+
+    .product-thumbnail img {
+        width: 80px;
+        height: 80px;
+        border-radius: 10px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .table tr:hover .product-thumbnail img {
+        transform: scale(1.1);
+    }
+
+    .table h5 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .table h5 a {
+        color: #2d3436;
         text-decoration: none;
+        transition: color 0.3s ease;
     }
 
-    footer a:hover {
-        text-decoration: underline;
+    .table h5 a:hover {
+        color: #006A67;
+    }
+
+    .product-qty {
+        color: #64748b;
+        font-size: 0.9rem;
+    }
+
+    /* Summary Rows */
+    .table tr.summary-row {
+        background: #f8fafc;
+    }
+
+    .table tr.summary-row th {
+        font-weight: 600;
+        color: #1a202c;
+        background: transparent;
+    }
+
+    .table tr.summary-row td {
+        font-weight: 600;
+        color: #2d3436;
+        text-align: right;
+    }
+
+    .table tr.final-total {
+        background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    }
+
+    .table tr.final-total th {
+        color: #166534;
+    }
+
+    .table tr.final-total td {
+        color: #166534;
+        font-size: 1.2rem;
+    }
+
+    /* Remove Coupon Button */
+    .btn-remove-coupon {
+        background: linear-gradient(135deg, #dc3545, #e74c3c);
+        color: white;
+        border: none;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        transition: all 0.3s ease;
+        float: right;
+        margin-left: 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .btn-remove-coupon:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(220,53,69,0.2);
+        color: white;
+    }
+
+    .btn-remove-coupon i {
+        font-size: 0.8rem;
+    }
+
+    /* Empty Cart Message */
+    .empty-cart {
+        text-align: center;
+        padding: 2rem;
+        color: #64748b;
+        font-style: italic;
+    }
+
+    /* Payment Method Styles */
+    .payment_method {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .payment_method h5 {
+        color: #1a202c;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+    }
+
+    .custome-radio {
+        margin-bottom: 1rem;
+        padding: 1rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .custome-radio:hover {
+        background: #f8fafc;
+    }
+
+    .custome-radio input[type="radio"] {
+        margin-right: 0.5rem;
+    }
+
+    .custome-radio label {
+        color: #2d3436;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    /* Place Order Button */
+    .btn-fill-out {
+        background: linear-gradient(135deg, #006A67, #00857f);
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 30px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        border: none;
+        width: 100%;
+        margin-top: 1rem;
+    }
+
+    .btn-fill-out:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,106,103,0.2);
+    }
+
+    @media (max-width: 768px) {
+        .table {
+            border-spacing: 0;
+        }
+
+        .table td, .table th {
+            padding: 1rem;
+        }
+
+        .product-thumbnail img {
+            width: 60px;
+            height: 60px;
+        }
+
+        .table h5 {
+            font-size: 0.9rem;
+        }
+
+        .btn-remove-coupon {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.75rem;
+        }
+
+        .payment_method {
+            padding: 1rem;
+        }
     }
 </style>
 
-<%- include('../../views/partial/user/footer') %>
+<!-- Add AOS Library -->
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        AOS.init({
+            duration: 800,
+            once: true
+        });
+    });
+</script>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <!-- Bootstrap CSS -->
@@ -300,10 +847,6 @@
             function hideAddressForm() {
                 document.getElementById('addressForm').style.display = 'none';
             }
-
-
-
-
         </script>
 
         <script>
@@ -591,3 +1134,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 </script>
 
+<%- include('../../views/partial/user/footer') %>

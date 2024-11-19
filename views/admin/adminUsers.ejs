@@ -17,13 +17,20 @@
           box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
           border-radius: 16px;
           padding: 2rem;
-          margin: 2rem 0;
+          margin: 0;
         }
 
         .gradient-bg {
           background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(103, 178, 111, 0.05));
           min-height: 100vh;
           padding: 2rem;
+          margin-left: 260px;
+          width: calc(100% - 260px);
+        }
+
+        .container {
+          max-width: 100%;
+          padding: 0 1rem;
         }
 
         .modern-table {
@@ -94,6 +101,14 @@
           padding: 0.5rem 1rem;
           border-radius: 20px;
           font-weight: 500;
+        }
+
+        @media (max-width: 991.98px) {
+          .gradient-bg {
+            margin-left: 0;
+            width: 100%;
+            padding: 1rem;
+          }
         }
     </style>
 </head>

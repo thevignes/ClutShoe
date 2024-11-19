@@ -1,9 +1,105 @@
+<!-- 
+<style>
+    @media (min-width: 992px) {
+        .main-wrap {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+        }
+        .content-main {
+            padding: 30px 20px;
+        }
+    }
+</style>
 
-  <section class="content-main">
+<style>
+    .navbar-aside {
+        width: 250px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 1999;
+        background: white;
+    }
+    
+    .main-wrap {
+        width: 100%;
+        margin-left: 250px;
+    }
+    
+    .content-main {
+        padding: 30px 20px;
+        background: #f8f9fa;
+    }
+
+    @media (max-width: 992px) {
+        .main-wrap {
+            margin-left: 0;
+        }
+    }
+
+    .content-header {
+        padding: 0 0 20px;
+    }
+
+    .row {
+        margin-right: 0;
+        margin-left: 0;
+    }
+</style>
+
+<style>
+    body {
+        overflow-x: hidden;
+    }
+    
+    aside.navbar-aside {
+        width: 250px !important;
+        position: fixed !important;
+        left: 0 !important;
+        top: 0;
+        bottom: 0;
+        z-index: 1999;
+        background: white;
+    }
+    
+    main.main-wrap {
+        position: relative !important;
+        width: calc(100% - 250px) !important;
+        margin-left: 250px !important;
+        min-height: 100vh;
+    }
+    
+    section.content-main {
+        padding: 30px 20px !important;
+        margin-left: 0 !important;
+    }
+
+    .content-header {
+        padding: 0 0 20px !important;
+        margin-left: 0 !important;
+    }
+
+    .row {
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+
+    @media (max-width: 992px) {
+        main.main-wrap {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+    }
+</style>
+-->
+
+
+  <!-- <section class="content-main"> -->
     
     <%- include("../../views/partial/admin/header") %>
 
-            <div class="content-header">
+            <!-- <div class="content-header">
                 <div>
                     <h2 class="content-title card-title">Dashboard </h2>
                     <p>Whole data about your business here</p>
@@ -11,7 +107,8 @@
                 <div>
                     <a href="#" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Create report</a>
                 </div>
-            </div>
+            </div> -->
+            <!-- Commented out dashboard content
             <div class="row">
                 <div class="col-lg-3">
                     <div class="card card-body mb-4">
@@ -67,6 +164,8 @@
                     </div>
                 </div>
             </div>
+            -->
+            <!-- Rest of the commented content
             <div class="row">
                 <div class="col-xl-8 col-lg-12">
                     <div class="card mb-4">
@@ -454,7 +553,7 @@
                             </table>
                         </div>
                     </div> <!-- table-responsive end// -->
-                </div>
+                <!-- </div>
             </div>
             <div class="pagination-area mt-30 mb-50">
                 <nav aria-label="Page navigation example">
@@ -468,5 +567,5 @@
                     </ul>
                 </nav>
             </div>
-        </section> <!-- content-main end// -->
+        </section> content-main end// -->
         <%-include("../../views/partial/admin/footer")%>

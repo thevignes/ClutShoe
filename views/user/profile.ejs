@@ -15,7 +15,252 @@
     margin-top: 5px;
 }
 
+        .profile-container {
+        min-height: calc(100vh - 140px); /* Adjust based on header/footer height */
+        background: linear-gradient(135deg, #f6f8fd 0%, #f1f4f9 100%);
+        padding: 2rem 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 2rem;
+        padding: 0 1rem;
+        position: relative;
+    }
+
+    .page-title {
+        display: none;
+    }
+
+    .sidebar {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        height: fit-content;
+        position: sticky;
+        top: 2rem;
+    }
+
+    .profile {
+        text-align: center;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .profile img {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #fff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile span {
+        display: block;
+        margin-top: 1rem;
+        color: #666;
+        font-size: 0.9rem;
+    }
+
+    .profile h4 {
+        margin: 0.5rem 0;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .menu {
+        list-style: none;
+        padding: 0;
+        margin: 1.5rem 0;
+    }
+
+    .menu li {
+        margin-bottom: 0.5rem;
+    }
+
+    .menu a {
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        color: #2c3e50;
+        text-decoration: none;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .menu a:hover, .menu a.active {
+        background: linear-gradient(135deg, #00878a, #006d6f);
+        color: white;
+        transform: translateX(5px);
+    }
+
+    .menu i {
+        margin-right: 1rem;
+        width: 20px;
+        text-align: center;
+    }
+
+    .logout {
+        text-align: center;
+    }
+
+    .logout button {
+        width: 100%;
+        padding: 0.8rem;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #ff4757, #e0394c);
+        color: white;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .logout button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(224, 57, 76, 0.2);
+    }
+
+    .content {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2.5rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        height: fit-content;
+    }
+
+    .form-container {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .form-container h2 {
+        color: #2c3e50;
+        margin-bottom: 2.5rem;
+        font-weight: 600;
+        position: relative;
+        padding-bottom: 0.5rem;
+        font-size: 1.75rem;
+    }
+
+    .form-container h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(135deg, #00878a, #006d6f);
+        border-radius: 2px;
+    }
+
+    .form-group {
+        margin-bottom: 1.8rem;
+        max-width: 500px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.9rem 1rem;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.9);
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #00878a;
+        box-shadow: 0 0 0 3px rgba(0, 135, 138, 0.1);
+    }
+
+    .error {
+        color: #ff4757;
+        font-size: 0.85rem;
+        margin-top: 0.25rem;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2.5rem;
+        max-width: 500px;
+    }
+
+    .form-actions button {
+        flex: 1;
+        padding: 0.8rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .cancel {
+        background: #e9ecef;
+        color: #2c3e50;
+    }
+
+    .save {
+        background: linear-gradient(135deg, #00878a, #006d6f);
+        color: white;
+    }
+
+    .cancel:hover, .save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 992px) {
+        .container {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+            position: relative;
+            top: 0;
+            margin-bottom: 2rem;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .form-group, .form-actions {
+            max-width: 100%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .form-actions button {
+            width: 100%;
+        }
+    }
     </style>
+    <div class="profile-container">
     <% if (user) { %>
     <div class="container">
         <div class="sidebar">
@@ -32,11 +277,6 @@
             </ul>
             <div class="logout text-white">
                 <button><a href="/userLogout" class="border-rounded text-white">LOGOUT</a></button>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-auto">
-                <h3 class="text-center" style="right: 51%; position: absolute; top: 9%; color: #7C73C0;">My Account</h3>
             </div>
         </div>
         <div class="content">
@@ -72,6 +312,7 @@
         </div>
     </div>
     <% } %>
+    </div>
 </body>
 <script>
     document.addEventListener('DOMContentLoaded', function () {

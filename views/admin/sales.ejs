@@ -8,24 +8,31 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    .container {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        border-radius: 20px;
+    .main-content {
+        margin-left: 260px;
+        width: calc(100% - 260px);
+        min-height: 100vh;
         padding: 2rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(103, 178, 111, 0.05));
     }
 
-    h1 {
-        color: #2c3e50;
+    .content-container {
+        max-width: 100%;
+        padding: 0;
+    }
+
+    .page-title {
+        color: #333;
         font-weight: 600;
         margin-bottom: 2rem;
         position: relative;
+        padding-bottom: 1rem;
     }
 
-    h1:after {
+    .page-title:after {
         content: '';
         position: absolute;
-        bottom: -10px;
+        bottom: 0;
         left: 50%;
         transform: translateX(-50%);
         width: 100px;
@@ -35,70 +42,42 @@
     }
 
     .filter-section {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 15px;
-        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
-        backdrop-filter: blur(4px);
-        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        border-radius: 16px;
         margin-bottom: 2rem;
     }
 
-    .form-select, .form-control {
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
+    .form-control, .form-select {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
         padding: 0.8rem;
-        transition: all 0.3s ease;
+        color: #333;
     }
 
-    .form-select:focus, .form-control:focus {
+    .form-control:focus, .form-select:focus {
         box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
         border-color: #4a90e2;
-    }
-
-    .btn-primary {
-        background: linear-gradient(45deg, #4a90e2, #67b26f);
-        border: none;
-        border-radius: 10px;
-        padding: 0.8rem 1.5rem;
-        transition: all 0.3s ease;
-    }
-
-    .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
-    }
-
-    .btn-success {
-        background: linear-gradient(45deg, #67b26f, #4ca2cd);
-        border: none;
-        border-radius: 10px;
-        padding: 0.8rem 1.5rem;
-        transition: all 0.3s ease;
-    }
-
-    .btn-success:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(103, 178, 111, 0.3);
+        background: rgba(255, 255, 255, 0.2);
     }
 
     .summary-card {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
         padding: 1.5rem;
-        margin: 1rem 0;
-        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
-        backdrop-filter: blur(4px);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        transition: all 0.3s ease;
-    }
-
-    .summary-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(31, 38, 135, 0.15);
+        margin-bottom: 1rem;
+        transition: transform 0.3s ease;
     }
 
     .summary-card h5 {
-        color: #2c3e50;
+        color: #333;
+        font-size: 1.1rem;
         margin-bottom: 1rem;
     }
 
@@ -106,29 +85,29 @@
         color: #4a90e2;
         font-size: 1.5rem;
         margin: 0;
+        font-weight: 600;
     }
 
     .order-card {
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
         padding: 1.5rem;
-        margin: 1rem 0;
-        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
-        backdrop-filter: blur(4px);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        transition: all 0.3s ease;
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease;
     }
 
     .order-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 40px rgba(31, 38, 135, 0.15);
+        transform: translateY(-5px);
     }
 
     .badge-status {
         padding: 0.5rem 1rem;
         border-radius: 20px;
-        font-size: 0.85rem;
         font-weight: 500;
+        color: white;
     }
 
     .product-list {
@@ -138,49 +117,74 @@
     }
 
     .product-item {
-        background: rgba(255, 255, 255, 0.5);
-        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
         padding: 1rem;
-        margin: 0.5rem 0;
+        margin-bottom: 0.5rem;
         transition: all 0.3s ease;
     }
 
     .product-item:hover {
-        background: rgba(255, 255, 255, 0.8);
+        background: rgba(255, 255, 255, 0.1);
         transform: translateX(5px);
     }
 
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .btn {
+        border-radius: 8px;
+        padding: 0.7rem 1.5rem;
+        transition: all 0.3s ease;
+        border: none;
+        font-weight: 500;
     }
 
-    .sales-data {
-        animation: fadeIn 0.5s ease-out;
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #4a90e2, #67b26f);
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #2ecc71, #27ae60);
+    }
+
+    @media (max-width: 991.98px) {
+        .main-content {
+            margin-left: 0;
+            width: 100%;
+            padding: 1rem;
+        }
+
+        .content-container {
+            padding: 0 1rem;
+        }
+
+        .summary-card {
+            margin-bottom: 1rem;
+        }
+
+        .filter-section {
+            padding: 1rem;
+        }
     }
 
     .custom-date-range {
-        opacity: 0;
-        height: 0;
+        display: none;
         transition: all 0.3s ease;
     }
 
     .custom-date-range.show {
-        opacity: 1;
-        height: auto;
+        display: block;
     }
-</style>
+  </style>
 </head>
 <body>
 
-<div class="container my-5">
-  <h1 class="mb-4 text-center">Sales Report</h1>
+<div class="main-content">
+    <div class="content-container">
+        <h1 class="page-title text-center">Sales Report</h1>
 
   <!-- Filter Section -->
   <div class="filter-section mb-4 p-4">

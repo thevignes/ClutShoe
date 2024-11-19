@@ -1,271 +1,504 @@
-
-
 <%- include('../../views/partial/user/header', {user: user}) %>
 <html>
 <head>
   <title>Wallet Page</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f5f5f5;
-      
+    .page-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(135deg, #f6f8fd 0%, #f1f4f9 100%);
+        padding: 2rem 0;
+        min-height: 100vh;
     }
+
+    .content-wrapper {
+        flex: 1;
+        width: 100%;
+        max-width: 1680px;
+        margin: 0 auto;
+        padding: 0 32px;
+    }
+
     .container {
-      display: flex;
-      flex-wrap: wrap;
+        max-width: 1600px;
+        width: 100%;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 280px minmax(950px, 1fr);
+        gap: 32px;
+        padding: 0 2rem;
     }
+
     .sidebar {
-      width: 250px;
-      background-color: #fff;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      height: 80vh;
-      right : 13%;
-      position:relative;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        height: fit-content;
+        position: sticky;
+        top: 2rem;
+        text-align: center;
     }
+
     .sidebar img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      display: block;
-      margin: 0 auto;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #fff;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
     }
-    .sidebar .username {
-      text-align: center;
-      margin-top: 10px;
-      font-size: 18px;
-      font-weight: bold;
-      color: #fff;
-      background-color: #6200ea;
-      padding: 10px;
-      border-radius: 5px;
+
+    .sidebar h4 {
+        color: #2c3e50;
+        margin: 0.5rem 0;
+        font-size: 1.1rem;
     }
-    .sidebar .menu {
-      list-style: none;
-      padding: 0;
-      margin-top: 20px;
+
+    .sidebar h5 {
+        color: #666;
+        margin: 0.5rem 0 1.5rem;
+        font-size: 1rem;
+        font-weight: 500;
     }
-    .sidebar .menu li {
-      margin-bottom: 20px;
-      font-size: 16px;
-      color: #333;
-      display: flex;
-      align-items: center;
+
+    .menu {
+        list-style: none;
+        padding: 0;
+        margin: 1.5rem 0;
     }
-    .sidebar .menu li i {
-      margin-right: 10px;
+
+    .menu li {
+        margin-bottom: 0.5rem;
     }
-    .sidebar .menu li.active {
-      background-color: #f5f5f5;
-      padding: 10px;
-      border-radius: 5px;
+
+    .menu li a {
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        color: #2c3e50;
+        text-decoration: none;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        gap: 1rem;
     }
-    .sidebar .logout {
-      background-color: #ff0000;
-      color: #fff;
-      text-align: center;
-      padding: 10px;
-      border-radius: 5px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
+
+    .menu li.active a,
+    .menu li a:hover {
+        background: linear-gradient(135deg, #00878a, #006d6f);
+        color: white !important;
+        transform: translateX(5px);
     }
+
+    .logout {
+        width: 100%;
+        padding: 0.8rem;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #ff4757, #e0394c);
+        color: white;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .logout:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(224, 57, 76, 0.2);
+    }
+
     .main-content {
-      flex: 1;
-      padding: 20px;
-      min-width: 0; /* allows it to shrink */
+        background: transparent;
+        min-width: 950px;
+        max-width: 1400px;
+        width: 100%;
     }
+
     .balance {
-      background-color: #007bff;
-      color: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 24px;
-      font-weight: bold;
-      flex-wrap: wrap;
+        background: #fff;
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
     }
-    .payment-method {
-      margin-top: 20px;
+
+    .balance span:first-child {
+        color: #666;
+        font-size: 1.1rem;
     }
-    .payment-method h3 {
-      font-size: 18px;
-      font-weight: bold;
+
+    .balance span:last-child {
+        color: #2c3e50;
+        font-size: 2.5rem;
+        font-weight: 600;
     }
-    .payment-method p {
-      color: #888;
-      font-size: 14px;
-    }
-    .payment-method input[type="radio"] {
-      margin-right: 10px;
-    }
-    .payment-method .amount-input {
-      display: flex;
-      align-items: center;
-      margin-top: 10px;
-    }
-    .payment-method .amount-input input {
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      margin-right: 10px;
-      flex: 1;
-    }
-    .payment-method .amount-input button {
-      background-color: #28a745;
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+
     .transaction-history {
-      margin-top: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        animation: fadeIn 0.8s ease-out, glowPulse 3s infinite;
+        position: relative;
+        overflow: hidden;
     }
+
+    .transaction-history::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.1) 50%,
+            rgba(255, 255, 255, 0) 100%
+        );
+        animation: shimmer 3s infinite linear;
+        pointer-events: none;
+    }
+
     .transaction-history h3 {
-      font-size: 18px;
-      font-weight: bold;
-    }
-    .transaction-history .filters {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-    .transaction-history .filters select {
-      padding: 10px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    .transaction-history table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    .transaction-history table th, .transaction-history table td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid #ccc;
-    }
-    .transaction-history table th {
-      background-color: #f5f5f5;
-    }
-    .transaction-history table tr:nth-child(even) {
-      background-color: #f9f9f9;
+        color: #2c3e50;
+        margin: 0 0 1.5rem;
+        font-size: 1.3rem;
+        font-weight: 600;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        animation: slideIn 0.6s ease-out;
     }
 
-    /* Responsive Styling */
+    table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-top: 0.5rem;
+    }
+
+    thead {
+        background: transparent;
+    }
+
+    th {
+        text-align: left;
+        padding: 1.25rem 1.5rem;
+        font-weight: 500;
+        color: #2c3e50;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    td {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: #2c3e50;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    tbody tr {
+        transition: all 0.3s ease;
+        position: relative;
+        background: rgba(255, 255, 255, 0.05);
+        animation: fadeIn 0.5s ease-out backwards;
+    }
+
+    tbody tr:hover {
+        transform: translateX(6px) scale(1.01);
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Date column */
+    td:first-child {
+        font-weight: 500;
+        color: #2c3e50;
+    }
+
+    /* Amount column */
+    td:nth-child(2) {
+        font-weight: 600;
+        font-size: 1rem;
+        color: #2874f0;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    td:nth-child(2):hover {
+        transform: translateY(-2px);
+        text-shadow: 0 2px 4px rgba(40, 116, 240, 0.2);
+    }
+
+    /* Transaction type column */
+    td:last-child {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-transform: capitalize;
+        font-weight: 500;
+    }
+
+    td:last-child::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    /* Credit transaction */
+    td[data-type="credited"]::before {
+        background: #26a541;
+        box-shadow: 0 0 10px rgba(38, 165, 65, 0.3);
+    }
+
+    td[data-type="credited"]:hover::before {
+        transform: scale(1.2);
+        box-shadow: 0 0 15px rgba(38, 165, 65, 0.5);
+    }
+
+    /* Debit transaction */
+    td[data-type="debited"]::before {
+        background: #ff6161;
+        box-shadow: 0 0 10px rgba(255, 97, 97, 0.3);
+    }
+
+    td[data-type="debited"]:hover::before {
+        transform: scale(1.2);
+        box-shadow: 0 0 15px rgba(255, 97, 97, 0.5);
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Glass effect for rows */
+    tbody tr {
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        border-radius: 10px;
+        margin: 0.5rem 0;
+    }
+
+    tbody tr td:first-child {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+
+    tbody tr td:last-child {
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 992px) {
+        .transaction-history {
+            padding: 1.5rem;
+        }
+
+        th, td {
+            padding: 1rem;
+        }
+
+        td:first-child {
+            font-size: 0.9rem;
+        }
+
+        td:nth-child(2) {
+            font-size: 0.95rem;
+        }
+    }
+
     @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
-      .sidebar {
-        width: 100%;
-        height: auto;
-      }
-      .balance {
-        font-size: 20px;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .payment-method .amount-input {
-        flex-direction: column;
-      }
-      .payment-method .amount-input input,
-      .payment-method .amount-input button {
-        width: 100%;
-        margin-top: 5px;
-      }
-      .transaction-history .filters {
-        flex-direction: column;
-        align-items: flex-start;
-      }
+        th {
+            font-size: 0.85rem;
+        }
+
+        td {
+            font-size: 0.9rem;
+        }
+
+        tbody tr:hover {
+            transform: none;
+        }
     }
 
-    @media (max-width: 480px) {
-      .balance {
-        font-size: 18px;
-      }
-      .sidebar .username {
-        font-size: 16px;
-      }
-      .sidebar .menu li {
-        font-size: 14px;
-      }
-      .transaction-history h3 {
-        font-size: 16px;
-      }
-      .transaction-history .filters select {
-        width: 100%;
-        margin-top: 5px;
-      }
+    @media (max-width: 1600px) {
+        .container {
+            grid-template-columns: 280px minmax(850px, 1fr);
+        }
+        
+        .main-content {
+            min-width: 850px;
+        }
     }
-    
+
+    @media (max-width: 1366px) {
+        .content-wrapper {
+            padding: 0 24px;
+        }
+
+        .container {
+            grid-template-columns: 280px minmax(750px, 1fr);
+            gap: 24px;
+        }
+
+        .main-content {
+            min-width: 750px;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .content-wrapper {
+            padding: 0 16px;
+        }
+
+        .container {
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .main-content {
+            min-width: 100%;
+        }
+
+        .balance, .transaction-history {
+            padding: 1.5rem;
+        }
+    }
+
+    /* Keyframe Animations */
+    @keyframes slideIn {
+        0% {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes glowPulse {
+        0% {
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+        50% {
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+        }
+        100% {
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: -1000px 0;
+        }
+        100% {
+            background-position: 1000px 0;
+        }
+    }
+
+    /* Add delay for each row */
+    tbody tr:nth-child(1) { animation-delay: 0.1s; }
+    tbody tr:nth-child(2) { animation-delay: 0.2s; }
+    tbody tr:nth-child(3) { animation-delay: 0.3s; }
+    tbody tr:nth-child(4) { animation-delay: 0.4s; }
+    tbody tr:nth-child(5) { animation-delay: 0.5s; }
+
+    /* Enhanced hover animations */
+    tbody tr {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Responsive animations */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="sidebar">
-      <img alt="User profile picture" height="100" src="https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg" width="100"/>
-      <h4 class="text-dark">Hello</h4>
-      <h5 > <%=user.name%></h5>
-      <ul class="menu">
-        <li><i class="fas fa-user"></i><a href="/profile" class="text-dark">Account Overview</a></li>
-        <li><i class="fas fa-box"></i><a href="/order"class="text-dark">My Orders</a></li>
-        <li><i class="fas fa-map-marker-alt"></i><a href="/manageAddress" class="text-dark">Manage Addresses</a></li>
-        <li class="active"><i class="fas fa-wallet"></i><a href="/wallet"class="text-dark">Wallet</a></li>
-      </ul>
-      <div class="logout">LOGOUT</div>
-    </div>
-    <div class="main-content">
-        <div class="balance">
-          <span>Available Balance</span>
-          <span>₹<%= wallet.balance %></span>
+  <div class="page-wrapper">
+    <div class="content-wrapper">
+      <div class="container">
+        <div class="sidebar">
+          <img alt="User profile picture" src="https://static.vecteezy.com/system/resources/previews/005/129/844/non_2x/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg"/>
+          <h4>Hello</h4>
+          <h5><%=user.name%></h5>
+          <ul class="menu">
+            <li><a href="/profile"><i class="fas fa-user"></i>Account Overview</a></li>
+            <li><a href="/order"><i class="fas fa-box"></i>My Orders</a></li>
+            <li><a href="/manageAddress"><i class="fas fa-map-marker-alt"></i>Manage Addresses</a></li>
+            <li class="active"><a href="/wallet"><i class="fas fa-wallet"></i>Wallet</a></li>
+          </ul>
+          <div class="logout">LOGOUT</div>
         </div>
-      
-        <div class="transaction-history">
-          <h3>Transaction History</h3>
-          <!-- <div class="filters" style="width: 10%; gap: 7px;">
-            <select>
-              <option>Debited</option>
-              <option>Credited</option>
-            </select>
-            <select>
-              <option>Sort</option>
-            </select>
-          </div> -->
-      
-          <table style="color: black; border: #333;">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Amount</th>
-                <th>Transaction</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% wallet.transaction.forEach(transaction => { %>
+        <div class="main-content">
+          <div class="balance">
+            <span>Available Balance</span>
+            <span>₹<%= wallet.balance %></span>
+          </div>
+          
+          <div class="transaction-history">
+            <h3>Transaction History</h3>
+            <table>
+              <thead>
                 <tr>
-                    <td><%= transaction.date.toLocaleDateString('en-GB') %></td>
-
-                  <td>₹ <%= transaction.amount %></td>
-                  <td><%= transaction.type %></td>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Transaction Type</th>
                 </tr>
-              <% }) %>
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                <% wallet.transaction.forEach(transaction => { %>
+                  <tr>
+                    <td><%= transaction.date.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: 'numeric' }) %></td>
+                    <td>₹<%= transaction.amount.toLocaleString('en-IN') %></td>
+                    <td data-type="<%= transaction.type.toLowerCase() %>">
+                      <%= transaction.type %>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-      
+    </div>
   </div>
 </body>
 </html>
