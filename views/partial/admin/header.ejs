@@ -10,14 +10,265 @@
     <meta property="og:title" content="">
     <meta property="og:type" content="">
     <meta property="og:url" content="">
-    <meta property="og:image" content="">z  
+    <meta property="og:image" content="">  
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/imgs/theme/favicon.svg">
     <link rel="stylesheet" href="/evara-backend/assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link href="/evara-backend/assets/css/main.css" rel="stylesheet" type="text/css" />
+    <link href="/evara-backend/assets/css/admin-header.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        .screen-overlay {
+            width: 0%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1998;
+            background: rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            transition: 0.3s;
+            visibility: hidden;
+        }
+        
+        .screen-overlay.show {
+            width: 100%;
+            opacity: 1;
+            visibility: visible;
+        }
 
+        .navbar-aside {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: -300px;
+            bottom: 0;
+            z-index: 1999;
+            background: white;
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            transition: left 0.3s ease;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-aside.show {
+            left: 0;
+        }
+
+        .aside-top {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .brand-wrap {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+        }
+
+        .brand-wrap .logo {
+            max-height: 40px;
+        }
+
+        .btn-aside-minimize {
+            padding: 0.5rem;
+            border: none;
+            background: none;
+            color: #4a90e2;
+            transition: transform 0.3s;
+        }
+
+        .nav-sidebar {
+            padding: 1rem 0;
+        }
+
+        .menu-aside {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .menu-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            color: #212529;
+            text-decoration: none;
+            transition: 0.3s;
+            border-left: 4px solid transparent;
+        }
+
+        .menu-link:hover,
+        .menu-link.active {
+            background: rgba(74, 144, 226, 0.1);
+            color: #4a90e2;
+            border-left-color: #4a90e2;
+        }
+
+        .menu-link i {
+            margin-right: 0.875rem;
+            font-size: 1.25rem;
+            color: #757575;
+            transition: 0.3s;
+        }
+
+        .menu-link:hover i,
+        .menu-link.active i {
+            color: #4a90e2;
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin-top: auto;
+        }
+
+        .main-wrap {
+            margin-left: 0;
+            transition: margin-left 0.3s;
+        }
+
+        .main-wrap.shift {
+            margin-left: 250px;
+        }
+
+        .main-header {
+            position: sticky;
+            top: 0;
+            z-index: 1997;
+            background: white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .search-wrap {
+            flex: 1;
+            max-width: 600px;
+            margin-right: 2rem;
+        }
+
+        .search-form .input-group {
+            position: relative;
+        }
+
+        .search-input {
+            padding-right: 40px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .btn-search {
+            position: absolute;
+            right: 0;
+            top: 0;
+            border: none;
+            background: none;
+            padding: 0.5rem 1rem;
+            color: #757575;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-icon {
+            position: relative;
+            padding: 0.5rem;
+            border: none;
+            background: none;
+            color: #757575;
+            transition: 0.3s;
+        }
+
+        .btn-icon:hover {
+            color: #4a90e2;
+        }
+
+        .badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #ff6b6b;
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 10px;
+        }
+
+        .action-items {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .language-dropdown .dropdown-menu {
+            min-width: 200px;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .dropdown-item img {
+            width: 20px;
+            height: 15px;
+            object-fit: cover;
+        }
+
+        @media (min-width: 992px) {
+            .navbar-aside {
+                left: 0;
+            }
+
+            .main-wrap {
+                margin-left: 250px;
+            }
+
+            .btn-mobile-menu {
+                display: none;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .navbar-aside {
+                left: -300px;
+            }
+
+            .navbar-aside.show {
+                left: 0;
+            }
+
+            .main-wrap {
+                margin-left: 0;
+            }
+
+            .btn-mobile-menu {
+                display: block;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -25,163 +276,196 @@
     <div class="screen-overlay"></div>
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
-            <a href="index.html" class="brand-wrap">
-                <img src="/evara-backend/assets/imgs/items/Clutchshoe_.-removebg-preview-removebg-preview.png" class="logo" alt="Evara Dashboard" >
+            <a href="/admin/dashboard" class="brand-wrap">
+                <img src="/evara-backend/assets/imgs/items/Clutchshoe_.-removebg-preview-removebg-preview.png" class="logo" alt="ClutchShoe Dashboard">
             </a>
-            <div>
-                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
-            </div>
+            <button class="btn btn-icon btn-aside-minimize">
+                <i class="material-icons md-menu_open"></i>
+            </button>
         </div>
-        <nav>
+        
+        <nav class="nav-sidebar">
             <ul class="menu-aside">
-                <li class="menu-item active">
-                    <a class="menu-link" href="/admin/dashboard"> <i class="icon material-icons md-home"></i>
-                    <span class="text">Dashboard</span>
-                </a>
-            </li>
-                <li style="color: #292f46;;">
-                    <a class="menu-link" href="/admin/product"> <i class="icon material-icons md-shopping_bag" style="color: #adb5bd;"></i>
-                        <span class="text">Products</span>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/dashboard">
+                        <i class="icon material-icons md-home"></i>
+                        <span>Dashboard</span>
                     </a>
-                
-                </li>
-           
-                    <a class="menu-link" href="/admin/orderList"> 
-                        <span>Order list</span>
-                    </a>
-  
-   
-                <li class="menu-item has-submenu">
-                    <!-- <a class="menu-link" href="/admin/user"> <i class="icon material-icons md-person"></i>
-                        user
-                    </a>
-                     -->
-                    <a href="/admin/user" style="    right: -10px;
-                    position: relative;
-                    color: #292f46;">   <i class="icon material-icons md-person"></i>  users</a>
-                </li>
-                <li >
-                    <a class="menu-link" href="/admin/couponList"> 
-                        <span class="text"></span>Coupons
-                    </a>
-               
-                </li>
-                <li class="menu-item has-submenu"><i class="icon material-icons md-monetization_on"></i>
-                    <div style="position: absolute; left: 20%;margin-top: -7%;">
-                        <a href="/admin/category" style="color: #292f46;">category</a> 
-                    </div>
-                    
-                
-                        <!-- <span class="text">Category</span> -->
-                 
-                 
-                </li>
-                <!-- <li class="menu-item has-submenu"> -->
-                    <a class="menu-link" href="/admin/sales"> 
-                        <span class="text" style="left:7%; position:  relative;">salesreport</span>
-                    </a>
-                 
-                </li>
-               
-                <!-- <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-transactions-1.html"> <i class="icon material-icons md-monetization_on"></i>
-                        <span class="text">offers</span>
-                    </a>
-                    <div class="submenu">
-                        <a href="page-transactions-1.html">category</a>
-                        <a href="page-transactions-2.html">product</a>
-               
-                    </div> -->
                 </li>
                 <li class="menu-item">
-                    <a class="menu-link" href="page-brands.html"> <i class="icon material-icons md-stars"></i>
-                        <span class="text">Payments</span> </a>
-                </li>
-              
-            </ul>
-            <hr>
-            <ul class="menu-aside">
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="#"> <i class="icon material-icons md-settings"></i>
-                        <span class="text">Settings</span>
+                    <a class="menu-link" href="/admin/product">
+                        <i class="icon material-icons md-shopping_bag"></i>
+                        <span>Products</span>
                     </a>
-                    <div class="submenu">
-                        <a href="page-settings-1.html">Setting sample 1</a>
-                        <a href="page-settings-2.html">Setting sample 2</a>
-                    </div>
                 </li>
-                <li class="menu-item"> <i class="fa-solid fa-right-from-bracket"></i> 
-                    <a  style="left: 5%; font-size: 10px;" class="menu-link" href="/admin/signin">
-                     <span>Logout</span>
-                    </a >
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/orderList">
+                        <i class="icon material-icons md-shopping_cart"></i>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/user">
+                        <i class="icon material-icons md-person"></i>
+                        <span>Users</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/couponList">
+                        <i class="icon material-icons md-local_offer"></i>
+                        <span>Coupons</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/category">
+                        <i class="icon material-icons md-category"></i>
+                        <span>Categories</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/sales">
+                        <i class="icon material-icons md-trending_up"></i>
+                        <span>Sales Report</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/payments">
+                        <i class="icon material-icons md-payment"></i>
+                        <span>Payments</span>
+                    </a>
                 </li>
             </ul>
-            <br>
-            <br>
-        </nav>
-    </aside>
-    <main class="main-wrap">
-        <header class="main-header navbar">
-            <div class="col-search">
-                <form class="searchform" method="GET" action="/admin/users">
-                    <div class="input-group">
-                        <input 
-                            type="text" 
-                            name="search" 
-                            class="form-control" 
-                            placeholder="Search by username or email" 
-                            style="border: solid 1px gray; border-radius: 5%;"
-                        >
-                        <button class="btn btn-light" type="submit"> 
-                            <i class="material-icons md-search"></i>
-                        </button>
-                    </div>
-                </form>
-                
-            </div>
-            
-            <div class="col-nav">
-                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
-                <ul class="nav">
-                    <li class="nav-item">
-                        <a class="nav-link btn-icon" href="#">
-                            <i class="material-icons md-notifications animation-shake"></i>
-                            <span class="badge rounded-pill">3</span>
+
+            <div class="sidebar-footer">
+                <ul class="menu-aside">
+                    <li class="menu-item">
+                        <a class="menu-link" href="/admin/settings">
+                            <i class="icon material-icons md-settings"></i>
+                            <span>Settings</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                    <li class="menu-item">
+                        <a class="menu-link" href="/admin/signin">
+                            <i class="icon material-icons md-exit_to_app"></i>
+                            <span>Logout</span>
+                        </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
-                    </li>
-                    <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
-                            <a class="dropdown-item text-brand" href="#"><img src="assets/imgs/theme/flag-us.png" alt="English">English</a>
-                            <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-fr.png" alt="Français">Français</a>
-                            <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-jp.png" alt="Français">日本語</a>
-                            <a class="dropdown-item" href="#"><img src="assets/imgs/theme/flag-cn.png" alt="Français">中国人</a>
+                </ul>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="main-wrap">
+        <header class="main-header">
+            <div class="header-content">
+                <div class="search-wrap">
+                    <form class="search-form" method="GET" action="/admin/users">
+                        <div class="input-group">
+                            <input type="text" 
+                                   name="search" 
+                                   class="form-control search-input" 
+                                   placeholder="Search users..."
+                                   aria-label="Search">
+                            <button class="btn btn-search" type="submit">
+                                <i class="material-icons md-search"></i>
+                            </button>
                         </div>
-                    </li>
-                    <!-- <li class="dropdown nav-item"> -->
-                        <!-- <Form action="/admin/signin" method="post">
-                            <a href="/admin/signin">LOGIN</a>
-                        </Form> -->
-                        <!-- <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> </a>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
-                            <div class="dropdown-divider"></div>
-                        </div> 
-                    <!-- </li> -->
-                    <!-- <a class="dropdown-item text-danger" href="/signin"><i class="material-icons md-exit_to_app"></i>Logout</a>  -->
-                <!-- </ul>
-            </div> -->
+                    </form>
+                </div>
 
+                <div class="header-actions">
+                    <button class="btn-mobile-menu" data-trigger="#offcanvas_aside">
+                        <i class="material-icons md-menu"></i>
+                    </button>
 
+                    <div class="action-items">
+                        <button class="btn-icon">
+                            <i class="material-icons md-notifications"></i>
+                            <span class="badge">3</span>
+                        </button>
+
+                        <button class="btn-icon btn-dark-mode">
+                            <i class="material-icons md-nights_stay"></i>
+                        </button>
+
+                        <button class="btn-icon btn-fullscreen">
+                            <i class="material-icons md-fullscreen"></i>
+                        </button>
+
+                        <div class="dropdown language-dropdown">
+                            <button class="btn-icon" data-bs-toggle="dropdown">
+                                <i class="material-icons md-language"></i>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#"><img src="/assets/imgs/flags/us.png" alt=""> English</a></li>
+                                <li><a class="dropdown-item" href="#"><img src="/assets/imgs/flags/fr.png" alt=""> Français</a></li>
+                                <li><a class="dropdown-item" href="#"><img src="/assets/imgs/flags/jp.png" alt=""> 日本語</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </header>
+    </main>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.querySelector('.btn-mobile-menu');
+            const sidebar = document.querySelector('.navbar-aside');
+            const overlay = document.querySelector('.screen-overlay');
+            
+            function toggleSidebar() {
+                sidebar.classList.toggle('show');
+                overlay.classList.toggle('show');
+                document.body.style.overflow = sidebar.classList.contains('show') ? 'hidden' : '';
+            }
+
+            mobileMenuBtn?.addEventListener('click', toggleSidebar);
+            overlay?.addEventListener('click', toggleSidebar);
+
+            // Minimize sidebar
+            const minimizeBtn = document.querySelector('.btn-aside-minimize');
+            const mainWrap = document.querySelector('.main-wrap');
+            
+            minimizeBtn?.addEventListener('click', () => {
+                mainWrap.classList.toggle('shift');
+                minimizeBtn.querySelector('i').style.transform = 
+                    mainWrap.classList.contains('shift') ? 'rotate(180deg)' : '';
+            });
+
+            // Dark mode toggle
+            const darkModeBtn = document.querySelector('.btn-dark-mode');
+            
+            darkModeBtn?.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                darkModeBtn.querySelector('i').textContent = 
+                    document.body.classList.contains('dark-mode') ? 'light_mode' : 'nights_stay';
+            });
+
+            // Fullscreen toggle
+            const fullscreenBtn = document.querySelector('.btn-fullscreen');
+            
+            fullscreenBtn?.addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                    fullscreenBtn.querySelector('i').textContent = 'fullscreen_exit';
+                } else {
+                    document.exitFullscreen();
+                    fullscreenBtn.querySelector('i').textContent = 'fullscreen';
+                }
+            });
+
+            // Active menu item
+            const currentPath = window.location.pathname;
+            const menuLinks = document.querySelectorAll('.menu-link');
+            
+            menuLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

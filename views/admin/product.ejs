@@ -11,31 +11,176 @@
       background-color: #f7f9fc;
     }
     .table-container {
-      margin-top: 30px;
-      padding: 20px;
-      background-color: #fff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
+      animation: fadeIn 0.5s ease-out;
+      width: calc(100% - 280px); /* Increased spacing for sidebar */
+      margin-left: 260px; /* Add margin to account for sidebar */
+      padding: 2rem;
+      overflow-x: auto;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
+
+    @media (max-width: 991.98px) {
+      .table-container {
+        width: 95%;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1rem;
+      }
+    }
+
     .page-header {
-      text-align: center;
-      margin-bottom: 30px;
-      font-size: 28px;
+      color: #2c3e50;
       font-weight: 600;
-    }
-    .add-product-btn {
-      float: right;
-      margin-bottom: 20px;
-    }
-    .btn {
-      padding: 5px 10px;
-      font-size: 14px;
-    }
-    .table thead th {
+      margin-bottom: 2rem;
+      position: relative;
       text-align: center;
     }
-    .table tbody td {
+
+    .page-header:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, #4a90e2, #67b26f);
+      border-radius: 2px;
+    }
+
+    .add-product-btn {
+      background: linear-gradient(45deg, #67b26f, #4ca2cd);
+      border: none;
+      border-radius: 10px;
+      padding: 0.8rem 1.5rem;
+      transition: all 0.3s ease;
+      margin-bottom: 2rem;
+    }
+
+    .add-product-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(103, 178, 111, 0.3);
+    }
+
+    .table {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+    }
+
+    .table thead {
+      background: linear-gradient(45deg, #4a90e2, #67b26f);
+      color: white;
+    }
+
+    .table th {
+      font-weight: 500;
+      padding: 1rem;
+      border: none;
+    }
+
+    .table td {
+      padding: 1rem;
       vertical-align: middle;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .table tbody tr {
+      transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.95);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .badge {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    .btn-sm {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      margin: 0.2rem;
+      border: none;
+    }
+
+    .btn-warning {
+      background: linear-gradient(45deg, #f6d365, #fda085);
+      color: white;
+    }
+
+    .btn-danger {
+      background: linear-gradient(45deg, #ff6b6b, #ee5253);
+      color: white;
+    }
+
+    .btn-success {
+      background: linear-gradient(45deg, #67b26f, #4ca2cd);
+      color: white;
+    }
+
+    .btn-primary {
+      background: linear-gradient(45deg, #4a90e2, #67b26f);
+      color: white;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Modal Styling */
+    .modal-content {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+    }
+
+    .modal-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      background: linear-gradient(45deg, #4a90e2, #67b26f);
+      color: white;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .modal-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .form-control {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      padding: 0.8rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+      border-color: #4a90e2;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
@@ -44,235 +189,244 @@
   <%- include("../../views/partial/admin/header") %>
 
   <!-- Main Content -->
-<!-- Main Content -->
-<div class="container table-container">
-    <form action="/admin/addProduct">
-      <button type="submit" class="btn btn-success add-product-btn">Add Product</button>
-    </form>
-  
-    <h2 class="page-header">Product List</h2>
-    <% if (products.length > 0) { %>
-      <table class="table table-bordered table-hover text-center align-middle">
-        <thead class="table-dark">
-          <tr>
-            <th>Product Name</th>
-            <th>Description</th>
-            <th>Regular Price</th>
-            <th>Sale Price</th>
-            <th>Quantity</th>
-            <th>Category</th>
-            <th>Offer</th>
-            <th>Status</th>
-            <th>Actions</th>
-            <th>Add Offer</th>
-            <th>Remove Offer</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% products.forEach(product => { %>
-            <tr>
-              <td><%= product.productName %></td>
-              <td><%= product.description %></td>
-              <td><%= product.regularPrice %></td>
-              <td><%= product.salePrice %></td>
-              <td><%= product.quantity %></td>
-              <td><%= product.category.name %></td>
-              <td>
-                <% if (product.offer) { %>
-                  <% if (product.offer.type === 'percentage') { %>
-                    <%= product.offer.value %>% OFF
-                  <% } else if (product.offer.type === 'flat') { %>
-                    ₹<%= product.offer.value %> OFF
-                  <% } %>
-                <% } else { %>
-                  No Offer
-                <% } %>
-              </td>
-              <td>
-                <% if (product.isListed) { %>
-                  <span class="badge bg-success">Listed</span>
-                <% } else { %>
-                  <span class="badge bg-secondary">Unlisted</span>
-                <% } %>
-              </td>
-              <td>
-                <a href="/admin/editProduct/<%= product._id %>" class="btn btn-warning btn-sm">Edit</a>
-                <% if (product.isListed) { %>
-                  <form action="/admin/unListProduct/<%= product._id %>" method="post" style="display: inline;">
-                    <button type="submit" class="btn btn-danger btn-sm">Unlist</button>
-                  </form>
-                <% } else { %>
-                  <form action="/admin/listProduct/<%= product._id %>" method="post" style="display: inline;">
-                    <button type="submit" class="btn btn-success btn-sm">List</button>
-                  </form>
-                <% } %>
-              </td>
-              <td>
-                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#offerModal" data-product-id="<%= product._id %>">
-                  Add Offer
-                </button>
-              </td>
-              <td class="text-end">
-                <button 
-                class="btn btn-danger btn-sm" 
-                onclick="removeOffer('<%= product._id %>')">
-                Remove Offer
-              </button>
-              
-              
-              </td>
-            </tr>
-          <% }) %>
-        </tbody>
-      </table>
-    <% } else { %>
-      <p class="text-center">No products found.</p>
-    <% } %>
-  </div>
-  
-  
-  <div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="offerModalLabel">Add Offer</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form id="offerForm" method="POST">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="offerValue" class="form-label">Offer Value (%)</label>
-                        <input type="number" id="offerValue" name="value" class="form-control" required placeholder="Enter discount percentage">
-                        <small class="form-text text-muted">Enter the discount percentage value.</small>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" id="submitOffer">Add Offer</button>
-                </div>
-            </form>
+  <main>
+    <div class="table-container">
+      <form action="/admin/addProduct">
+        <button type="submit" class="btn add-product-btn">
+          <i class="fas fa-plus me-2"></i>Add Product
+        </button>
+      </form>
+
+      <h2 class="page-header">Product List</h2>
+      <% if (products.length > 0) { %>
+        <div class="table-responsive">
+          <table class="table table-hover text-center align-middle">
+            <thead>
+              <tr>
+                <th>Product Name</th>
+                <th>Description</th>
+                <th>Regular Price</th>
+                <th>Sale Price</th>
+                <th>Quantity</th>
+                <th>Category</th>
+                <th>Offer</th>
+                <th>Status</th>
+                <th>Actions</th>
+                <th>Add Offer</th>
+                <th>Remove Offer</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% products.forEach(product => { %>
+                <tr>
+                  <td><%= product.productName %></td>
+                  <td><%= product.description %></td>
+                  <td>₹<%= product.regularPrice %></td>
+                  <td>₹<%= product.salePrice %></td>
+                  <td><%= product.quantity %></td>
+                  <td><%= product.category.name %></td>
+                  <td>
+                    <% if (product.offer) { %>
+                      <% if (product.offer.type === 'percentage') { %>
+                        <span class="badge bg-info"><%= product.offer.value %>% OFF</span>
+                      <% } else if (product.offer.type === 'flat') { %>
+                        <span class="badge bg-info">₹<%= product.offer.value %> OFF</span>
+                      <% } %>
+                    <% } else { %>
+                      <span class="badge bg-secondary">No Offer</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <% if (product.isListed) { %>
+                      <span class="badge bg-success">Listed</span>
+                    <% } else { %>
+                      <span class="badge bg-secondary">Unlisted</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <a href="/admin/editProduct/<%= product._id %>" class="btn btn-warning btn-sm">
+                      <i class="fas fa-edit me-1"></i>Edit
+                    </a>
+                    <% if (product.isListed) { %>
+                      <form action="/admin/unListProduct/<%= product._id %>" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                          <i class="fas fa-times me-1"></i>Unlist
+                        </button>
+                      </form>
+                    <% } else { %>
+                      <form action="/admin/listProduct/<%= product._id %>" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-success btn-sm">
+                          <i class="fas fa-check me-1"></i>List
+                        </button>
+                      </form>
+                    <% } %>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#offerModal" data-product-id="<%= product._id %>">
+                      <i class="fas fa-tag me-1"></i>Add Offer
+                    </button>
+                  </td>
+                  <td>
+                    <button class="btn btn-danger btn-sm" onclick="removeOffer('<%= product._id %>')">
+                      <i class="fas fa-trash-alt me-1"></i>Remove
+                    </button>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
         </div>
+      <% } else { %>
+        <div class="alert alert-info text-center">
+          <i class="fas fa-info-circle me-2"></i>No products found.
+        </div>
+      <% } %>
     </div>
-</div>
+  </main>
 
-<!-- Footer -->
-<%- include("../../views/partial/admin/footer") %>
+  <!-- Offer Modal -->
+  <div class="modal fade" id="offerModal" tabindex="-1" aria-labelledby="offerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="offerModalLabel">
+            <i class="fas fa-tag me-2"></i>Add Offer
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="offerForm" method="POST">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="offerValue" class="form-label">Offer Value (%)</label>
+              <div class="input-group">
+                <input type="number" id="offerValue" name="value" class="form-control" required placeholder="Enter discount percentage">
+                <span class="input-group-text">%</span>
+              </div>
+              <small class="form-text text-muted">Enter the discount percentage value.</small>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <i class="fas fa-times me-1"></i>Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="submitOffer">
+              <i class="fas fa-check me-1"></i>Add Offer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
-<!-- Bootstrap and SweetAlert2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- Footer -->
+  <%- include("../../views/partial/admin/footer") %>
 
-<script>
-  let productId;  // Declare productId in a broader scope
+  <!-- Bootstrap and SweetAlert2 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  const offerModal = document.getElementById('offerModal');
-  offerModal.addEventListener('show.bs.modal', function (event) {
+  <script>
+    let productId;  // Declare productId in a broader scope
+
+    const offerModal = document.getElementById('offerModal');
+    offerModal.addEventListener('show.bs.modal', function (event) {
       const button = event.relatedTarget;
       productId = button.getAttribute('data-product-id'); // Set productId when modal is shown
-  });
+    });
 
-  document.getElementById('submitOffer').addEventListener('click', async () => {
+    document.getElementById('submitOffer').addEventListener('click', async () => {
       const value = document.getElementById('offerValue').value;
 
       try {
-          const response = await fetch(`/admin/addOffer/${productId}`, {  // Use productId here
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ type: 'percentage', value })
-          });
+        const response = await fetch(`/admin/addOffer/${productId}`, {  // Use productId here
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ type: 'percentage', value })
+        });
 
-          const result = await response.json();
+        const result = await response.json();
 
-          if (result.message) {
-              Swal.fire({
-                  icon: 'success',
-                  title: 'Offer Applied!',
-                  text: result.message, 
-                  toast: true,
-                  position: 'top-end',
-                  showConfirmButton: false,
-                  timer: 2000
-              });
-              offerModal.querySelector('.btn-close').click()
-          } else {
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Error',
-                  text: result.message || 'An error occurred while applying the offer.',
-                  toast: true,
-                  position: 'top-end',
-                  showConfirmButton: false,
-                  timer: 2000
-              });
-          }
-      } catch (error) {
-          console.error(error);
+        if (result.message) {
           Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'An error occurred while applying the offer.',
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 2000
+            icon: 'success',
+            title: 'Offer Applied!',
+            text: result.message, 
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000
           });
+          offerModal.querySelector('.btn-close').click()
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: result.message || 'An error occurred while applying the offer.',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'An error occurred while applying the offer.',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000
+        });
       }
-  })
-  async function removeOffer(productId) {
-    try {
-        console.log('sathanam kitti', productId
-            
-        )
+    })
+    async function removeOffer(productId) {
+      try {
+        console.log('sathanam kitti', productId)
         const response = await fetch('/admin/offer-remove', {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ productId }),
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ productId }),
         });
 
         const result = await response.json();
 
         if (response.ok) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Offer Removed',
-                text: result.message || 'Offer removed successfully.',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1500,
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: result.message || 'Failed to remove the offer.',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 1500,
-            });
-        }
-    } catch (error) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'An error occurred while removing the offer.',
+          Swal.fire({
+            icon: 'success',
+            title: 'Offer Removed',
+            text: result.message || 'Offer removed successfully.',
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
             timer: 1500,
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: result.message || 'Failed to remove the offer.',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'An error occurred while removing the offer.',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1500,
         });
+      }
     }
-}
-
-</script>
-
-
-
+  </script>
 </body>
-</html> 
-
-  
-<!-- <%- include("../../views/partial/admin/footer") %> -->
+</html>

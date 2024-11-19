@@ -8,45 +8,174 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    .summary-card {
-      background-color: #9FE2BF;
-      border-radius: 8px;
-      padding: 20px;
-      color: #333;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
+    .container {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
-    .order-card {
-      background-color: #CCCCFF;
-      border-radius: 8px;
-      padding: 15px;
-      color: #333;
-      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px;
+
+    h1 {
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        position: relative;
     }
+
+    h1:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: linear-gradient(90deg, #4a90e2, #67b26f);
+        border-radius: 2px;
+    }
+
     .filter-section {
-      background-color: #f8f9fa;
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 20px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        margin-bottom: 2rem;
     }
-    .custom-date-range {
-      display: none;
+
+    .form-select, .form-control {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        padding: 0.8rem;
+        transition: all 0.3s ease;
     }
+
+    .form-select:focus, .form-control:focus {
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        border-color: #4a90e2;
+    }
+
+    .btn-primary {
+        background: linear-gradient(45deg, #4a90e2, #67b26f);
+        border: none;
+        border-radius: 10px;
+        padding: 0.8rem 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+    }
+
+    .btn-success {
+        background: linear-gradient(45deg, #67b26f, #4ca2cd);
+        border: none;
+        border-radius: 10px;
+        padding: 0.8rem 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(103, 178, 111, 0.3);
+    }
+
+    .summary-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        transition: all 0.3s ease;
+    }
+
+    .summary-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(31, 38, 135, 0.15);
+    }
+
+    .summary-card h5 {
+        color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+
+    .summary-card p {
+        color: #4a90e2;
+        font-size: 1.5rem;
+        margin: 0;
+    }
+
+    .order-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        transition: all 0.3s ease;
+    }
+
+    .order-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 40px rgba(31, 38, 135, 0.15);
+    }
+
     .badge-status {
-      padding: 5px 10px;
-      border-radius: 5px;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
     }
-    @media (max-width: 768px) {
-      .summary-card {
-        margin-bottom: 10px;
-        padding: 10px;
-      }
-      .filter-section {
-        padding: 10px;
-      }
+
+    .product-list {
+        list-style: none;
+        padding: 0;
+        margin: 1rem 0;
     }
-  </style>
+
+    .product-item {
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 10px;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        transition: all 0.3s ease;
+    }
+
+    .product-item:hover {
+        background: rgba(255, 255, 255, 0.8);
+        transform: translateX(5px);
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .sales-data {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .custom-date-range {
+        opacity: 0;
+        height: 0;
+        transition: all 0.3s ease;
+    }
+
+    .custom-date-range.show {
+        opacity: 1;
+        height: auto;
+    }
+</style>
 </head>
 <body>
 
@@ -54,146 +183,154 @@
   <h1 class="mb-4 text-center">Sales Report</h1>
 
   <!-- Filter Section -->
-  <div class="filter-section mb-4 p-3">
-    <form action="/admin/sales-report" method="GET" class="row g-3 align-items-end">
+  <div class="filter-section mb-4 p-4">
+    <form action="/admin/sales-report" method="GET" class="row g-4 align-items-end">
       <div class="col-md-3">
         <label for="filter" class="form-label">Filter by</label>
         <select name="filter" id="filter" class="form-select" onchange="toggleCustomDateRange()">
           <option value="daily" <%= filter === 'daily' ? 'selected' : '' %>>Daily</option>
           <option value="weekly" <%= filter === 'weekly' ? 'selected' : '' %>>Weekly</option>
           <option value="monthly" <%= filter === 'monthly' ? 'selected' : '' %>>Monthly</option>
-          <option value="custom"  <%= filter === 'custom' ? 'selected' : '' %>>Custom Range</option>
+          <option value="custom" <%= filter === 'custom' ? 'selected' : '' %>>Custom Range</option>
         </select>
       </div>
-      <div class="col-md-3 custom-date-range">
+      <div class="col-md-3 custom-date-range <%= filter === 'custom' ? 'show' : '' %>">
         <label for="startDate" class="form-label">Start Date</label>
         <input type="date" name="startDate" id="startDate" class="form-control" value="<%= startDate || '' %>">
       </div>
-      <div class="col-md-3 custom-date-range">
+      <div class="col-md-3 custom-date-range <%= filter === 'custom' ? 'show' : '' %>">
         <label for="endDate" class="form-label">End Date</label>
         <input type="date" name="endDate" id="endDate" class="form-control" value="<%= endDate || '' %>">
       </div>
       <div class="col-md-3">
-        <button type="submit" class="btn btn-primary w-100">Generate Report</button>
+        <button type="submit" class="btn btn-primary w-100">
+          <i class="fas fa-chart-line me-2"></i>Generate Report
+        </button>
       </div>
     </form>
-      <!-- Download PDF Button -->
-  <div class="text-end mb-4">
-    <button class="btn btn-success" onclick="downloadPDF()"><i class="fas fa-download"></i> Download PDF</button>
-  </div>
+    <!-- Download PDF Button -->
+    <div class="text-end mt-3">
+      <button class="btn btn-success" onclick="downloadPDF()">
+        <i class="fas fa-download me-2"></i>Download PDF
+      </button>
+    </div>
   </div>
 
   <!-- Display Sales Data -->
   <div class="sales-data" id="salesReportContent">
-    <h2>Sales Summary</h2>
-    <ul>
-      <% if (filter === 'daily') { %>
-        <li><strong>Today's Sales</strong></li>
-      <% } %>
-      <% if (filter === 'weekly') { %>
-        <li><strong>This Week's Sales</strong></li>
-      <% } %>
-      <% if (filter === 'monthly') { %>
-        <li><strong>This Month's Sales</strong></li>
-      <% } %>
-      <li><strong>Total Sales:</strong> <%= totalSalesAmount ? totalSalesAmount.toFixed(2) : '0.00' %></li>
-    </ul>
- 
-
-  <!-- Summary Cards -->
-  <div class="row text-center mb-4">
-    <div class="col-md-4">
-      <div class="summary-card">
-        <h5>Overall Sales Count</h5>
-        <p><strong><%= overallSalesCount || 0 %></strong></p>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="summary-card">
-        <h5>Overall Order Amount</h5>
-        <p><strong><%= overallOrderAmount ? overallOrderAmount.toFixed(2) : '0.00' %></strong></p>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="summary-card">
-        <h5>Overall Discount</h5>
-        <p><strong><%= overallDiscount ? overallDiscount.toFixed(2) : '0.00' %></strong></p>
-      </div>
-    </div>
-  </div>
-
-
-
-  <!-- Orders Section -->
-  <% if (orders && orders.length > 0) { %>
-    <% orders.forEach(order => { %>
-      <div class="order-card">
-        <div class="header d-flex justify-content-between">
-          <h5>Order ID: <%= order.oid %></h5>
-          <span class="badge-status bg-<%= order.paymentStatus === 'paid' ? 'success' : 'secondary' %>"><%= order.paymentMethod %></span>
+    <h2 class="mb-4">Sales Summary</h2>
+    
+    <!-- Summary Cards -->
+    <div class="row text-center mb-4">
+      <div class="col-md-4">
+        <div class="summary-card">
+          <h5>Overall Sales Count</h5>
+          <p><%= overallSalesCount || 0 %></p>
         </div>
-        <strong>Date:<%= new Date(order.orderDate).toLocaleDateString() %></strong>
-        <p><strong>Total Amount:</strong> <%= order.total ? order.total.toFixed(2) : '0.00' %></p>
-        <strong>status:<%=order.status%></strong>
-        <% if (cart && cart.length > 0) { %>
-          <% cart.forEach(carts => { %>
-            <p><strong>Discount Amount:</strong> <%= carts.discountAmount  %></p>
-            <!-- <p><strong>Coupon Code:</strong> <%= carts.couponCode || 'N/A' %></p> -->
-       
-          <% }); %>
-        <% } %>
-        <h6>Products:</h6>
-        <ul class="product-list">
-          <% order.products.forEach(item => { %>
-            <li class="product-item d-flex justify-content-between">
-              <div>
-                <% if (item.productId) { %>
-                  <strong>Product:</strong> <%= item.productId.productName || 'Unknown' %> <br>
-                  <strong>Quantity:</strong> <%= item.quantity || 'N/A' %>
-               
+      </div>
+      <div class="col-md-4">
+        <div class="summary-card">
+          <h5>Overall Order Amount</h5>
+          <p>₹<%= overallOrderAmount ? overallOrderAmount.toFixed(2) : '0.00' %></p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="summary-card">
+          <h5>Overall Discount</h5>
+          <p>₹<%= overallDiscount ? overallDiscount.toFixed(2) : '0.00' %></p>
+        </div>
+      </div>
+    </div>
 
-
-                <% } else { %>
-                  <p>Product details are not available.</p>
-                <% } %>
-              </div>
-              <div>
-                <strong>Subtotal:</strong> <%= item.subtotal ? item.subtotal.toFixed(2) : '0.00' %>
-              </div>
-            </li>
-            <% }); %>
+    <!-- Orders Section -->
+    <% if (orders && orders.length > 0) { %>
+      <% orders.forEach(order => { %>
+        <div class="order-card">
+          <div class="header d-flex justify-content-between align-items-center mb-3">
+            <h5 class="m-0">Order ID: <%= order.oid %></h5>
+            <span class="badge-status bg-<%= order.paymentStatus === 'paid' ? 'success' : 'secondary' %>">
+              <%= order.paymentMethod %>
+            </span>
           </div>
-        </ul>
-      </div>
-      </div>
-    <% }); %>
-  <% } else { %>
-    <h4 class="text-center">No orders found for the selected range.</h4>
-  <% } %>
-  
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
-  <script>
-    function downloadPDF() {
-      const element = document.getElementById('salesReportContent');
-      html2pdf().from(element).set({
-        margin: 1,
-        filename: 'Sales_Report.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-      }).save();
-    }
+          <div class="order-details mb-3">
+            <div class="row">
+              <div class="col-md-4">
+                <strong>Date:</strong> <%= new Date(order.orderDate).toLocaleDateString() %>
+              </div>
+              <div class="col-md-4">
+                <strong>Total Amount:</strong> ₹<%= order.total ? order.total.toFixed(2) : '0.00' %>
+              </div>
+              <div class="col-md-4">
+                <strong>Status:</strong> <%= order.status %>
+              </div>
+            </div>
+          </div>
 
-    function toggleCustomDateRange() {
-      const filter = document.getElementById('filter').value;
-      const customDateRange = document.querySelectorAll('.custom-date-range');
-      customDateRange.forEach(element => {
-        element.style.display = filter === 'custom' ? 'block' : 'none';
-      });
-    }
-    toggleCustomDateRange(); // Set the initial state
-  </script>
-  <%- include("../../views/partial/admin/footer") %>
+          <% if (cart && cart.length > 0) { %>
+            <% cart.forEach(carts => { %>
+              <div class="discount-info mb-3">
+                <strong>Discount Amount:</strong> ₹<%= carts.discountAmount %>
+              </div>
+            <% }); %>
+          <% } %>
+
+          <h6 class="mb-3">Products:</h6>
+          <ul class="product-list">
+            <% order.products.forEach(item => { %>
+              <li class="product-item d-flex justify-content-between align-items-center">
+                <div>
+                  <% if (item.productId) { %>
+                    <strong><%= item.productId.productName || 'Unknown' %></strong><br>
+                    <small>Quantity: <%= item.quantity || 'N/A' %></small>
+                  <% } else { %>
+                    <p>Product details are not available.</p>
+                  <% } %>
+                </div>
+                <div>
+                  <strong>₹<%= item.subtotal ? item.subtotal.toFixed(2) : '0.00' %></strong>
+                </div>
+              </li>
+            <% }); %>
+          </ul>
+        </div>
+      <% }); %>
+    <% } else { %>
+      <div class="text-center p-5">
+        <h4>No orders found for the selected range.</h4>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  function toggleCustomDateRange() {
+    const filter = document.getElementById('filter').value;
+    const dateRanges = document.querySelectorAll('.custom-date-range');
+    
+    dateRanges.forEach(range => {
+      if (filter === 'custom') {
+        range.classList.add('show');
+      } else {
+        range.classList.remove('show');
+      }
+    });
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+<script>
+  function downloadPDF() {
+    const element = document.getElementById('salesReportContent');
+    html2pdf().from(element).set({
+      margin: 1,
+      filename: 'Sales_Report.pdf',
+      image: { type: 'jpeg', quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    }).save();
+  }
+</script>
+<%- include("../../views/partial/admin/footer") %>
 </body>
 </html>

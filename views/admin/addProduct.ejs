@@ -6,203 +6,237 @@
 
  <%- include("../../views/partial/admin/header") %>
  <style>
-    .error-message{
-        color: red;
+    .content-main {
+        padding: 20px;
+        margin-left: 250px;
+        width: calc(100% - 250px);
+        transition: all 0.3s ease;
     }
- 
- 
-        .thumbnails-container {
-            display: flex;
-            overflow-x: auto;
+
+    @media (max-width: 992px) {
+        .content-main {
+            margin-left: 0;
+            width: 100%;
         }
- 
- 
-        .thumbnail {
-            margin-right: 10px;
- 
- 
+    }
+
+    .container-fluid {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+
+    .card {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .card-header {
+        padding: 1rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        background: transparent;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .form-control, .form-select {
+        height: 42px;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #4a90e2;
+        box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+    }
+
+    textarea.form-control {
+        height: auto;
+        min-height: 100px;
+    }
+
+    .form-label {
+        color: #2d3748;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .input-group-text {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+    }
+
+    .btn-primary {
+        background: #4a90e2;
+        border: none;
+        padding: 0.625rem 1.5rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: #357abd;
+        transform: translateY(-1px);
+    }
+
+    .image-upload-container {
+        border: 2px dashed #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .image-upload-container:hover {
+        border-color: #4a90e2;
+        background: rgba(74, 144, 226, 0.05);
+    }
+
+    .image-preview {
+        max-width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+    }
+
+    .error-message {
+        color: #e53e3e;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+        .content-main {
+            padding: 15px;
         }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        .row {
+            margin: 0 -10px;
+        }
+
+        .col-md-4, .col-md-6 {
+            padding: 0 10px;
+        }
+    }
  </style>
     <section class="content-main">
-        <div class="row">
-            <div class="col-12 container-fluid">
-                <div class="content-header ">
-                    <h2 class="content-title text-primary">Add New Product</h2>
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <div class="content-header mb-4">
+                        <h2 class="content-title">Add New Product</h2>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <form method="post" action="/admin/addProduct" enctype="multipart/form-data"
-                            onsubmit="return validateForm() ">
-                            <div class="mb-4">
-                                <label for="product_name" class="form-label">Product Name</label>
-                                <input type="text" placeholder="Type here" name="productName"
-                                    class="form-control border" id="product_name">
-                                <div id="productName-error" class="error-message"></div>
-                            </div>
-                            <!-- <div class="col-lg-4 mb-4">
-                                <label class="form-label">Brand</label>
-                                <select class="form-select border" name="brand">
-                                    
-                                 
-                                        <option value="">
-                                            
- 
- 
-                                          
-                                        </option>
-                                        
-                                      
-                                </select>
-                                <div id="brand-error" class="error-message"></div>
-                            </div> -->
-                            <div class="mb-4">
-                                <label class="form-label">Full description</label>
-                                <textarea placeholder="Type here" id="descriptionid" name="description" class="form-control border"
-                                    rows="4"></textarea>
-                                <div id="description-error" class="error-message"></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="mb-4">
-                                        <label class="form-label">Regular price</label>
-                                        <input placeholder="$" name="regularPrice" type="text"
-                                            class="form-control border">
-                                            <div id="regularPrice-error" class="error-message"></div>
+                
+                <div class="col-lg-9">
+                    <form method="post" action="/admin/addProduct" enctype="multipart/form-data" onsubmit="return validateForm()">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="row">
+                                    <!-- Basic Info -->
+                                    <div class="col-12 mb-4">
+                                        <label class="form-label">Product Name</label>
+                                        <input type="text" name="productName" class="form-control" id="product_name" placeholder="Enter product name">
+                                        <div id="productName-error" class="error-message"></div>
                                     </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="mb-4">
-                                        <label class="form-label">Sale price</label>
-                                        <input placeholder="$" name="salePrice" type="text" class="form-control border">
-                                       
+
+                                    <div class="col-12 mb-4">
+                                        <label class="form-label">Description</label>
+                                        <textarea name="description" id="descriptionid" class="form-control" rows="4" placeholder="Product description"></textarea>
+                                        <div id="description-error" class="error-message"></div>
                                     </div>
-                                    <div id="salePrice-error" class="error-message"></div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="mb-4">
+
+                                    <!-- Price Info -->
+                                    <div class="col-md-4 mb-4">
+                                        <label class="form-label">Regular Price</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="text" name="regularPrice" class="form-control">
+                                        </div>
+                                        <div id="regularPrice-error" class="error-message"></div>
+                                    </div>
+
+                                    <div class="col-md-4 mb-4">
+                                        <label class="form-label">Sale Price</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="text" name="salePrice" class="form-control">
+                                        </div>
+                                        <div id="salePrice-error" class="error-message"></div>
+                                    </div>
+
+                                    <div class="col-md-4 mb-4">
                                         <label class="form-label">Quantity</label>
-                                        <input placeholder="" name="quantity" type="text" class="form-control border">
+                                        <input type="number" name="quantity" class="form-control">
                                         <div id="quantity-error" class="error-message"></div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                               
-                                <div class="col-lg-4">
-                                    <div class="mb-4">
+
+                                    <!-- Additional Info -->
+                                    <div class="col-md-6 mb-4">
                                         <label class="form-label">Size</label>
-                                        <input placeholder="" name="size" type="text"
-                                            class="form-control border">
-                                            <div id="Size-error" class="error-message"></div>
+                                        <input type="text" name="size" class="form-control" placeholder="e.g., S, M, L, XL">
+                                        <div id="Size-error" class="error-message"></div>
                                     </div>
-                                </div>
-                             
-                            </div>
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <div class="row gx-2">
-                                        <div class="col-sm-6 mb-3">
-                                            <label class="form-label">Category</label>
-                                            <select class="form-select border" style="width: 150px;" name="category">
 
-                                                <% for(let i=0; i<cate.length; i++){%>
- 
- 
-                                               
-                                                    <option value="<%= cate[i].name %>">
-
-                                                        <%=cate[i].name%>
-                                                    </option>
-                                                    <%}%>
-                                                   
-                                                  
-                                                    
-                                            </select>
-                                            <div id="category-error" class="error-message"></div>
-                                        </div>
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Category</label>
+                                        <select class="form-select" name="category" style="width: 100%">
+                                            <% for(let i=0; i<cate.length; i++) { %>
+                                                <option value="<%= cate[i].name %>"><%= cate[i].name %></option>
+                                            <% } %>
+                                        </select>
+                                        <div id="category-error" class="error-message"></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card mb-2">
-                                <div class="card-header">
-                                    <h4>Choose images</h4>
-                                </div>
-                                <div class="border row">
-                                    <div id="addedImagesContainer" class="thumbnails-container"></div>
-                                </div>
+                        </div>
+
+                        <!-- Images Section -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h4 class="card-title mb-0">Product Images</h4>
+                            </div>
+                            <div class="card-body">
+                                <div id="addedImagesContainer" class="row mb-4"></div>
+                                
                                 <div class="row">
-                                    <div class="card-body align-items-center" style="margin-bottom: 20px;">
-                                        <img src="" alt="product image1" id="imgView1">
-                                                                    <input class="form-control" type="file" name="images" id="input1"
-                                                                        accept="image/png, image/jpeg, image/jpg"
-                                                                        onchange="viewImage(event), viewImage(event, 1)">
-                                                                        <div id="images-error" class="error-message"></div>
-                                                                </div>
-                                                                <div class="image-cropper d-flex align-items-center"
-                                                                    style="display:none; width: 300px; height: 200px; margin-bottom: 20px;">
-                                                                    <img src="" id="croppedImg1" alt="">
-                                                                    <button type="button" id="saveButton1" class="btn-sm btn-primary">Save</button>
-                                                                </div>
-                                                            </div>
-                                                           
-                                                            <div class="row">
-                                                                <div class="card-body align-items-center" style="margin-bottom: 20px;">
-                                                                    <img src="" alt="" id="imgView2">
- 
- 
-                                                                    <input class="form-control" type="file" name="images" id="input2"
-                                                                        accept="image/png, image/jpeg, image/jpg"
-                                                                        onchange="viewImage(event),viewImage(event, 2)">
-                                                                </div>
-                                                                <div class="image-cropper d-flex align-items-center"
-                                                                    style="display:none; width: 300px; height: 200px; margin-bottom: 20px;">
-                                                                    <img src="" id="croppedImg2" alt="">
-                                                                    <button type="button" id="saveButton2" class="btn-sm btn-primary">Save</button>
-                                                                </div>
-                                                            </div>
-                                                           
-                                                            <div class="row">
-                                                                <div class="card-body align-items-center" style="margin-bottom: 20px;">
-                                                                    <img src="" alt="" id="imgView3">
- 
- 
-                                                                    <input class="form-control" type="file" name="images" id="input3"
-                                                                        accept="image/png, image/jpeg, image/jpg"
-                                                                        onchange="viewImage(event),viewImage(event, 3)">
-                                                                </div>
-                                                                <div class="image-cropper d-flex align-items-center"
-                                                                    style="display:none; width: 300px; height: 200px; margin-bottom: 20px;">
-                                                                    <img src="" id="croppedImg3" alt="">
-                                                                    <button type="button" id="saveButton3" class="btn-sm btn-primary">Save</button>
-                                                                </div>
-                                                            </div>
-                                                           
-                                                            <div class="row">
-                                                                <div class="card-body align-items-center" style="margin-bottom: 20px;">
-                                                                    <img src="" alt="" id="imgView4">
- 
- 
-                                                           
-                                                                    <input class="form-control" type="file" name="images" id="input4"
-                                                                        accept="image/png, image/jpeg, image/jpg"
-                                                                        onchange="viewImage(event),viewImage(event, 4)">
-                                                                </div>
-                                                                <div class="image-cropper d-flex align-items-center"
-                                                                     style="display:none; width: 300px; height: 200px; margin-bottom: 20px;">
-                                                                    <img src="" id="croppedImg4" alt="">
-                                                                    <button type="button" id="saveButton4" class="btn-sm btn-primary">Save</button>
-                                                                </div>
-                                                            </div>
-                           
-                                                        </div>
+                                    <% for(let i = 1; i <= 4; i++) { %>
+                                        <div class="col-md-6 mb-4">
+                                            <div class="image-upload-container">
+                                                <img src="" alt="Preview" id="imgView<%= i %>" class="image-preview" style="display: none;">
+                                                <input class="form-control" type="file" name="images" id="input<%= i %>"
+                                                    accept="image/png, image/jpeg, image/jpg"
+                                                    onchange="viewImage(event, <%= i %>)">
+                                                <div class="image-cropper" style="display:none;">
+                                                    <img src="" id="croppedImg<%= i %>" alt="">
+                                                    <button type="button" id="saveButton<%= i %>" class="btn btn-sm btn-primary">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% } %>
+                                </div>
                             </div>
-                            <div>
-                                <button class="btn btn-md rounded font-sm hover-up"  type="submit" onclick="validateAndSubmit()">Publish</button>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-end mb-4">
+                            <button class="btn btn-primary" type="submit" onclick="validateAndSubmit()">
+                                <i class="fas fa-plus me-2"></i>Publish Product
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

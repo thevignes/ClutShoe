@@ -1,5 +1,3 @@
-
-
 <%- include("../../views/partial/admin/header", {user: user}) %>
 
 <!DOCTYPE html>
@@ -11,117 +9,150 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href=" /evara-backend/assets/css/vendors/pagination.css">
+    <style>
+        .glass-container {
+          background: rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+          border-radius: 16px;
+          padding: 2rem;
+          margin: 2rem 0;
+        }
+
+        .gradient-bg {
+          background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(103, 178, 111, 0.05));
+          min-height: 100vh;
+          padding: 2rem;
+        }
+
+        .modern-table {
+          background: rgba(255, 255, 255, 0.05);
+          backdrop-filter: blur(10px);
+          border-radius: 16px;
+          overflow: hidden;
+          border: none;
+        }
+
+        .modern-table th {
+          background: rgba(74, 144, 226, 0.1);
+          color: #333;
+          font-weight: 600;
+          padding: 1rem !important;
+          border: none;
+        }
+
+        .modern-table td {
+          padding: 1rem !important;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+          vertical-align: middle;
+        }
+
+        .modern-btn {
+          background: linear-gradient(135deg, #4a90e2, #67b26f) !important;
+          border: none !important;
+          color: white !important;
+          padding: 0.5rem 1.5rem !important;
+          border-radius: 8px !important;
+          transition: all 0.3s ease !important;
+        }
+
+        .modern-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .modern-btn.danger {
+          background: linear-gradient(135deg, #ff6b6b, #ee5253) !important;
+        }
+
+        .modern-pagination {
+          display: flex;
+          justify-content: center;
+          gap: 0.5rem;
+          margin-top: 2rem;
+        }
+
+        .modern-pagination .page-link {
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          color: #333;
+          padding: 0.5rem 1rem;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+        }
+
+        .modern-pagination .page-link:hover,
+        .modern-pagination .active .page-link {
+          background: linear-gradient(135deg, #4a90e2, #67b26f);
+          color: white;
+          border-color: transparent;
+          transform: translateY(-2px);
+        }
+
+        .badge {
+          padding: 0.5rem 1rem;
+          border-radius: 20px;
+          font-weight: 500;
+        }
+    </style>
 </head>
 <body>
    
 
-    <style>
-        .pagination-box {
-  text-align: center;
-  margin-top: 20px;
-}
+    <div class="gradient-bg">
+      <div class="container">
+        <div class="glass-container">
+          <h3 class="mb-4">User Management</h3>
 
-.page-item {
-  display: inline-block;
-  margin: 0 5px;
-}
-
-.page-link {
-  text-decoration: none;
-  padding: 8px 16px;
-  background-color: #f8f9fa;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-.page-item.active .page-link {
-  background-color: #007bff;
-  color: white;
-}
-
-    </style>
-
-    <div class="container mt-5">
-        <h3 class="text-left mb-4">Users</h3>
-
-        <div class="table-responsive">
-            <table class="table table-hover table-bordered table-striped align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% user.forEach(user => { %>
-                        <tr>
-                            <td><%= user.name %></td>
-                            <td><%= user.email %></td>
-                            <td>
-                                <% if (!user.IsBlocked) { %>
-                                    <span class="badge bg-success">Active</span>
-                                <% } else { %>
-                                    <span class="badge bg-secondary">Blocked</span>
-                                <% } %>
-                            </td>
-                            <td>
-                                <% if (!user.IsBlocked) { %>
-                                 
-                                    <!-- <form action="/admin/blockUser/<%= user._id %>" method="POST" onclick="return funBlock(event, this.href)" style="display:inline;">
-                                        <button type="submit" class="btn btn-danger btn-sm">Block</button>
-                                    </form> -->
-                                    <a href="/admin/blockUser?id=<%= user._id %>"  onclick="return funBlock(event, this.href)" style="display:inline;">
-                                      <button type="submit" class="btn btn-danger btn-sm">Block</button>
-                                  </a>
-                                <% } else { %>
-                                   
-                                    <!-- <form action="/admin/unblockUser?id=<%= user._id %>"  onclick="return fununBlock(event, this.href)"  style="display:inline;">
-                                        <button type="submit" class="btn btn-success btn-sm" >Unblock</button>
-                                    </form> --> 
-
-                                    <a href="/admin/UnblockUser?id=<%= user._id %>"  onclick="return fununBlock(event, this.href)" style="display:inline;">
-                                      <button type="submit" class="btn btn-danger btn-sm">UnBlock</button>
-                                  </a>
-                                <% } %>
-                            </td>
-                        </tr>
-                        <% }) %>
-                </tbody>
+          <div class="table-responsive modern-table">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% user.forEach(user => { %>
+                  <tr>
+                    <td><%= user.name %></td>
+                    <td><%= user.email %></td>
+                    <td>
+                      <% if (!user.IsBlocked) { %>
+                        <span class="badge bg-success">Active</span>
+                      <% } else { %>
+                        <span class="badge bg-secondary">Blocked</span>
+                      <% } %>
+                    </td>
+                    <td>
+                      <% if (!user.IsBlocked) { %>
+                        <a href="/admin/blockUser?id=<%= user._id %>" onclick="return funBlock(event, this.href)" class="btn modern-btn danger">Block</a>
+                      <% } else { %>
+                        <a href="/admin/UnblockUser?id=<%= user._id %>" onclick="return fununBlock(event, this.href)" class="btn modern-btn">Unblock</a>
+                      <% } %>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
             </table>
+          </div>
+
+          <!-- Pagination -->
+          <nav aria-label="User table pagination" class="modern-pagination">
+            <ul class="pagination">
+              <% for (let i = 1; i <= totalPages; i++) { %>
+                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                  <a class="page-link" href="?page=<%= i %>&limit=15&search=<%= searchQuery %>"><%= i %></a>
+                </li>
+              <% } %>
+            </ul>
+          </nav>
         </div>
-    </div>
-      <!-- Pagination Controls -->
-
-<!-- Pagination Controls -->
-<!-- Pagination Controls -->
-<nav aria-label="User table pagination">
-    <ul class="pagination justify-content-center">
-      <!-- Previous Button -->
-
-  
-      <div class="pagination-box">
-        <ul class="pagination">
-          <% for (let i = 1; i <= totalPages; i++) { %>
-            <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-              <!-- Create page links with search query parameter and page number -->
-              <a class="page-link" href="?page=<%= i %>&limit=15&search=<%= searchQuery %>" class="page-number">
-                <%= i %>
-              </a>
-            </li>
-          <% } %>
-        </ul>
       </div>
-      
-  
-      <!-- Next Button -->
-      
-    </ul>
-  </nav>
-  
-
-</div>
+    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -144,9 +175,9 @@
             confirmButtonText: "Yes, block!"
         }).then((result) => {
             if (result.isConfirmed) {
-              
+　　 　 　 　
                 window.location.href = url;
-                
+　 　 　 　 　
                 Swal.fire({
                     title: "Deleted!",
                     text: "Your file has been deleted.",
