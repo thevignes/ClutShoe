@@ -296,6 +296,59 @@
             margin-left: 1rem;
         }
 
+        .order-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .return-btn {
+            background-color: #ff9f00;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .return-btn:hover {
+            background-color: #ff8c00;
+        }
+
+        .return-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .download-invoice-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .download-invoice-btn:hover {
+            background-color: #45a049;
+        }
+
+        .download-invoice-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .download-invoice-btn i {
+            margin-right: 5px;
+        }
+
         @media (max-width: 1600px) {
             .main-container {
                 grid-template-columns: 280px minmax(850px, 1fr);
@@ -452,6 +505,24 @@
                             </div>
                           </div>
 
+                          <div class="order-actions">
+                            <% if (order.status === 'Delivered') { %>
+                              <button 
+                                onclick="returnOrder('<%= order.oid %>')" 
+                                class="return-btn"
+                                <%= Date.now() - new Date(order.orderDate).getTime() > 7 * 24 * 60 * 60 * 1000 ? 'disabled' : '' %>
+                              >
+                                Return Order
+                              </button>
+                              <button 
+                                onclick="downloadInvoice('<%= order.oid %>')" 
+                                class="download-invoice-btn"
+                              >
+                                <i class="fas fa-file-download"></i> Download Invoice
+                              </button>
+                            <% } %>
+                          </div>
+
                           <div class="order-footer">
                             <div class="order-total">
                               <strong>Total:</strong> ₹<%= order.total %>
@@ -525,48 +596,95 @@
 
         async function returnOrder(orderId) {
             try {
-                const response = await fetch('/return-order', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ orderId }),
+                const result = await Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'question',
+                    title: `Return order #${orderId}?`,
+                    showCancelButton: true,
+                    confirmButtonColor: '#ff9f00',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                    timer: 5000,
+                    timerProgressBar: true
                 });
 
-                const result = await response.json();
-
-                if (response.ok) {
-                    // Show success toast notification
-                    Swal.fire({
-                        toast: true, 
-                        position: 'top-end', 
-                        icon: 'success', 
-                        title: result.message, 
-                        showConfirmButton: false, 
-                        timer: 1500,
-                        timerProgressBar: true, 
+                if (result.isConfirmed) {
+                    const response = await fetch('/return-order', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ orderId })
                     });
-                } else {
 
-                    Swal.fire({
-                        toast: true, 
-                        position: 'top-end',
-                        icon: 'error', 
-                        title: result.message ,
-                        showConfirmButton: false,
-                        timer: 1500,
-                        timerProgressBar: true, 
-                    });
+                    const data = await response.json();
+
+                    if (data.success) {
+                        await Swal.fire({
+                            toast: true,
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Order returned successfully',
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
+                        location.reload();
+                    } else {
+                        throw new Error(data.message || 'Failed to return order');
+                    }
                 }
             } catch (error) {
+                console.error('Error returning order:', error);
                 Swal.fire({
                     toast: true,
-                    position: 'top-end', 
-                    icon: 'error', // Error icon
-                    title: 'An error occurred. Please try again!', // General error message
-                    showConfirmButton: false, // No confirm button
-                    timer: 1500, // Show for 1.5 seconds
-                    timerProgressBar: true, // Show progress bar
+                    position: 'top-end',
+                    icon: 'error',
+                    title: error.message || 'Failed to return order',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+            }
+        }
+
+        async function downloadInvoice(orderId) {
+            try {
+                const response = await fetch(`/download-invoice/${orderId}`);
+                
+                if (!response.ok) {
+                    throw new Error('Failed to download invoice');
+                }
+
+                // Check if the response is a PDF
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/pdf')) {
+                    // Create a blob from the PDF stream
+                    const blob = await response.blob();
+                    // Create a link to download the PDF
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `invoice-${orderId}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                } else {
+                    throw new Error('Invalid invoice format');
+                }
+            } catch (error) {
+                console.error('Error downloading invoice:', error);
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Failed to download invoice',
+                    text: error.message,
+                    showConfirmButton: false,
+                    timer: 3000
                 });
             }
         }

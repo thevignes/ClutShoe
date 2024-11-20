@@ -811,39 +811,38 @@
     function copyCoupon(couponCode) {
         navigator.clipboard.writeText(couponCode)
             .then(function() {
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'success',
-                    title: 'Coupon Code Copied!',
-                    text: couponCode,
-                    showConfirmButton: false,
-                    timer: 2000,
-                    timerProgressBar: true
-                });
+                Toastify({
+                    text: "Coupon Code Copied!",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "center",
+                    backgroundColor: "#51cf66",
+                    stopOnFocus: true
+                }).showToast();
             })
             .catch(function(err) {
                 console.error('Error copying text:', err);
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'error',
-                    title: 'Failed to copy coupon code',
-                    showConfirmButton: false,
-                    timer: 2000,
-                    timerProgressBar: true
-                });
+                Toastify({
+                    text: "Failed to copy coupon code",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "center",
+                    backgroundColor: "#ff6b6b",
+                    stopOnFocus: true
+                }).showToast();
             });
     }
 </script>
 
         <script>
-            // Show the add address form
+       
             function showAddAddressForm() {
                 document.getElementById('addressForm').style.display = 'block';
             }
 
-            // Hide the add address form
+         
             function hideAddressForm() {
                 document.getElementById('addressForm').style.display = 'none';
             }
@@ -854,22 +853,25 @@
     document.getElementById('placeOrderBtn').addEventListener('click', function () {
         const selectedAddress = document.querySelector('input[name="selected_address"]:checked');
         const selectedPaymentOption = document.querySelector('input[name="payment_option"]:checked');
-        const couponCode = document.getElementById('couponCode')?.value.trim(); // Get coupon code if available
+        const couponCode = document.getElementById('couponCode')?.value.trim();
 
         if (!selectedAddress || !selectedPaymentOption) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Incomplete Information',
-                text: 'Please select both an address and a payment option.',
-                confirmButtonText: 'Okay'
-            });
+            Toastify({
+                text: "Please select both an address and a payment option",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "#ff6b6b",
+                stopOnFocus: true
+            }).showToast();
             return;
         }
 
         const data = {
             addressId: selectedAddress.value,
             paymentOption: selectedPaymentOption.value,
-            couponCode: couponCode || null, // Include coupon code if provided
+            couponCode: couponCode || null,
         };
 
         fetch('/order', {
@@ -882,33 +884,41 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                Swal.fire({
-                    position: "top-end",
-                    icon: 'success',
-                    timer: 1500,
-                    title: 'Order Placed Successfully',
-                    text: data.message,
-                    showConfirmButton: false,
-                }).then(() => {
-                    // window.location.href = '/order-success'; // Redirect to success page
-                });
+                Toastify({
+                    text: "Order Placed Successfully",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "center",
+                    backgroundColor: "#51cf66",
+                    stopOnFocus: true,
+                    callback: function() {
+                        window.location.href = '/order';
+                    }
+                }).showToast();
             } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Order Failed',
-                    text: 'Order failed. Please try again.',
-                    confirmButtonText: 'Try Again'
-                });
+                Toastify({
+                    text: data.message || "Order failed. Please try again.",
+                    duration: 3000,
+                    close: true,
+                    gravity: "top",
+                    position: "center",
+                    backgroundColor: "#ff6b6b",
+                    stopOnFocus: true
+                }).showToast();
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Server Error',
-                text: 'An error occurred while placing the order.',
-                confirmButtonText: 'Close'
-            });
+            Toastify({
+                text: "An error occurred while placing the order",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "#ff6b6b",
+                stopOnFocus: true
+            }).showToast();
         });
     });
 }
@@ -931,40 +941,37 @@ placeOrder()
             document.getElementById("discountAmount").innerText = data.discount.toFixed(2);
             document.getElementById("finalTotal").innerText = data.finalPrice.toFixed(2);
             
-            Swal.fire({
-                icon: 'success',
-                title: `Discount Applied! You saved ${data.discount.toFixed(2)}`,
-                text: `Final Price: $${data.finalPrice.toFixed(2)}`,
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true
-            });
+            Toastify({
+                text: `Discount Applied! You saved ${data.discount.toFixed(2)}`,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "#51cf66",
+                stopOnFocus: true
+            }).showToast();
         } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
+            Toastify({
                 text: data.message,
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true
-            });
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "#ff6b6b",
+                stopOnFocus: true
+            }).showToast();
         }
     } catch (error) {
         console.error('Error:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Unexpected Error',
-            text: 'There was an error applying the coupon.',
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true
-        });
+        Toastify({
+            text: "An error occurred while applying the coupon",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "#ff6b6b",
+            stopOnFocus: true
+        }).showToast();
     }
 }
 
@@ -982,39 +989,36 @@ async function removeCoupon(userId) {
       document.getElementById("discountAmount").innerText = "0.00";
       document.getElementById("finalTotal").innerText = result.newTotal.toFixed(2);
 
-      Swal.fire({
-        icon: 'success',
-        title: result.message || 'Coupon removed successfully',
-        text: `New total: ₹${result.newTotal.toFixed(2)}`,
-        toast: true,
-        position: 'top-end',
-        timer: 3000,
-        timerProgressBar: true,
-        showConfirmButton: false
-      });
+      Toastify({
+        text: result.message || 'Coupon removed successfully',
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "#51cf66",
+        stopOnFocus: true
+      }).showToast();
     } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
+      Toastify({
         text: result.message,
-        toast: true,
-        position: 'top-end',
-        timer: 3000,
-        timerProgressBar: true,
-        showConfirmButton: false
-      });
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "center",
+        backgroundColor: "#ff6b6b",
+        stopOnFocus: true
+      }).showToast();
     }
   } catch (error) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Severe error occurred',
-      toast: true,
-      position: 'top-end',
-      timer: 3000,
-      timerProgressBar: true,
-      showConfirmButton: false
-    });
+    Toastify({
+      text: "An error occurred while removing the coupon",
+      duration: 3000,
+      close: true,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "#ff6b6b",
+      stopOnFocus: true
+    }).showToast();
   }
 }
 document.getElementById('onlinePayment').addEventListener('click', async function() {
@@ -1059,32 +1063,30 @@ document.getElementById('onlinePayment').addEventListener('click', async functio
                
                 if (verificationResult.status === "success") {
                  
-                    Swal.fire({
-                        position: 'top-right',
-                        icon: 'success',
-                        title: 'Payment verified and order placed successfully!',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        toast: true,
-                        background: '#28a745',
-                        color: '#fff',
-                        animation: false 
-                    });
-window.location.href='/success'
-               
+                    Toastify({
+                        text: "Payment verified and order placed successfully!",
+                        duration: 3000,
+                        close: true,
+                        gravity: "top",
+                        position: "center",
+                        backgroundColor: "#51cf66",
+                        stopOnFocus: true,
+                        callback: function() {
+                            window.location.href='/success'
+                        }
+                    }).showToast();
                     placeOrder();
                 } else {
                 
-                    Swal.fire({
-                        position: 'top-right',
-                        icon: 'error',
-                        title: 'Payment verification failed.',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        toast: true,
-                        background: '#dc3545', 
-                        color: '#fff',
-                    });
+                    Toastify({
+                        text: "Payment verification failed.",
+                        duration: 3000,
+                        close: true,
+                        gravity: "top",
+                        position: "center",
+                        backgroundColor: "#ff6b6b",
+                        stopOnFocus: true
+                    }).showToast();
                 }
             },
             prefill: {
@@ -1100,7 +1102,15 @@ window.location.href='/success'
 
     } catch (error) {
         console.error("Payment error:", error);
-        alert("Payment failed. Please try again.");
+        Toastify({
+            text: "Payment failed. Please try again.",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "#ff6b6b",
+            stopOnFocus: true
+        }).showToast();
     }
 });
 
@@ -1133,5 +1143,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateButtonVisibility();
     });
 </script>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js@1.11.2/src/toastify.min.css">
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js@1.11.2/src/toastify.min.js"></script>
 
 <%- include('../../views/partial/user/footer') %>

@@ -892,7 +892,6 @@ const shopPage = async (req, res) => {
   try {
     const sortOption = req.query.sort || "featured";
     const sizeSortOption = req.query.sizeSort || ""; 
-    console.log('the size sortoption', sizeSortOption)
     const currentPage = parseInt(req.query.page) || 1;
     const itemsPerPage = parseInt(req.query.limit) || 5;
     const searchQuery = req.query.q || "";
@@ -904,9 +903,20 @@ const shopPage = async (req, res) => {
     console.log("Items per page:", itemsPerPage);
     console.log("Category Filter:", categoryFilter);
 
-    // Sorting query
-    let sortQuery = {};
+    // Get category counts
+    const categories = await Category.find();
+    const categoryCounts = {};
+    
+    // Count products for each category
+    for (const category of categories) {
+      const count = await Product.countDocuments({
+        isListed: true,
+        category: category._id
+      });
+      categoryCounts[category.name] = count;
+    }
 
+    let sortQuery = {};
     switch (sortOption) {
       case "lowToHigh":
         sortQuery = { salePrice: 1 };
@@ -974,12 +984,14 @@ const shopPage = async (req, res) => {
       user: user || "",
       ProductData,
       sortOption,
-      sizeSortOption, // Ensure this variable is included
+      sizeSortOption,
       currentPage,
       totalPages,
       itemsPerPage,
       searchQuery,
       categoryFilter,
+      categories,
+      categoryCounts
     });
     
   } catch (error) {
@@ -990,7 +1002,7 @@ const shopPage = async (req, res) => {
 
 const PlaceOrder = async (req, res) => {
   try {
-    const { paymentOption, addressId } = req.body;
+    const { paymentOption, addressId,amount } = req.body;
 
     const userEmail = req.session.user.email;
     const user = await User.findOne({ email: userEmail });
@@ -1030,30 +1042,45 @@ const PlaceOrder = async (req, res) => {
       })
     );
 
+    // Get cart for discount amount
+    const cart = await Cart.findOne({userId: user._id});
+    // Calculate final total after discount
+    const finalTotal = total - (cart.discountAmount || 0);
+
+    // Check COD eligibility
+    if (paymentOption === "COD") {
+      console.log("COD Check - Final Total:", finalTotal);
+      if (finalTotal <= 1000) {
+        return res.status(400).json({
+          success: false,
+          message: 'Cash on delivery is only available for orders above ₹1000'
+        });
+      }
+    }
+
     if (paymentOption === "wallet") {
       const walletBalance = await Wallet.findOne({ userId: user._id });
-      if (!walletBalance || walletBalance < total) {
+      if (!walletBalance || walletBalance.balance < finalTotal) {
         return res
           .status(400)
           .json({ message: " wallet balance is not enough " });
       }
 
-      walletBalance.balance -= total;
+      walletBalance.balance -= finalTotal;
       console.log(">>>>>>", walletBalance.balance);
       walletBalance.transaction.push({
         type: "debit",
-        amount: total,
+        amount: finalTotal,
         description: `Order Payment for ${oid}`,
       });
       await walletBalance.save();
       console.log(">>>>>>>>>>", walletBalance);
     }
-const cart = await Cart.findOne({userId: user._id})
     const order = new Order({
       oid,
       userId: user._id,
       products: productDetails,
-      total:total-cart.discountAmount,
+      total:finalTotal,
       paymentMethod: paymentOption,
       address: {
         Firstname: address.Firstname,
@@ -1215,7 +1242,7 @@ const returnOrder = async (req, res) => {
     });
 
     await Wallet.updateOne({ userId: user?._id }, wallet);
-console.log('the refund is', refundAmount)
+    console.log('the refund is', refundAmount)
     order.status = "Returned";
     await order.save();
 
@@ -1255,6 +1282,19 @@ const searchProducts = async (req, res) => {
       .skip(skip)
       .limit(itemsPerPage);
 
+    // Get categories and their counts
+    const categories = await Category.find();
+    const categoryCounts = {};
+    
+    // Count products for each category
+    for (const category of categories) {
+      const count = await Product.countDocuments({
+        isListed: true,
+        category: category._id
+      });
+      categoryCounts[category.name] = count;
+    }
+
     // Render the shop page
     res.render("shop", {
       user,
@@ -1264,6 +1304,8 @@ const searchProducts = async (req, res) => {
       itemsPerPage,
       totalPages,
       searchQuery,
+      categories,
+      categoryCounts
     });
 
     console.log("Searched Products:", ProductData);
