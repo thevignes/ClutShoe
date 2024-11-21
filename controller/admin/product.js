@@ -7,7 +7,7 @@ const Sharp = require('sharp')
 const path = require('path')
 const Category = require('../../models/categoryModel')
 
-
+// const { upload } = require('../middleware/upload')
 
 const ProductList = async (req,res)=>{
     try {
@@ -40,7 +40,7 @@ const addProduct = async (req, res) => {
     try {
         console.log("Processing the product addition...");
         // const product = req.body
-        const {productName,description,price,images,size,category,regularPrice,salePrice,colors,review,quantity,isListed,stock,status} = req.body
+        const {productName, description, price, images, sizes, category, regularPrice, salePrice, colors, review, quantity, isListed, stock, status} = req.body
         console.log(req.body)
         // const { category: categoryName } = req.body;
         // Check if the product already exists
@@ -100,7 +100,7 @@ const addProduct = async (req, res) => {
             regularPrice,
             salePrice,
             quantity,
-            size,
+            size: Array.isArray(sizes) ? sizes.join(',') : sizes,
             colors,
             isListed,
             stock,

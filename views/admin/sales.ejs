@@ -13,20 +13,34 @@
         width: calc(100% - 260px);
         min-height: 100vh;
         padding: 2rem;
-        background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(103, 178, 111, 0.05));
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
+        transition: all 0.3s ease;
     }
 
     .content-container {
         max-width: 100%;
         padding: 0;
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     .page-title {
-        color: #333;
-        font-weight: 600;
+        color: #2c3e50;
+        font-weight: 700;
         margin-bottom: 2rem;
         position: relative;
         padding-bottom: 1rem;
+        text-align: center;
+        animation: slideDown 0.8s ease-out;
+    }
+
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     .page-title:after {
@@ -36,78 +50,139 @@
         left: 50%;
         transform: translateX(-50%);
         width: 100px;
-        height: 3px;
-        background: linear-gradient(90deg, #4a90e2, #67b26f);
+        height: 4px;
+        background: linear-gradient(90deg, #3498db, #2ecc71);
         border-radius: 2px;
+        animation: expandWidth 1s ease-out;
+    }
+
+    @keyframes expandWidth {
+        from { width: 0; }
+        to { width: 100px; }
     }
 
     .filter-section {
-        background: rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-        border-radius: 16px;
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        border-radius: 20px;
         margin-bottom: 2rem;
+        transform: translateY(0);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation: slideUp 0.8s ease-out;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .filter-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.15);
     }
 
     .form-control, .form-select {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid rgba(52, 152, 219, 0.1);
+        border-radius: 12px;
         padding: 0.8rem;
-        color: #333;
+        color: #2c3e50;
+        transition: all 0.3s ease;
     }
 
     .form-control:focus, .form-select:focus {
-        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
-        border-color: #4a90e2;
-        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        border-color: #3498db;
+        transform: translateY(-2px);
     }
 
     .summary-card {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        border-radius: 12px;
+        background: white;
+        border-radius: 16px;
         padding: 1.5rem;
-        margin-bottom: 1rem;
-        transition: transform 0.3s ease;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        animation: fadeInScale 0.6s ease-out;
+        border: 2px solid rgba(52, 152, 219, 0.1);
+    }
+
+    @keyframes fadeInScale {
+        from { 
+            opacity: 0; 
+            transform: scale(0.95);
+        }
+        to { 
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .summary-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 8px 25px rgba(52, 152, 219, 0.15);
     }
 
     .summary-card h5 {
-        color: #333;
+        color: #34495e;
         font-size: 1.1rem;
         margin-bottom: 1rem;
-    }
-
-    .summary-card p {
-        color: #4a90e2;
-        font-size: 1.5rem;
-        margin: 0;
         font-weight: 600;
     }
 
+    .summary-card p {
+        background: linear-gradient(135deg, #3498db, #2ecc71);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
     .order-card {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        border-radius: 12px;
-        padding: 1.5rem;
+        background: white;
+        border-radius: 16px;
+        padding: 1.8rem;
         margin-bottom: 1.5rem;
-        transition: transform 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.4s ease;
+        animation: slideIn 0.6s ease-out;
+        border: 2px solid rgba(52, 152, 219, 0.1);
+    }
+
+    @keyframes slideIn {
+        from { 
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to { 
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
 
     .order-card:hover {
         transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(52, 152, 219, 0.15);
     }
 
     .badge-status {
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        font-weight: 500;
-        color: white;
+        padding: 0.6rem 1.2rem;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+    }
+
+    .badge-status.bg-success {
+        background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
+    }
+
+    .badge-status.bg-secondary {
+        background: linear-gradient(135deg, #95a5a6, #7f8c8d) !important;
     }
 
     .product-list {
@@ -117,37 +192,43 @@
     }
 
     .product-item {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 8px;
-        padding: 1rem;
-        margin-bottom: 0.5rem;
+        background: rgba(52, 152, 219, 0.03);
+        border-radius: 12px;
+        padding: 1.2rem;
+        margin-bottom: 0.8rem;
         transition: all 0.3s ease;
+        border: 1px solid rgba(52, 152, 219, 0.1);
     }
 
     .product-item:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: translateX(5px);
+        background: rgba(52, 152, 219, 0.06);
+        transform: translateX(8px);
+        border-color: rgba(52, 152, 219, 0.2);
     }
 
     .btn {
-        border-radius: 8px;
-        padding: 0.7rem 1.5rem;
+        border-radius: 12px;
+        padding: 0.8rem 1.8rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
         transition: all 0.3s ease;
-        border: none;
-        font-weight: 500;
+        text-transform: uppercase;
+        font-size: 0.9rem;
     }
 
     .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(52, 152, 219, 0.2);
     }
 
     .btn-primary {
-        background: linear-gradient(135deg, #4a90e2, #67b26f);
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        border: none;
     }
 
     .btn-success {
         background: linear-gradient(135deg, #2ecc71, #27ae60);
+        border: none;
     }
 
     @media (max-width: 991.98px) {
@@ -168,15 +249,209 @@
         .filter-section {
             padding: 1rem;
         }
+
+        .order-card {
+            padding: 1.2rem;
+        }
     }
 
     .custom-date-range {
         display: none;
+        opacity: 0;
+        transform: translateY(-10px);
         transition: all 0.3s ease;
     }
 
     .custom-date-range.show {
         display: block;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .discount-info {
+        background: rgba(46, 204, 113, 0.1);
+        padding: 0.8rem 1.2rem;
+        border-radius: 10px;
+        color: #27ae60;
+        font-weight: 500;
+        margin: 1rem 0;
+        transition: all 0.3s ease;
+    }
+
+    .discount-info:hover {
+        background: rgba(46, 204, 113, 0.15);
+        transform: translateX(5px);
+    }
+
+    /* Table Styles */
+    .sales-table {
+        width: 100%;
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        margin: 2rem 0;
+        border: 1px solid rgba(52, 152, 219, 0.1);
+    }
+
+    .sales-table table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .sales-table thead {
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+    }
+
+    .sales-table th {
+        padding: 1.2rem;
+        font-weight: 600;
+        text-align: left;
+        font-size: 0.95rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sales-table td {
+        padding: 1.2rem;
+        border-bottom: 1px solid rgba(52, 152, 219, 0.1);
+        color: #2c3e50;
+        font-size: 0.95rem;
+    }
+
+    .sales-table tbody tr {
+        transition: all 0.3s ease;
+        background: white;
+        position: relative;
+        cursor: pointer;
+    }
+
+    .sales-table tbody tr:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.1);
+        background: rgba(52, 152, 219, 0.02);
+    }
+
+    .sales-table tbody tr:hover::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+    }
+
+    .table-status {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.85rem;
+        display: inline-block;
+        text-transform: capitalize;
+        transition: all 0.3s ease;
+    }
+
+    .table-status.completed {
+        background: rgba(46, 204, 113, 0.1);
+        color: #27ae60;
+    }
+
+    .table-status.pending {
+        background: rgba(241, 196, 15, 0.1);
+        color: #f39c12;
+    }
+
+    .table-status.cancelled {
+        background: rgba(231, 76, 60, 0.1);
+        color: #c0392b;
+    }
+
+    .table-actions {
+        display: flex;
+        gap: 0.5rem;
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+
+    .sales-table tbody tr:hover .table-actions {
+        opacity: 1;
+    }
+
+    .table-btn {
+        padding: 0.5rem;
+        border-radius: 8px;
+        border: none;
+        background: transparent;
+        color: #2c3e50;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .table-btn:hover {
+        background: rgba(52, 152, 219, 0.1);
+        color: #3498db;
+        transform: translateY(-2px);
+    }
+
+    .table-btn i {
+        font-size: 1.1rem;
+    }
+
+    .expanded-row {
+        background: rgba(52, 152, 219, 0.02);
+        padding: 0;
+        transition: all 0.3s ease;
+    }
+
+    .expanded-content {
+        padding: 1.5rem;
+        animation: expandContent 0.3s ease-out;
+    }
+
+    @keyframes expandContent {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .product-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(52, 152, 219, 0.1);
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #7f8c8d;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        color: #bdc3c7;
     }
   </style>
 </head>
@@ -246,63 +521,76 @@
       </div>
     </div>
 
-    <!-- Orders Section -->
-    <% if (orders && orders.length > 0) { %>
-      <% orders.forEach(order => { %>
-        <div class="order-card">
-          <div class="header d-flex justify-content-between align-items-center mb-3">
-            <h5 class="m-0">Order ID: <%= order.oid %></h5>
-            <span class="badge-status bg-<%= order.paymentStatus === 'paid' ? 'success' : 'secondary' %>">
-              <%= order.paymentMethod %>
-            </span>
-          </div>
-          <div class="order-details mb-3">
-            <div class="row">
-              <div class="col-md-4">
-                <strong>Date:</strong> <%= new Date(order.orderDate).toLocaleDateString() %>
-              </div>
-              <div class="col-md-4">
-                <strong>Total Amount:</strong> ₹<%= order.total ? order.total.toFixed(2) : '0.00' %>
-              </div>
-              <div class="col-md-4">
-                <strong>Status:</strong> <%= order.status %>
-              </div>
-            </div>
-          </div>
-
-          <% if (cart && cart.length > 0) { %>
-            <% cart.forEach(carts => { %>
-              <div class="discount-info mb-3">
-                <strong>Discount Amount:</strong> ₹<%= carts.discountAmount %>
-              </div>
-            <% }); %>
-          <% } %>
-
-          <h6 class="mb-3">Products:</h6>
-          <ul class="product-list">
-            <% order.products.forEach(item => { %>
-              <li class="product-item d-flex justify-content-between align-items-center">
-                <div>
-                  <% if (item.productId) { %>
-                    <strong><%= item.productId.productName || 'Unknown' %></strong><br>
-                    <small>Quantity: <%= item.quantity || 'N/A' %></small>
-                  <% } else { %>
-                    <p>Product details are not available.</p>
-                  <% } %>
-                </div>
-                <div>
-                  <strong>₹<%= item.subtotal ? item.subtotal.toFixed(2) : '0.00' %></strong>
-                </div>
-              </li>
-            <% }); %>
-          </ul>
-        </div>
-      <% }); %>
-    <% } else { %>
-      <div class="text-center p-5">
-        <h4>No orders found for the selected range.</h4>
-      </div>
-    <% } %>
+    <!-- Sales Table -->
+    <div class="sales-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (orders && orders.length > 0) { %>
+                    <% orders.forEach(order => { %>
+                        <tr data-order-id="<%= order._id %>">
+                            <td><%= order.oid %></td>
+                            <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
+                            <td><%= order.userId ? order.userId.name : 'Guest User' %></td>
+                            <td>
+                                <span class="table-status <%= order.status.toLowerCase() %>">
+                                    <%= order.status %>
+                                </span>
+                            </td>
+                            <td>₹<%= order.total ? order.total.toFixed(2) : '0.00' %></td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="table-btn" onclick="toggleOrderDetails('<%= order._id %>')" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <!-- <button class="table-btn" onclick="downloadInvoice('<%= order._id %>')" title="Download Invoice">
+                                        <i class="fas fa-download"></i>
+                                    </button> -->
+                                </div>
+                            </td>
+                        </tr>
+                        <tr id="details-<%= order._id %>" class="expanded-row" style="display: none;">
+                            <td colspan="6">
+                                <div class="expanded-content">
+                                    <h6 class="mb-3">Order Details</h6>
+                                    <div class="product-grid">
+                                        <% order.products.forEach(item => { %>
+                                            <div class="product-card">
+                                                <h6><%= item.productId ? item.productId.productName : 'Unknown Product' %></h6>
+                                                <div class="mt-2">
+                                                    <p class="mb-1">Quantity: <%= item.quantity || 'N/A' %></p>
+                                                    <p class="mb-1">Price: ₹<%= item.price ? item.price.toFixed(2) : '0.00' %></p>
+                                                    <p class="mb-0">Subtotal: ₹<%= item.subtotal ? item.subtotal.toFixed(2) : '0.00' %></p>
+                                                </div>
+                                            </div>
+                                        <% }); %>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="fas fa-box-open"></i>
+                                <p>No orders found for the selected range</p>
+                            </div>
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
   </div>
 </div>
 
@@ -314,27 +602,100 @@
     dateRanges.forEach(range => {
       if (filter === 'custom') {
         range.classList.add('show');
+        setTimeout(() => {
+          range.style.opacity = '1';
+          range.style.transform = 'translateY(0)';
+        }, 50);
       } else {
-        range.classList.remove('show');
+        range.style.opacity = '0';
+        range.style.transform = 'translateY(-10px)';
+        setTimeout(() => {
+          range.classList.remove('show');
+        }, 300);
       }
     });
+  }
+
+  function downloadPDF() {
+    const element = document.getElementById('salesReportContent');
+    const btn = event.currentTarget;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Generating PDF...';
+    
+    html2pdf().from(element).set({
+      margin: [0.5, 0.5],
+      filename: 'Sales_Report.pdf',
+      image: { type: 'jpeg', quality: 1 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    }).save().then(() => {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-download me-2"></i>Download PDF';
+    });
+  }
+
+  // Add smooth scroll animation for filter form submission
+  document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const queryString = new URLSearchParams(formData).toString();
+    
+    // Animate content fade out
+    document.querySelector('.content-container').style.opacity = '0';
+    
+    setTimeout(() => {
+      window.location.href = this.action + '?' + queryString;
+    }, 300);
+  });
+
+  // Add entrance animations for summary cards
+  document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.summary-card');
+    cards.forEach((card, index) => {
+      card.style.animationDelay = `${index * 0.1}s`;
+    });
+  });
+
+  function toggleOrderDetails(orderId) {
+    const detailsRow = document.getElementById(`details-${orderId}`);
+    const parentRow = document.querySelector(`tr[data-order-id="${orderId}"]`);
+    const allRows = document.querySelectorAll('.expanded-row');
+    
+    // Close all other expanded rows
+    allRows.forEach(row => {
+      if (row.id !== `details-${orderId}` && row.style.display !== 'none') {
+        row.style.display = 'none';
+        row.previousElementSibling.classList.remove('active');
+      }
+    });
+
+    if (detailsRow) {
+      if (detailsRow.style.display === 'none') {
+        detailsRow.style.display = 'table-row';
+        parentRow.classList.add('active');
+      } else {
+        detailsRow.style.display = 'none';
+        parentRow.classList.remove('active');
+      }
+    }
+  }
+
+  function downloadInvoice(orderId) {
+    const btn = event.currentTarget;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    
+    // Simulate download delay
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-download"></i>';
+      // Add your invoice download logic here
+    }, 1000);
   }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
-<script>
-  function downloadPDF() {
-    const element = document.getElementById('salesReportContent');
-    html2pdf().from(element).set({
-      margin: 1,
-      filename: 'Sales_Report.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-    }).save();
-  }
-</script>
 <%- include("../../views/partial/admin/footer") %>
 </body>
 </html>

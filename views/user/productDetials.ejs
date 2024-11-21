@@ -356,6 +356,16 @@
     gap: 0.5rem;
     margin-top: 1rem;
 }
+.size-btn {
+    min-width: 50px;
+    height: 40px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+.size-btn.selected {
+    background-color: #212529;
+    color: white;
+}
 </style>
           
         
@@ -383,7 +393,7 @@
                                         <div class="slider-nav-thumbnails mt-3 d-flex">
                                             <% ProductData.images.forEach((image, index)=> { %>
                                                 <img alt="Thumbnail <% index %>" class="thumbnail rounded-lg me-2"
-                                                    height="100" width="100" src="/uploads/re-image/<%= image %>"
+                                                    height="150" width="130" src="/uploads/re-image/<%= image %>"
                                                     onclick="updateMainImage(this, '<%= image %>')" />
                                                 <% }); %>
                                         </div>
@@ -450,11 +460,21 @@
                                                 <%= ProductData.description %>
                                             </p>
                                         </div>
-                                        <div class="short-desc mb-3">
-                                            <p >available size :
-                                                <%= ProductData.size %>
-                                            </p>
-                                        </div>
+                                   <h6 class="mb-2">Select Size:</h6>
+                                   <div class="d-flex flex-wrap gap-2">
+                                       <% const sizes = ProductData.size ? ProductData.size.split(',') : []; %>
+                                       <% if (sizes.length > 0) { %>
+                                           <% sizes.forEach(size => { %>
+                                               <button type="button" class="btn btn-outline-dark size-btn" onclick="selectSize(this, '<%= size.trim() %>')">
+                                                   <%= size.trim() %>
+                                               </button>
+                                           <% }); %>
+                                       <% } else { %>
+                                           <p class="text-muted">No sizes available</p>
+                                       <% } %>
+                                   </div>
+                                   <small id="sizeError" class="text-danger d-none">Please select a size</small>
+                                   <input type="hidden" id="selectedSize" name="size">  
                                         <% if (ProductData.quantity <=0) { %>
                                             <div class="alert alert-danger" role="alert">This product is currently out
                                                 of stock.</div>
@@ -1019,6 +1039,24 @@ document.getElementById('wish').addEventListener('click', function() {
     this.classList.add('clicked');
     setTimeout(() => this.classList.remove('clicked'), 300);
 });
+
+
+
+function selectSize(button, size) {
+    // Remove selected class from all buttons
+    document.querySelectorAll('.size-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    
+    // Add selected class to clicked button
+    button.classList.add('selected');
+    
+    // Store selected size
+    document.getElementById('selectedSize').value = size;
+    
+    // Hide error message if shown
+    document.getElementById('sizeError').classList.add('d-none');
+}
 </script>
 
 

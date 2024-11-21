@@ -181,9 +181,38 @@
 
                                     <!-- Additional Info -->
                                     <div class="col-md-6 mb-4">
-                                        <label class="form-label">Size</label>
-                                        <input type="text" name="size" class="form-control" placeholder="e.g., S, M, L, XL">
-                                        <div id="Size-error" class="error-message"></div>
+                                        <label class="form-label">Shoe Sizes</label>
+                                        <div class="size-variants">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input size-checkbox" type="checkbox" name="sizes[]" value="6" id="size6">
+                                                <label class="form-check-label" for="size6">6</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input size-checkbox" type="checkbox" name="sizes[]" value="7" id="size7">
+                                                <label class="form-check-label" for="size7">7</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input size-checkbox" type="checkbox" name="sizes[]" value="8" id="size8">
+                                                <label class="form-check-label" for="size8">8</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input size-checkbox" type="checkbox" name="sizes[]" value="9" id="size9">
+                                                <label class="form-check-label" for="size9">9</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input size-checkbox" type="checkbox" name="sizes[]" value="10" id="size10">
+                                                <label class="form-check-label" for="size10">10</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input size-checkbox" type="checkbox" name="sizes[]" value="11" id="size11">
+                                                <label class="form-check-label" for="size11">11</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input size-checkbox" type="checkbox" name="sizes[]" value="12" id="size12">
+                                                <label class="form-check-label" for="size12">12</label>
+                                            </div>
+                                        </div>
+                                        <small id="sizeError" class="text-danger d-none">Please select at least one size</small>
                                     </div>
 
                                     <div class="col-md-6 mb-4">
@@ -239,6 +268,21 @@
         </div>
     </section>
     <script src="https://cdn.jsdelivr.net/npm/cropperjs/dist/cropper.min.js"></script>
+    <style>
+        .size-variants {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .form-check-inline {
+            margin-right: 15px;
+        }
+        .form-check-input:checked {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+    </style>
     <script>
         let croppers = {};
 
@@ -373,6 +417,13 @@
                 isValid = false;
             }
 
+            // Check if at least one size is selected
+            const selectedSizes = document.querySelectorAll('.size-checkbox:checked');
+            if (selectedSizes.length === 0) {
+                document.getElementById('sizeError').classList.remove('d-none');
+                isValid = false;
+            }
+
             return isValid;
         }
 
@@ -381,6 +432,7 @@
             for (let errorMessage of errorMessages) {
                 errorMessage.innerHTML = "";
             }
+            document.getElementById('sizeError').classList.add('d-none');
         }
 
         function displayErrorMessage(id, message){
