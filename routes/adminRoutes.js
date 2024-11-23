@@ -112,7 +112,7 @@ router.get('/sales-report', salesReportController.salesReport)
 
 //edit coupon 
 
-router.get('/editCoupon/:id',couponController.editCouponPage )
+router.get('/editCoupon/:id/edit',couponController.editCouponPage )
 router.post('/updateCoupon',couponController.editCoupon)
 
 

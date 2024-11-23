@@ -1021,23 +1021,57 @@ async function removeCoupon(userId) {
     }).showToast();
   }
 }
+
 document.getElementById('onlinePayment').addEventListener('click', async function() {
     const selectedAddress = document.querySelector('input[name="selected_address"]:checked');
-    const selectedPaymentOption = document.querySelector('input[name="payment_option"]:checked');
+    if (!selectedAddress) {
+        Toastify({
+            text: "Please select a delivery address",
+            duration: 3000,
+            close: true,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "#ff6b6b",
+            stopOnFocus: true
+        }).showToast();
+        return;
+    }
+
     const data = {
         addressId: selectedAddress.value,
+        amount: totalAmount
     };
 
     try {
-       
+        // First create a pending order
+        const pendingOrderResponse = await fetch("/create-pending-order", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+        
+        if (!pendingOrderResponse.ok) {
+            throw new Error('Failed to create pending order');
+        }
+        
+        const pendingOrder = await pendingOrderResponse.json();
+        
+        // Then create Razorpay order
         const orderResponse = await fetch("/create-order", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ amount:totalAmount })
+            body: JSON.stringify({ 
+                amount: totalAmount,
+                orderId: pendingOrder.orderId 
+            })
         });
+
+        if (!orderResponse.ok) {
+            throw new Error('Failed to create Razorpay order');
+        }
+
         const order = await orderResponse.json();
 
-  
         const options = {
             key: "rzp_test_qT7pjheiiJYL7l",
             amount: order.amount,
@@ -1046,47 +1080,79 @@ document.getElementById('onlinePayment').addEventListener('click', async functio
             description: "Test Transaction",
             order_id: order.id,
             handler: async function (response) {
-       
-                const verifyResponse = await fetch("/verify", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        razorpay_order_id: response.razorpay_order_id,
-                        razorpay_payment_id: response.razorpay_payment_id,
-                        razorpay_signature: response.razorpay_signature,
-                        data
-                    }),
-                });
+                try {
+                    const verifyResponse = await fetch("/verify", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            orderId: pendingOrder.orderId
+                        }),
+                    });
 
-                const verificationResult = await verifyResponse.json();
-                
-               
-                if (verificationResult.status === "success") {
-                 
+                    const verificationResult = await verifyResponse.json();
+                    
+                    if (verificationResult.status === "success") {
+                        Toastify({
+                            text: "Payment verified and order placed successfully!",
+                            duration: 3000,
+                            close: true,
+                            gravity: "top",
+                            position: "center",
+                            backgroundColor: "#51cf66",
+                            stopOnFocus: true,
+                            callback: function() {
+                                window.location.href = '/orders';
+                            }
+                        }).showToast();
+                    } else {
+                        throw new Error("Payment verification failed");
+                    }
+                } catch (error) {
+                    console.error("Verification error:", error);
                     Toastify({
-                        text: "Payment verified and order placed successfully!",
-                        duration: 3000,
-                        close: true,
-                        gravity: "top",
-                        position: "center",
-                        backgroundColor: "#51cf66",
-                        stopOnFocus: true,
-                        callback: function() {
-                            window.location.href='/success'
-                        }
-                    }).showToast();
-                    placeOrder();
-                } else {
-                
-                    Toastify({
-                        text: "Payment verification failed.",
-                        duration: 3000,
+                        text: "Payment verification failed. You can retry the payment from your orders page.",
+                        duration: 5000,
                         close: true,
                         gravity: "top",
                         position: "center",
                         backgroundColor: "#ff6b6b",
-                        stopOnFocus: true
+                        stopOnFocus: true,
+                        callback: function() {
+                            window.location.href = '/orders';
+                        }
                     }).showToast();
+                }
+            },
+            modal: {
+                ondismiss: async function() {
+                    try {
+                        await fetch("/update-order-status", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                orderId: pendingOrder.orderId,
+                                status: "payment_pending"
+                            })
+                        });
+                        
+                        Toastify({
+                            text: "Order saved. You can complete the payment from your orders page.",
+                            duration: 5000,
+                            close: true,
+                            gravity: "top",
+                            position: "center",
+                            backgroundColor: "#ffd43b",
+                            stopOnFocus: true,
+                            callback: function() {
+                                window.location.href = '/order';
+                            }
+                        }).showToast();
+                    } catch (error) {
+                        console.error("Error updating order status:", error);
+                    }
                 }
             },
             prefill: {
@@ -1096,14 +1162,13 @@ document.getElementById('onlinePayment').addEventListener('click', async functio
             },
         };
 
-      
         const rzp1 = new Razorpay(options);
         rzp1.open();
 
     } catch (error) {
         console.error("Payment error:", error);
         Toastify({
-            text: "Payment failed. Please try again.",
+            text: error.message || "Payment initialization failed. Please try again.",
             duration: 3000,
             close: true,
             gravity: "top",
@@ -1122,7 +1187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const razorpayButtonContainer = document.getElementById('razorpayButtonContainer');
         const codButtonContainer = document.getElementById('codButtonContainer');
 
-        // Function to toggle visibility based on selected option
+    
         function updateButtonVisibility() {
             const selectedOption = [...paymentOptions].find(option => option.checked)?.value;
             if (selectedOption === 'razorpay') {

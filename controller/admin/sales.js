@@ -11,7 +11,7 @@ const salesReport = async (req, res) => {
     const currentDate = new Date();
     const startOfDay = new Date(currentDate.setHours(0, 0, 0, 0));
 
-    // Apply date filters based on selection
+
     if (filter === 'daily') {
       dateFilter = { createdAt: { $gte: startOfDay } };
     } else if (filter === 'weekly') {
@@ -30,7 +30,7 @@ const salesReport = async (req, res) => {
       }
     }
 
-    // Fetch orders based on the filter
+
     const orders = await Order.find(dateFilter)
       .populate('products.productId', 'productName')
       .sort({ createdAt: -1 });
@@ -45,26 +45,25 @@ const salesReport = async (req, res) => {
     let weeklySales = 0;
     let monthlySales = 0;
 
-    // Process order data if orders exist
+    
     if (orders.length > 0) {
       overallSalesCount = orders.length;
 
       orders.forEach((order) => {
         overallOrderAmount += order.total || 0;
 
-        // Calculate daily sales
         if (new Date(order.createdAt) >= startOfDay) {
           todaySales += order.total || 0;
         }
 
-        // Calculate weekly sales
+
         const weekStartDate = new Date();
         weekStartDate.setDate(currentDate.getDate() - 7);
         if (new Date(order.createdAt) >= weekStartDate) {
           weeklySales += order.total || 0;
         }
 
-        // Calculate monthly sales
+     
         const monthStartDate = new Date();
         monthStartDate.setMonth(currentDate.getMonth() - 1);
         if (new Date(order.createdAt) >= monthStartDate) {
@@ -77,10 +76,10 @@ const salesReport = async (req, res) => {
       });
     }
 
-    // Calculate total sales amount (same as overallOrderAmount)
+
     const totalSalesAmount = overallOrderAmount;
 
-    // Render the data with additional sales summaries
+
     res.render('sales', {
       orders,
       cart,
@@ -90,10 +89,10 @@ const salesReport = async (req, res) => {
       todaySales,
       weeklySales,
       monthlySales,
-      totalSalesAmount, // Pass totalSalesAmount to the template
-      filter: filter || '', // Pass filter to the template (ensure it's not undefined)
-      startDate: startDate || '', // Ensure startDate is always defined
-      endDate: endDate || '', // Ensure endDate is always defined
+      totalSalesAmount, 
+      filter: filter || '', 
+      startDate: startDate || '', 
+      endDate: endDate || '',
     });
   } catch (error) {
     console.error('Error fetching orders:', error);

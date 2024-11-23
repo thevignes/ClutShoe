@@ -349,6 +349,31 @@
             margin-right: 5px;
         }
 
+        .retry-payment-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .retry-payment-btn:hover {
+            background-color: #45a049;
+        }
+
+        .retry-payment-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .retry-payment-btn i {
+            margin-right: 5px;
+        }
+
         @media (max-width: 1600px) {
             .main-container {
                 grid-template-columns: 280px minmax(850px, 1fr);
@@ -503,6 +528,7 @@
                               <i class="fas <%= order.status === 'Cancelled' ? 'fa-times-circle' : 'fa-check-circle' %>"></i>
                               <%= order.status %>
                             </div>
+                            <p class="text-dark"><%= order.paymentStatus%></p>
                           </div>
 
                           <div class="order-actions">
@@ -519,6 +545,15 @@
                                 class="download-invoice-btn"
                               >
                                 <i class="fas fa-file-download"></i> Download Invoice
+                              </button>
+                            <% } %>
+                            <% if (order.
+                            paymentStatus === 'failed') { %>
+                              <button 
+                                onclick="retryPayment('<%= order._id %>', '<%= order.total || 0 %>')" 
+                                class="retry-payment-btn"
+                              >
+                                <i class="fas fa-redo"></i> Retry Payment
                               </button>
                             <% } %>
                           </div>
@@ -558,6 +593,8 @@
         </div>
     </div>
     <%- include('../../views/partial/user/footer') %>
+  
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.1.9/sweetalert2.all.min.js"></script>
     <script>
         async function cancelOrder(orderId) {
@@ -643,6 +680,170 @@
                     position: 'top-end',
                     icon: 'error',
                     title: error.message || 'Failed to return order',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+            }
+        }
+
+        async function retryPayment(orderId, total) {
+            try {
+                const response = await fetch('/retry-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ orderId, total })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const options = {
+                        key: data.key, // Razorpay Key
+                        amount: data.order.amount,
+                        currency: "INR",
+                        name: "Test Company",
+                        description: "Retry Payment",
+                        order_id: data.order.id,
+                        handler: async function (response) {
+                            try {
+                                const verifyResponse = await fetch("/verify", {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({
+                                        razorpay_order_id: response.razorpay_order_id,
+                                        razorpay_payment_id: response.razorpay_payment_id,
+                                        razorpay_signature: response.razorpay_signature,
+                                        orderId: orderId
+                                    }),
+                                });
+
+                                const verificationResult = await verifyResponse.json();
+                                
+                                if (verificationResult.status === "success") {
+                                    Swal.fire({
+                                        toast: true,
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: "Payment verified successfully!",
+                                        showConfirmButton: false,
+                                        timer: 3000,
+                                        timerProgressBar: true,
+                                        callback: function() {
+                                            window.location.reload();
+                                        }
+                                    });
+                                } else {
+                                    throw new Error("Payment verification failed");
+                                }
+                            } catch (error) {
+                                console.error("Verification error:", error);
+                                Swal.fire({
+                                    toast: true,
+                                    position: 'top-end',
+                                    icon: 'error',
+                                    title: "Payment verification failed",
+                                    showConfirmButton: false,
+                                    timer: 3000,
+                                    timerProgressBar: true
+                                });
+                            }
+                        },
+                        modal: {
+                            ondismiss: async function() {
+                                try {
+                                    await fetch("/update-order-status", {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify({
+                                            orderId: orderId,
+                                            status: "payment_pending"
+                                        })
+                                    });
+                                    
+                                    Swal.fire({
+                                        toast: true,
+                                        position: 'top-end',
+                                        icon: 'warning',
+                                        title: "Payment cancelled. You can retry later.",
+                                        showConfirmButton: false,
+                                        timer: 3000,
+                                        timerProgressBar: true
+                                    });
+                                } catch (error) {
+                                    console.error("Error updating order status:", error);
+                                }
+                            }
+                        },
+                        prefill: {
+                            name: "Customer",
+                            email: "customer@example.com",
+                            contact: ""
+                        },
+                        theme: {
+                            color: "#3399cc"
+                        }
+                    };
+
+                    const rzp1 = new Razorpay(options);
+                    rzp1.open();
+                } else {
+                    throw new Error(data.message || 'Failed to retry payment');
+                }
+            } catch (error) {
+                console.error('Error retrying payment:', error);
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: error.message || 'Failed to retry payment',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+            }
+        }
+
+        async function handlePaymentSuccess(response, orderId) {
+            try {
+                const verifyResponse = await fetch("/verify", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        razorpay_order_id: response.razorpay_order_id,
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        razorpay_signature: response.razorpay_signature,
+                        orderId: orderId
+                    }),
+                });
+
+                const verificationResult = await verifyResponse.json();
+                
+                if (verificationResult.status === "success") {
+                    await Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: "Payment verified successfully!",
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        callback: function() {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    throw new Error("Payment verification failed");
+                }
+            } catch (error) {
+                console.error("Verification error:", error);
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: "Payment verification failed",
                     showConfirmButton: false,
                     timer: 3000,
                     timerProgressBar: true

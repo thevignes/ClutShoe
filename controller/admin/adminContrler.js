@@ -1,20 +1,69 @@
 const Admin = require('../../models/adminModel');
 const User = require('../../models/userModel');
 const Order = require('../../models/order');
+const Product = require('../../models/product');
+const Category = require('../../models/categoryModel') 
 const { use } = require('passport');
 
 
-// Dashboard rendering function
+
 const Dashboard = async (req, res) => {
   try {
-    return res.render('dashboard'); 
+    const orders = await Order.find()
+      .populate('products.productId', 'productName');
+    
+
+    const totalUser = await User.countDocuments();
+    const totalProducts = await Product.countDocuments();
+    const totalCategory = await Category.countDocuments();
+
+    const mostSellingCate = await Order.aggregate([
+      { $unwind: '$products' },
+      {
+        $lookup: {
+          from: 'products',
+          localField: 'products.productId',
+          foreignField: '_id',
+          as: 'product'
+        }
+      },
+      { $unwind: '$product' },
+      {
+        $lookup: {
+          from: 'categories',
+          localField: 'product.category',
+          foreignField: '_id',
+          as: 'category'
+        }
+      },
+      { $unwind: '$category' },
+      {
+        $group: {
+          _id: '$category.name',
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { count: -1 } },
+      { $limit: 1 }
+    ])
+    console.log(mostSellingCate)
+    console.log(totalProducts)
+
+    return res.render('dashboard', { 
+      orders,
+      totalProducts,
+      totalUser,
+      totalCategory,
+      mostSellingCategory: mostSellingCate[0] || {} 
+
+    }); 
   } catch (error) {
     console.log(error);
     res.status(500).send('Server Error');
   }
 };
 
-// Admin login page rendering
+
 const AdminLogin = async (req, res) => {
   try {
     return res.render('signin'); 
@@ -68,7 +117,7 @@ const AdminVerify = async (req, res) => {
   
 };
 const adminLogout = async(req,res)=>{
-    re.session.destroy((err)=>{
+    req.session.destroy((err)=>{
         if(err){
             console.log(err)
             return res.render('dashboard')
@@ -244,3 +293,4 @@ module.exports = {
 };
 
 
+ 

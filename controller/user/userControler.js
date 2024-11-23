@@ -11,6 +11,7 @@ const Cart = require("../../models/cart");
 const Order = require("../../models/order");
 const Coupon = require("../../models/couponModels");
 const Wallet = require("../../models/wallet");
+const { v4: uuidv4 } = require('uuid');
 
 const HomePage = async (req, res) => {
   try {
@@ -494,8 +495,11 @@ const addAddress = async (req, res) => {
       type,
     } = req.body;
 
+    // Generate a unique oid using uuid
+    const oid = uuidv4();
+
     const newAddress = new Address({
-      userId: user,
+      userId: user._id,
       state,
       pin,
       district,
@@ -504,11 +508,12 @@ const addAddress = async (req, res) => {
       Lastname,
       country,
       type,
+      oid // Add the generated oid
     });
-    // user.addresses.push(newAddress);
+
     await newAddress.save();
 
-    console.log("the adress is", newAddress);
+    console.log("the address is", newAddress);
     res.render("manageAddress", { user });
   } catch (err) {
     console.log(err);
@@ -700,12 +705,9 @@ const AddToCart = async (req, res) => {
     const productId = req.query.id;
     console.log(productId);
     const userEmail = req.session.user.email;
-
-    if (!userEmail) {
-      return res.redirect("/login");
-    }
-
     const user = await User.findOne({ email: userEmail });
+
+
     const product = await Product.findById(productId);
 
     if (!product) {

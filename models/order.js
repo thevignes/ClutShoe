@@ -14,7 +14,6 @@ const OrderSchema = new mongoose.Schema({
     address: {
         Firstname:{type:String,required: true},
         Lastname:{type:String,required: true},
-
         city: { type: String, required: true },
         state: { type: String, required: true },
         pin: { type: String, required: true },
@@ -34,16 +33,19 @@ const OrderSchema = new mongoose.Schema({
             type: Number,
             required: true
         },
-    
     }],
     paymentMethod: {
         type: String,
         required: true
     },
-
     status: {
         type: String,
-        enum: ['pending', 'shipped', 'delivered','Returned','Cancelled'],
+        enum: ['pending', 'shipped', 'delivered', 'Returned', 'Cancelled'],
+        default: 'pending'
+    },
+    paymentStatus: {
+        type: String,
+        enum: ['pending', 'paid', 'failed'],
         default: 'pending'
     },
     total: {
@@ -61,8 +63,10 @@ const OrderSchema = new mongoose.Schema({
     DiscountAmount:{
         type:Number,
         default:0
-
-    }
+    },
+    razorpay_order_id: String,
+    razorpay_payment_id: String,
+    razorpay_signature: String
 },{timestamps:true});
 
 const Order = mongoose.model('Order', OrderSchema);
