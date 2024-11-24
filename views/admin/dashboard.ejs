@@ -1,254 +1,481 @@
-    
     <%- include("../../views/partial/admin/header") %>
-    <h1>Dashboard</h1>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-
-    <section class="content-main">
-        <di  v class="content-header">
-            <div>
-                <h2 class="content-title card-title">Dashboard</h2>
-      
-            </div>
-        </di>
-    
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="card card-body mb-4">
-                    <article class="icontext">
-                        <span class="icon icon-sm rounded-circle bg-primary-light">
-                            <i class="fas fa-usd-circle text-primary"></i>
-                        </span>
-                        <div class="text">
-                            <h6 class="mb-1">Total category<h6>
-                            <span><%= totalCategory %></span>
-                        </div>
-               
-                    </article>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="card card-body mb-4">
-                    <article class="icontext">
-                        <span class="icon icon-sm rounded-circle bg-success-light">
-                            <i class="fas fa-bags-shopping text-success"></i>
-                        </span>
-                        <div class="text">
-                            <h6 class="mb-1">Total Orders</h6>
-                            <span><%= orders.length %></span>
-                        </div>
-                    </article>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="card card-body mb-4">
-                    <article class="icontext">
-                        <span class="icon icon-sm rounded-circle bg-warning-light">
-                            <i class="fas fa-shopping-basket text-warning"></i>
-                        </span>
-                        <div class="text">
-                            <h6 class="mb-1">Total Products</h6>
-                            <span><%= totalProducts %></span>
-                        </div>
-                    </article>
-                </div>
-            </div>
-            <div class="col-lg-3">
-                <div class="card card-body mb-4">
-                    <article class="icontext">
-                        <span class="icon icon-sm rounded-circle bg-info-light">
-                            <i class="fas fa-users text-info"></i>
-                        </span>
-                        <div class="text">
-                            <h6 class="mb-1">Total Users</h6>
-                            <span><%=totalUser%></span>
-                            
-              
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </div>
-    
-        <div class="row">
-            <div class="col-xl-8 col-lg-12">
-                <div class="card mb-4">
-                    <article class="card-body">
-                        <h5 class="card-title">Sale Statistics</h5>
-                    </article>
-                </div>
-            </div>
-            <div class="col-xl-4 col-lg-12">
-                <div class="card mb-4">
-                    <article class="card-body">
-                        <h5 class="card-title">Revenue by Category</h5>
-                        <% if (mostSellingCategory && mostSellingCategory._id) { %>
-                            <div class="d-flex flex-column align-items-center">
-                                <h6 class="text-muted mb-3">Most Selling Category</h6>
-                                <div class="text-center">
-                                    <p class="h5 mb-2"><%= mostSellingCategory._id %></p>
-                                    <p class="text-success">Sales: <%= mostSellingCategory.count %></p>
-                                </div>
-                            </div>
-                        <% } else { %>
-                            <p class="text-center text-muted">No category data available</p>
-                        <% } %>
-                    </article>
-                </div>
-            </div>
-        </div>
+<section class="content-main">
+    <div class="content-header mb-4">
         <div>
-            <canvas id="myChart"></canvas>
-          </div>
-          
-    </section>
-    
-    <style>
-    .content-main {
-        padding: 30px 3%;
-        margin-left: 260px;
-        background-color: #f8f9fa;
-    }
-    
-    .card {
-        border: none;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-        border-radius: 10px;
-    }
-    
-    .card-title {
-        color: #333;
-        font-weight: 600;
-    }
-    
-    .icontext {
-        display: flex;
-        align-items: center;
-    }
-    
-    .icon {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 48px;
-        height: 48px;
-        margin-right: 15px;
-    }
-    
-    .bg-primary-light {
-        background-color: rgba(13, 110, 253, 0.1);
-    }
-    
-    .bg-success-light {
-        background-color: rgba(25, 135, 84, 0.1);
-    }
-    
-    .bg-warning-light {
-        background-color: rgba(255, 193, 7, 0.1);
-    }
-    
-    .bg-info-light {
-        background-color: rgba(13, 202, 240, 0.1);
-    }
-    
-    .text h6 {
-        font-size: 14px;
-        color: #666;
-    }
-    
-    .text span {
-        font-size: 18px;
-        font-weight: 600;
-        color: #333;
-    }
-    
-    @media (max-width: 1200px) {
-        .content-main {
-            margin-left: 0;
-        }
-    }
+            <h2 class="content-title card-title">Dashboard</h2>
+        </div>
+    </div>
 
-    .category-stats {
-        padding: 20px;
-        text-align: center;
-        background-color: #f8f9fa;
-        border-radius: 10px;
-        margin: 15px 0;
-    }
+    <!-- Statistics Cards Row -->
+    <div class="row mb-4">
+        <div class="col-lg-3">
+            <div class="card card-body h-100">
+                <article class="icontext">
+                    <span class="icon icon-sm rounded-circle bg-primary-light">
+                        <i class="fas fa-rupee-sign text-primary"></i>
+                    </span>
+                    <div class="text">
+                        <h6 class="mb-1">Total Revenue</h6>
+                        <span>₹<%= totalRevenue %></span>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card card-body h-100">
+                <article class="icontext">
+                    <span class="icon icon-sm rounded-circle bg-success-light">
+                        <i class="fas fa-shopping-cart text-success"></i>
+                    </span>
+                    <div class="text">
+                        <h6 class="mb-1">Total Orders</h6>
+                        <span><%= orders.length %></span>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card card-body h-100">
+                <article class="icontext">
+                    <span class="icon icon-sm rounded-circle bg-warning-light">
+                        <i class="fas fa-box text-warning"></i>
+                    </span>
+                    <div class="text">
+                        <h6 class="mb-1">Total Products</h6>
+                        <span><%= totalProducts %></span>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card card-body h-100">
+                <article class="icontext">
+                    <span class="icon icon-sm rounded-circle bg-info-light">
+                        <i class="fas fa-users text-info"></i>
+                    </span>
+                    <div class="text">
+                        <h6 class="mb-1">Total Users</h6>
+                        <span><%= totalUser %></span>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
 
-    .stats-title {
-        color: #2c3e50;
-        font-size: 1.2rem;
-        font-weight: 600;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #e9ecef;
-    }
+    <!-- Chart and Statistics Row -->
+    <div class="row">
+        <!-- Chart Column -->
+        <div class="col-xl-8 col-lg-12 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="card-title">Revenue Analytics</h5>
+                        <select id="periodSelect" class="form-select" style="width: 150px;">
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly" selected>Monthly</option>
+                            <option value="yearly">Yearly</option>
+                        </select>
+                    </div>
+                    <div class="chart-container" style="position: relative; height: 400px;">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    .stat-item {
-        margin: 15px 0;
-        padding: 10px;
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        transition: transform 0.2s;
-    }
+        <!-- Category Statistics -->
+        <div class="col-xl-4 col-lg-12 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Category Statistics</h5>
+                    <% if (mostSellingCategory && mostSellingCategory._id) { %>
+                        <div class="category-stats">
+                            <div class="stats-title">Most Selling Category</div>
+                            <div class="stat-item">
+                                <div class="stat-label">Category Name</div>
+                                <div class="stat-value"><%= mostSellingCategory._id %></div>
+                            </div>
+                            <!-- <div class="stat-item">
+                                <div class="stat-label">Total Sales</div>
+                                <div class="stat-value highlight"><%= mostSellingCategory.count %></div>
+                            </div> -->
+                        </div>
+                    <% } else { %>
+                        <div class="no-data">
+                            No category data available
+                        </div>
+                    <% } %>
+                </div>
+               
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div>
 
-    .stat-item:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xl-6 col-lg-12 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Top 10 Products</h5>
+                        <div class="table-responsive">
+                            <table class="table" style="min-width: 600px;">
+                                <thead>
+                                    <tr>
+                                        <th style="padding: 12px;">Product</th>
+                                        <th style="padding: 12px;">Image</th>
+                                        <th style="padding: 12px;">Total Sales</th>
+                                        <th style="padding: 12px;">Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% topProducts.forEach(topPro => { %>
+                                    <tr>
+                                        <td style="padding: 12px; vertical-align: middle;">
+                                            <%=topPro.productName%>
+                                        </td>
+                                        <td style="padding: 12px; vertical-align: middle;">
+                                            <img src="/uploads/re-image/<%= topPro.images[0] %>" alt="<%= topPro.productName %>"
+                                                style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+                                        </td>
+                                        <td style="padding: 12px; vertical-align: middle;">
+                                            <%=topPro.totalSales%>
+                                        </td>
+                                        <td style="padding: 12px; vertical-align: middle;">
+                                            ₹<%=topPro.totalRevenue.toLocaleString()%>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-    .stat-label {
-        color: #6c757d;
-        font-size: 0.9rem;
-        margin-bottom: 5px;
-    }
+            <div class="col-xl-6 col-lg-12 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Top 10 Categories</h5>
+                        <div class="table-responsive">
+                            <table class="table" style="min-width: 600px;">
+                                <thead>
+                                    <tr>
+                                        <th style="padding: 12px;">Category</th>
+                                        <th style="padding: 12px;">Total Sales</th>
+                                        <th style="padding: 12px;">Revenue</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% topCategories.forEach(topCate => { %>
+                                    <tr>
+                                        <td style="padding: 12px; vertical-align: middle;">
+                                            <%=topCate.CategoryName%>
+                                        </td>
+                                        <td style="padding: 12px; vertical-align: middle;">
+                                            <%=topCate.totalSales%>
+                                        </td>
+                                        <td style="padding: 12px; vertical-align: middle;">
+                                            ₹<%=topCate.totalRevenue.toLocaleString()%>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
 
-    .stat-value {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #2c3e50;
-    }
-
-    .stat-value.highlight {
-        color: #2ecc71;
-        font-size: 1.3rem;
-    }
-
-    .no-data {
-        padding: 20px;
-        color: #6c757d;
-        font-style: italic;
-        background-color: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
     <script>
-      const ctx = document.getElementById('myChart');
-    
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-          datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
+        document.addEventListener('DOMContentLoaded', function() {
+            const chartData = <%- JSON.stringify(chartData) %>;
+            let chart = null;
+
+            function formatCurrency(value) {
+                return new Intl.NumberFormat('en-IN', {
+                    style: 'currency',
+                    currency: 'INR',
+                    maximumFractionDigits: 0
+                }).format(value);
             }
-          }
-        }
-      });
+
+            function getLabels(data, period) {
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                
+                switch(period) {
+                    case 'weekly':
+                        return data.map(item => `Week ${item._id.week}, ${item._id.year}`);
+                    case 'monthly':
+                        return data.map(item => `${months[item._id.month - 1]} ${item._id.year}`);
+                    case 'yearly':
+                        return data.map(item => item._id.year.toString());
+                    default:
+                        return [];
+                }
+            }
+
+            function updateChart(period) {
+                if (chart) {
+                    chart.destroy();
+                }
+
+                const data = chartData[period];
+                const ctx = document.getElementById('revenueChart').getContext('2d');
+                const labels = getLabels(data, period);
+                const revenues = data.map(item => item.totalAmount || 0);
+                const orders = data.map(item => item.count);
+
+                chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Orders',
+                                data: orders,
+                                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1,
+                                yAxisID: 'y-orders'
+                            },
+                            {
+                                label: 'Revenue',
+                                data: revenues,
+                                type: 'line',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                                yAxisID: 'y-revenue',
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        scales: {
+                            'y-orders': {
+                                type: 'linear',
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Number of Orders'
+                                },
+                                ticks: {
+                                    beginAtZero: true
+                                }
+                            },
+                            'y-revenue': {
+                                type: 'linear',
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Revenue (₹)'
+                                },
+                                ticks: {
+                                    callback: value => formatCurrency(value),
+                                    beginAtZero: true
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.dataset.label;
+                                        const value = context.raw;
+                                        return label === 'Revenue' ? 
+                                            `${label}: ${formatCurrency(value)}` :
+                                            `${label}: ${value}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+          
+            updateChart('monthly');
+
+       
+            document.getElementById('periodSelect').addEventListener('change', e => {
+                updateChart(e.target.value);
+            });
+        });
     </script>
 
+    <style>
+        .content-main {
+            padding: 30px 3%;
+            margin-left: 260px;
+            background-color: #f8f9fa;
+        }
 
-    
-        <%-include("../../views/partial/admin/footer")%>
+        .card {
+            border: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            border-radius: 10px;
+            height: 100%;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            color: #333;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .context {
+            display: flex;
+            align-items: center;
+        }
+
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            margin-right: 15px;
+        }
+
+        .bg-primary-light { background-color: rgba(13, 110, 253, 0.1); }
+        .bg-success-light { background-color: rgba(25, 135, 84, 0.1); }
+        .bg-warning-light { background-color: rgba(255, 193, 7, 0.1); }
+        .bg-info-light { background-color: rgba(13, 202, 240, 0.1); }
+
+        .text h6 {
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+        }
+
+        .text span {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .category-stats {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .stats-title {
+            color: #2c3e50;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .stat-item {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .stat-value.highlight {
+            color: #2ecc71;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .form-select {
+            padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #495057;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .form-select:focus {
+            border-color: #86b7fe;
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+        @media (max-width: 1200px) {
+            .content-main {
+                margin-left: 0;
+            }
+        }
+        /* Add these styles */
+.table-responsive {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.product-image {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.rank {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.revenue {
+  color: #27ae60;
+  font-weight: 600;
+}
+
+/* Hover effects */
+.table tbody tr:hover {
+  background-color: rgba(0,0,0,0.02);
+  transition: background-color 0.2s;
+}
+    </style>
+</section>
+
+<%- include("../../views/partial/admin/footer") %>

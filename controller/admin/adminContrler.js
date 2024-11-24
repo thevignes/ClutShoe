@@ -5,18 +5,113 @@ const Product = require('../../models/product');
 const Category = require('../../models/categoryModel') 
 const { use } = require('passport');
 
-
-
 const Dashboard = async (req, res) => {
   try {
-    const orders = await Order.find()
+    const orders = await Order.find({})
       .populate('products.productId', 'productName');
-    
 
     const totalUser = await User.countDocuments();
     const totalProducts = await Product.countDocuments();
     const totalCategory = await Category.countDocuments();
 
+
+    const [weeklyData, monthlyData, yearlyData] = await Promise.all([
+      // Weekly data
+      Order.aggregate([
+        {
+          $match: {
+            status: { $ne: 'Cancelled' },
+            createdAt: { 
+              $gte: new Date(new Date().setDate(new Date().getDate() - 30)) 
+            }
+          }
+        },
+        {
+          $group: {
+            _id: {
+              year: { $year: '$createdAt' },
+              week: { $week: '$createdAt' }
+            },
+            count: { $sum: 1 },
+            totalAmount: { $sum: '$total' }
+          }
+        },
+        {
+          $sort: {
+            '_id.year': 1,
+            '_id.week': 1
+          }
+        }
+      ]),
+
+      // Monthly data
+      Order.aggregate([
+        {
+          $match: {
+            status: { $ne: 'Cancelled' },
+            createdAt: {
+              $gte: new Date(new Date().setMonth(new Date().getMonth() - 12)) 
+            }
+          }
+        },
+        {
+          $group: {
+            _id: {
+              year: { $year: '$createdAt' },
+              month: { $month: '$createdAt' }
+            },
+            count: { $sum: 1 },
+            totalAmount: { $sum: '$total' }
+          }
+        },
+        {
+          $sort: {
+            '_id.year': 1,
+            '_id.month': 1
+          }
+        }
+      ]),
+
+      // Yearly data
+      Order.aggregate([
+        {
+          $match: {
+            status: { $ne: 'Cancelled' }
+          }
+        },
+        {
+          $group: {
+            _id: {
+              year: { $year: '$createdAt' }
+            },
+            count: { $sum: 1 },
+            totalAmount: { $sum: '$total' }
+          }
+        },
+        {
+          $sort: {
+            '_id.year': 1
+          }
+        }
+      ])
+    ]);
+
+    //  total revenue
+    const totalRevenue = await Order.aggregate([
+      {
+        $match: {
+          status: { $ne: 'Cancelled' }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: '$total' }
+        }
+      }
+    ]);
+
+    //  most selling category
     const mostSellingCate = await Order.aggregate([
       { $unwind: '$products' },
       {
@@ -45,24 +140,91 @@ const Dashboard = async (req, res) => {
       },
       { $sort: { count: -1 } },
       { $limit: 1 }
-    ])
-    console.log(mostSellingCate)
-    console.log(totalProducts)
+    ]);
 
-    return res.render('dashboard', { 
+
+    //top 10 categories
+
+    const topCategories = await Order.aggregate([
+      {$unwind:'$products'},
+      {
+        $lookup:{
+          from:'products',
+          localField:'products.productId',
+          foreignField:'_id',
+          as:'product'
+        }
+      },
+      {$unwind:'$product'},
+      {
+        $lookup:{
+          from:'categories',
+          localField:'product.category',
+          foreignField:'_id',
+          as:'Categories'
+        }
+      },
+      {$unwind:'$Categories'},
+      {
+        $group:{
+          _id: '$Categories._id',
+          CategoryName: { $first: '$Categories.name' },
+          totalSales: { $sum: '$products.quantity' },
+          totalRevenue: { $sum: { $multiply: ['$products.quantity', '$product.salePrice'] } }
+        }
+      },
+      {$sort:{totalSales:-1}},
+      {$limit:10}
+
+    ])
+
+      //top 10 products
+   const topProducts = await Order.aggregate([
+      {$unwind:'$products'},
+      {
+        $lookup:{
+          from:'products',
+          localField:'products.productId',
+          foreignField:'_id',
+          as:'product'
+        }
+      },
+      {$unwind:'$product'},
+      {
+        $group:{
+          _id:'$product._id',
+          productName: { $first: '$product.productName' },
+          images: { $first: '$product.images' },
+          totalSales:{$sum:'$products.quantity'},
+          totalRevenue:{$sum:{$multiply:['$products.quantity', '$product.salePrice']}}
+        }
+      },
+      {$sort:{totalSales:-1}},
+      {$limit:10}
+   ])
+
+    return res.render('dashboard', {
       orders,
       totalProducts,
       totalUser,
       totalCategory,
-      mostSellingCategory: mostSellingCate[0] || {} 
+      mostSellingCategory: mostSellingCate[0] || {},
+      totalRevenue: totalRevenue[0]?.total || 0,
+      topProducts,
+      topCategories,
+      chartData: {
+        weekly: weeklyData,
+        monthly: monthlyData,
+        yearly: yearlyData,
 
-    }); 
+      }
+    });
+
   } catch (error) {
     console.log(error);
     res.status(500).send('Server Error');
   }
 };
-
 
 const AdminLogin = async (req, res) => {
   try {
@@ -72,10 +234,6 @@ const AdminLogin = async (req, res) => {
     return res.status(400).send({ message: "Can't get login page, server error" });
   }
 };
-
-
-
-// Admin login verification\
 
 const AdminVerify = async (req, res) => {
   const { email, password } = req.body; 
@@ -116,6 +274,7 @@ const AdminVerify = async (req, res) => {
   }
   
 };
+
 const adminLogout = async(req,res)=>{
     req.session.destroy((err)=>{
         if(err){
@@ -139,120 +298,110 @@ const getUSers = async(req,res)=>{
     }
 }
 
-        //  blocking user
+const blockUser = async(req,res)=>{
+  try {
+    const UserId = req.query.id
 
-        const blockUser = async(req,res)=>{
-          try {
-            const UserId = req.query.id
-
-            await User.findByIdAndUpdate(UserId,{IsBlocked:true})
-            res.redirect('/admin/user',)
-            console.log('Blocking user with ID:', UserId);
+    await User.findByIdAndUpdate(UserId,{IsBlocked:true})
+    res.redirect('/admin/user',)
+    console.log('Blocking user with ID:', UserId);
 
 
-          } catch (error) {
-            console.log(error);
-            res.status(500).send('Server Error');
-            
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Server Error');
+    
+  }
+}
+
+const UnblockUser = async(req,res)=>{
+  try {
+    const UserId = req.query.id
+
+    await User.findByIdAndUpdate(UserId,{IsBlocked:false})
+    res.redirect('/admin/user',)
+    console.log('User Unblocked successfully')
+
+    console.log('Unblocking user with ID:', UserId);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Server Error');
+    
+  }
+}
+
+const Userlist = async (req, res) => {
+  const page = Math.max(1, parseInt(req.query.page)) || 1;
+  const limit = Math.max(1, parseInt(req.query.limit)) ||10 ;
+
+  const searchQuery = req.query.search || '';
+
+  try {
+   
+      const filter = searchQuery
+          ? {
+              $or: [
+                  { name: { $regex: searchQuery, $options: 'i' } },
+                  { email: { $regex: searchQuery, $options: 'i' } }
+              ]
           }
-        }
-        //unblocking user
-
-        const UnblockUser = async(req,res)=>{
-          try {
-            const UserId = req.query.id
-
-            await User.findByIdAndUpdate(UserId,{IsBlocked:false})
-            res.redirect('/admin/user',)
-            console.log('User Unblocked successfully')
-
-            console.log('Unblocking user with ID:', UserId);
-          } catch (error) {
-            console.log(error);
-            res.status(500).send('Server Error');
-            
-          }
-        }
-
-        //user side pagination// User side pagination with search
-
-
-
-  const Userlist = async (req, res) => {
-    const page = Math.max(1, parseInt(req.query.page)) || 1;
-    const limit = Math.max(1, parseInt(req.query.limit)) ||10 ;
-
-    const searchQuery = req.query.search || '';
-
-    try {
-     
-        const filter = searchQuery
-            ? {
-                $or: [
-                    { name: { $regex: searchQuery, $options: 'i' } },
-                    { email: { $regex: searchQuery, $options: 'i' } }
-                ]
-            }
-            : {}; 
+          : {}; 
 
  
-        const users = await User.find(filter)
-            .skip((page - 1) * limit)
-            .limit(limit);
+      const users = await User.find(filter)
+          .skip((page - 1) * limit)
+          .limit(limit);
+
+  
+      const totalUsers = await User.countDocuments(filter);
+      const totalPages = Math.ceil(totalUsers / limit);
+
+      
+      res.render('adminUsers', {
+          user:users,           
+          currentPage: page, 
+          totalPages,      
+          searchQuery      
+      });
+  } catch (err) {
+      console.log('Error fetching users:', err);
+      res.status(500).send('Server Error');
+  }
+};
+
+const orderList = async (req,res)=>{
+  try {
+
+    const   Orders = await Order.find().populate('userId', 'name').sort({ orderDate: -1 });
 
     
-        const totalUsers = await User.countDocuments(filter);
-        const totalPages = Math.ceil(totalUsers / limit);
-
-        
-        res.render('adminUsers', {
-            user:users,           
-            currentPage: page, 
-            totalPages,      
-            searchQuery      
-        });
-    } catch (err) {
-        console.log('Error fetching users:', err);
-        res.status(500).send('Server Error');
-    }
-};
- 
+    console.log('the admin view', Orders)
+    res.render('orderList', { Orders });
 
 
-  const orderList = async (req,res)=>{
-    try {
-
-      const   Orders = await Order.find().populate('userId', 'name').sort({ orderDate: -1 });
-
-      
-      console.log('the admin view', Orders)
-      res.render('orderList', { Orders });
-
-
-      
-    } catch (error) {
-      console.log('Error fetching orders:', error);
-      res.status(500).send('Server Error');
-      
-    }
+    
+  } catch (error) {
+    console.log('Error fetching orders:', error);
+    res.status(500).send('Server Error');
+    
   }
+}
 
+const OrderDetails = async (req,res)=>{
+  try {
+    const id = req.params.id;
+    console.log(id)
+    const order = await Order.findById(id).populate('userId', 'name email')  .populate('products.productId', 'productName price images');
+    console.log('the order details', order)
+    res.render('orderDetials', { order });
+    
+  } catch (error) {
+    console.log('Error fetching order details:', error);
+    res.status(500).send('Server Error');
 
-  const OrderDetails = async (req,res)=>{
-    try {
-      const id = req.params.id;
-      console.log(id)
-      const order = await Order.findById(id).populate('userId', 'name email')  .populate('products.productId', 'productName price images');
-      console.log('the order details', order)
-      res.render('orderDetials', { order });
-      
-    } catch (error) {
-      console.log('Error fetching order details:', error);
-      res.status(500).send('Server Error');
-
-      
-    }
+    
   }
+}
 
 const updateOrder = async (req,res)=>{
   try {
@@ -276,7 +425,6 @@ const updateOrder = async (req,res)=>{
   }
 }
 
-
 module.exports = {
   Dashboard,
   AdminLogin,
@@ -291,6 +439,3 @@ module.exports = {
   updateOrder
  
 };
-
-
- 

@@ -14,7 +14,7 @@
         transaction: [{
             transactionId: {
                 type: mongoose.Schema.Types.ObjectId,
-                default: () => new mongoose.Types.ObjectId(), // Generates a new ObjectId for each transaction
+                default: () => new mongoose.Types.ObjectId(), 
                 required: true,
             },
             type: {
