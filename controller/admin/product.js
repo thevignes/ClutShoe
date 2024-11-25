@@ -11,9 +11,17 @@ const Category = require('../../models/categoryModel')
 
 const ProductList = async (req,res)=>{
     try {
-        const products = await Product.find().populate('category', 'name');
+        const currentPage = parseInt(req.query.page ) || 1
+        const itemsPerPage = 6 ;
 
-        res.render('product',{products})
+        const totalProduct = await Product.countDocuments()
+        
+        const totalPages = Math.ceil(totalProduct/itemsPerPage)
+        console.log(totalPages)
+        console.log(currentPage)
+        const skip = (currentPage-1)*itemsPerPage
+        const products = await Product.find().populate('category', 'name').skip(skip).limit(itemsPerPage);
+        res.render('product',{products,currentPage,totalPages})
     } catch (error) {
          console.log(error)
          res.status(500).send('Server Error')

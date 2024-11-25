@@ -334,7 +334,7 @@
                                             onchange="updateQuantity('<%= item._id %>', this.value, this.max)" 
                                             style="width: 60px; text-align: center;" 
                                             data-product-id="<%= item._id %>" 
-                                          />
+                                          />    
                                         </div>
                                       </td>
                                       
@@ -398,6 +398,7 @@
             </div>
         </div>
     </div>
+    <%-include('../../views/partial/user/footer')%>
 </main>
 
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -493,4 +494,4 @@ console.log(data);
   }
 </script>
 
-<%-include('../../views/partial/user/footer')%>
+<!-- <%-include('../../views/partial/user/footer')%> -->

@@ -150,6 +150,13 @@
       padding: 1rem;
     }
   }
+  .pagination{
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    background-color: #00f5d4;
+    width: 50%;
+  }
 </style>
 
 <div class="gradient-bg">
@@ -205,6 +212,12 @@
           <% }); %>
         </tbody>
       </table>
+    </div>
+    <div class="pagination">
+      <%for(let i=1; i<=totalPages; i++){%>
+        <a href="?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+      <%}%>
+  
     </div>
   </div>
 </div>

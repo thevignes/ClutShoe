@@ -282,6 +282,59 @@
         border-radius: 12px;
       }
     }
+    .pagination {
+                gap: 6px;
+                padding: 0.75rem;
+            }
+            
+            .pagination a {
+                min-width: 35px;
+                height: 35px;
+                padding: 0 10px;
+                font-size: 14px;
+            }
+            .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin: 2rem auto;
+            padding: 1rem;
+            width: fit-content;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+
+        .pagination a {
+            min-width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 12px;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .pagination a:hover {
+            background: #f5f5f5;
+            border-color: #006A67;
+            color: #006A67;
+            transform: translateY(-2px);
+        }
+
+        .pagination a.active {
+            background: #006A67;
+            border-color: #006A67;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 106, 103, 0.2);
+        }
   </style>
 </head>
 <body>
@@ -382,6 +435,19 @@
         </div>
       <% } %>
     </div>
+    <div class="pagination">
+      <% if (currentPage > 1) { %>
+          <a href="?page=<%= currentPage - 1 %>">←</a>
+      <% } %>
+      
+      <% for(let i = 1; i <= totalPages; i++) { %>
+          <a href="?page=<%= i %>" class="<%= currentPage === i ? 'active' : '' %>"><%= i %></a>
+      <% } %>
+      
+      <% if (currentPage < totalPages) { %>
+          <a href="?page=<%= currentPage + 1 %>">→</a>
+      <% } %>
+  </div>
   </div>
 
   <!-- Offer Modal -->

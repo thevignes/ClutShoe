@@ -372,11 +372,18 @@ const Userlist = async (req, res) => {
 const orderList = async (req,res)=>{
   try {
 
-    const   Orders = await Order.find().populate('userId', 'name').sort({ orderDate: -1 });
+    const currentPage = parseInt( req.query.page) || 1;
+    const itemsPerPage = 10
+    const totalOrders = await Order.countDocuments()
+    const totalPages = Math.ceil(totalOrders/itemsPerPage);
+    const skip = (currentPage-1)*itemsPerPage
+console.log(currentPage)
+    const   Orders = await Order.find().populate('userId', 'name').sort({ orderDate: -1 }).skip(skip).limit(itemsPerPage);
 
     
-    console.log('the admin view', Orders)
-    res.render('orderList', { Orders });
+  
+    res.render('orderList', { Orders,totalPages,currentPage });
+
 
 
     

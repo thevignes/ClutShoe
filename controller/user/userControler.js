@@ -142,7 +142,7 @@ const Registration = async (req, res) => {
       return res.render("register", { message: "Email already exists" });
     }
 
-    // Generate OTP and store in session
+    // Generating OTP and store in session
 
     req.session.Tempuser = { email, password, name };
     console.log(req.session, "first otp");
@@ -169,7 +169,7 @@ const verifyOtp = async (req, res) => {
   try {
     const { otp } = req.body;
 
-    // Check if OTP session has expired
+   
     if (
       !req.session.otp ||
       !req.session.Tempuser ||
@@ -183,12 +183,10 @@ const verifyOtp = async (req, res) => {
 
     console.log("Entered OTP:", otp);
     console.log("Stored OTP:", req.session.otp);
-
-    // Compare entered OTP with stored OTP
     if (String(otp).trim() === String(req.session.otp).trim()) {
       const { email, password, name } = req.session.Tempuser;
 
-      // Hash the password
+
       const hashedPassword = await bcrypt.hash(password, 10);
 
       const newUser = new User({
@@ -209,7 +207,7 @@ const verifyOtp = async (req, res) => {
         });
       }
 
-      // Redirect to login with a success message
+
       return res.render("verify-otp", {
         message: "Registration successful! Redirecting to login...",
         alertType: "success",
@@ -255,7 +253,7 @@ const userLogin = async (req, res) => {
       return res.status(403).send({ message: "User is blocked" });
     }
 
-    // Check if user already has a wallet; if not, create one
+  
     let wallet = await Wallet.findOne({ userId: user._id });
     if (!wallet) {
       wallet = new Wallet({
@@ -391,7 +389,7 @@ const userLogout = async (req, res) => {
 
 const profile = async (req, res) => {
   try {
-    const userEmail = req.session.user.email; // This should now be correctly set
+    const userEmail = req.session.user.email;
 
     console.log("Checking user email:", userEmail);
 
@@ -402,7 +400,7 @@ const profile = async (req, res) => {
       return res.status(400).send("Email is not defined in session.");
     }
 
-    // Attempt a case-insensitive search for the user by email
+
     const user = await User.findOne({
       email: new RegExp(`^${userEmail}$`, "i"),
     });
@@ -413,7 +411,7 @@ const profile = async (req, res) => {
 
     console.log("User found:", user);
 
-    // Render the profile if the user is found
+ 
     res.render("profile", { user });
   } catch (err) {
     console.error("Error occurred:", err);
@@ -495,7 +493,7 @@ const addAddress = async (req, res) => {
       type,
     } = req.body;
 
-    // Generate a unique oid using uuid
+   
     const oid = uuidv4();
 
     const newAddress = new Address({
@@ -508,7 +506,7 @@ const addAddress = async (req, res) => {
       Lastname,
       country,
       type,
-      oid // Add the generated oid
+      oid 
     });
 
     await newAddress.save();
@@ -544,7 +542,7 @@ const EditAddressPage = async (req, res) => {
     console.log("User email from session: ", userEmail);
     console.log("Address ID from params: ", id);
 
-    // Use `findOne` to find the address by both `_id` and `userEmail`
+
     const address = await Address.findOne({ _id: id, email: userEmail });
 
     console.log("Found address: ", address);
@@ -565,12 +563,12 @@ const EditAddressPage = async (req, res) => {
 
 const EditAddress = async (req, res) => {
   try {
-    const { id } = req.params; // Address ID from request parameters
-    const userEmail = req.session.user.email; // User email from session
+    const { id } = req.params; 
+    const userEmail = req.session.user.email; 
 
     console.log("User email from session:", userEmail);
 
-    // Fetch the user by email
+
     const user = await User.findOne({ email: userEmail });
 
     if (!user) {
@@ -580,9 +578,8 @@ const EditAddress = async (req, res) => {
     const { state, pin, district, city, Firstname, Lastname, country, type } =
       req.body;
 
-    // Update the address with the specified ID for the logged-in user
     const updatedAddress = await Address.findOneAndUpdate(
-      { _id: id, userId: user._id }, // Filter by address ID and user ID
+      { _id: id, userId: user._id }, 
       {
         $set: {
           Firstname,
@@ -595,7 +592,7 @@ const EditAddress = async (req, res) => {
           type,
         },
       },
-      { new: true } // Return the updated document
+      { new: true } 
     );
 
     if (!updatedAddress) {
@@ -1142,19 +1139,27 @@ const myOrders = async (req, res) => {
   try {
     const userEmail = req.session.user.email;
     // console.log('uuuuuuu',userEmail);
+    const currentPage = parseInt(req.query.page)||1
+    const itemsPerPage = 5
 
     const user = await User.findOne({ email: userEmail });
     // console.log('machane',user)
     if (!user) {
       return res.status(401).send("!you are not logged in");
     }
+    const totalOrders = await Order.countDocuments({userId:user._id})
+    const totalpages = Math.ceil(totalOrders/itemsPerPage)
+    const skip = (currentPage-1)*itemsPerPage
+
+
     const Orders = await Order.find({ userId: user._id }).populate(
       "products.productId"
-    );
-    // console.log('u id', user._id)
-    // console.log('your order ', Orders )
+    ).sort({createdAt:-1})
+    .skip(skip)
+    .limit(itemsPerPage)
 
-    res.render("order", { Orders, user });
+
+    res.render("order", { Orders, user,currentPage,totalpages });
   } catch (error) {
     console.error("Error fetching orders:", error);
     return res.status(500).send("!oops cannot get this page");
