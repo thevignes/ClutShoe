@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
+    
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Your Shop</title>
@@ -16,99 +19,52 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #f1f3f6;
             font-family: Roboto, Arial, sans-serif;
         }
 
         .login-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('/evara-frontend/assets/imgs/shop/login-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             padding: 20px;
         }
 
         .login-box {
             display: flex;
-            max-width: 750px;
-            width: 100%;
-            background: #fff;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px 0 rgba(0,0,0,.08);
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            width: 100%;
+            max-width: 1000px;
         }
 
         .login-sidebar {
-            background: var(--primary-color);
+            flex: 1;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             padding: 40px;
-            width: 40%;
-            color: #fff;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .login-sidebar::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(40, 116, 240, 0.95) 0%, rgba(40, 116, 240, 0.85) 100%);
-            z-index: 1;
-        }
-
-        .login-sidebar > div {
-            position: relative;
-            z-index: 2;
-        }
-
-        .website-logo {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #fff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .login-sidebar img {
-            max-width: 100%;
-            height: auto;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-top: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 2;
-        }
-
-        .login-sidebar h2 {
-            font-size: 28px;
-            font-weight: 500;
-            margin-bottom: 16px;
-        }
-
-        .login-sidebar p {
-            font-size: 18px;
-            line-height: 150%;
-            color: #dbdbdb;
-            margin-bottom: 20px;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
 
         .login-form {
+            flex: 1;
             padding: 40px;
-            width: 60%;
+            background: white;
         }
 
-        .form-title {
+        .website-logo {
             font-size: 24px;
-            font-weight: 500;
-            margin-bottom: 24px;
-            color: #212121;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
         }
 
         .form-group {
@@ -116,101 +72,108 @@
         }
 
         .form-control {
-            height: 48px;
-            padding: 8px 16px;
-            font-size: 16px;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: none;
-        }
-
-        .form-text {
-            color: var(--text-light);
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
             font-size: 14px;
-            margin-top: 8px;
         }
 
         .btn-login {
-            background: var(--secondary-color);
-            color: #fff;
-            height: 48px;
+            width: 100%;
+            padding: 12px;
+            background: #2874f0;
+            color: white;
+            border: none;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: 500;
-            border: none;
-            border-radius: 4px;
-            width: 100%;
-            margin-top: 16px;
-            transition: background-color 0.3s ease;
+            cursor: pointer;
+            transition: background 0.3s;
         }
 
         .btn-login:hover {
-            background: #e85d17;
-        }
-
-        .btn-otp {
-            background: #fff;
-            color: var(--primary-color);
-            height: 48px;
-            font-size: 16px;
-            font-weight: 500;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            width: 100%;
-            margin-top: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-otp:hover {
-            background: #f5f5f5;
+            background: #1a5dc9;
         }
 
         .divider {
             text-align: center;
-            margin: 24px 0;
+            margin: 20px 0;
             position: relative;
         }
 
-        .divider::before {
+        .divider::before,
+        .divider::after {
             content: "";
             position: absolute;
             top: 50%;
-            left: 0;
-            right: 0;
+            width: 45%;
             height: 1px;
-            background: #e0e0e0;
-            z-index: 1;
+            background: #ddd;
+        }
+
+        .divider::before {
+            left: 0;
+        }
+
+        .divider::after {
+            right: 0;
         }
 
         .divider span {
-            background: #fff;
-            padding: 0 16px;
-            color: var(--text-light);
-            position: relative;
-            z-index: 2;
+            background: white;
+            padding: 0 10px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .social-login {
+            margin-bottom: 20px;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .social-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .social-btn i {
+            margin-right: 10px;
         }
 
         .signup-link {
             text-align: center;
-            margin-top: 24px;
-            color: var(--text-light);
+            margin-top: 20px;
             font-size: 14px;
         }
 
         .signup-link a {
-            color: var(--primary-color);
+            color: #2874f0;
             text-decoration: none;
-            font-weight: 500;
+        }
+
+        .terms-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
         }
 
         .error-message {
-            color: #ff6161;
-            font-size: 14px;
-            margin-top: 8px;
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
             display: none;
         }
 
@@ -218,53 +181,14 @@
             .login-box {
                 flex-direction: column;
             }
-
+            
             .login-sidebar {
-                width: 100%;
-                padding: 24px;
+                padding: 20px;
             }
-
+            
             .login-form {
-                width: 100%;
-                padding: 24px;
+                padding: 20px;
             }
-        }
-
-        .social-login {
-            display: flex;
-            gap: 16px;
-            margin-top: 24px;
-        }
-
-        .social-btn {
-            flex: 1;
-            height: 40px;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            color: var(--text-light);
-            background: #fff;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-
-        .social-btn:hover {
-            background: #f5f5f5;
-            color: var(--text-light);
-        }
-
-        .social-btn i {
-            font-size: 18px;
-        }
-
-        .terms-text {
-            font-size: 12px;
-            color: var(--text-light);
-            text-align: center;
-            margin-top: 16px;
         }
     </style>
 </head>
@@ -276,7 +200,7 @@
                     <div class="website-logo">ClutchShoe</div>
                     <h2>Welcome Back!</h2>
                     <p>Get access to your Orders, Wishlist and Recommendations</p>
-                    <img src="/evara-frontend/assets/imgs/shop/clutchshoe.jpg" alt="Stylish Shoes" style="max-width: 100%;">
+                    <img src="/evara-frontend/assets/imgs/shop/clutchshoe.jpg" alt="Stylish Shoes" style="max-width: 100%; border-radius: 10px; margin-top: 20px;">
                 </div>
             </div>
             <div class="login-form">
@@ -293,7 +217,6 @@
                     </div>
                     <button type="submit" class="btn btn-login">Login</button>
        
-
                     <div class="divider">
                         <span>OR</span>
                     </div>
@@ -303,7 +226,6 @@
                             <i class="fab fa-google"></i>
                             Google
                         </a>
-                        
                     </div>
 
                     <div class="signup-link">

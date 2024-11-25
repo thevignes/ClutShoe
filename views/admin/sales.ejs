@@ -487,14 +487,20 @@
         </button>
       </div>
     </form>
+
     <!-- Download PDF Button -->
     <div class="text-end mt-3">
       <button class="btn btn-success" onclick="downloadPDF()">
         <i class="fas fa-download me-2"></i>Download PDF
       </button>
     </div>
+    <!-- Download Excel Button -->
+    <div class="text-end mt-3">
+      <button class="btn btn-success" onclick="downloadExcel()">
+        <i class="fas fa-download me-2"></i>Download Excel
+      </button>
+    </div>
   </div>
-
   <!-- Display Sales Data -->
   <div class="sales-data" id="salesReportContent">
     <h2 class="mb-4">Sales Summary</h2>
@@ -633,14 +639,46 @@
       btn.innerHTML = '<i class="fas fa-download me-2"></i>Download PDF';
     });
   }
+  function downloadExcel() {
+    fetch('/admin/export-sales-report', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Sales report download failed');
+      }
+      return response.blob();
+    })
+    .then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      
+      const filename = `sales_report_${new Date().toISOString().split('T')[0]}.xlsx`;
+      a.download = filename;
+      
+      document.body.appendChild(a);
+      a.click();
+      
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    })
+    .catch(error => {
+      console.error('Download error:', error);
+      alert('Failed to download sales report: ' + error.message);
+    });
+  }
 
-  // Add smooth scroll animation for filter form submission
   document.querySelector('form').addEventListener('submit', function(e) {
     e.preventDefault();
     const formData = new FormData(this);
     const queryString = new URLSearchParams(formData).toString();
     
-    // Animate content fade out
+
     document.querySelector('.content-container').style.opacity = '0';
     
     setTimeout(() => {
@@ -648,7 +686,6 @@
     }, 300);
   });
 
-  // Add entrance animations for summary cards
   document.addEventListener('DOMContentLoaded', function() {
     const cards = document.querySelectorAll('.summary-card');
     cards.forEach((card, index) => {
@@ -661,7 +698,7 @@
     const parentRow = document.querySelector(`tr[data-order-id="${orderId}"]`);
     const allRows = document.querySelectorAll('.expanded-row');
     
-    // Close all other expanded rows
+
     allRows.forEach(row => {
       if (row.id !== `details-${orderId}` && row.style.display !== 'none') {
         row.style.display = 'none';

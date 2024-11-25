@@ -17,7 +17,7 @@ router.get('/signin',AdminController.AdminLogin)
 
 router.post('/signin',AdminController.AdminVerify)
 
-router.get('signin',AdminController.adminLogout)
+router.get('/signout',AdminController.adminLogout)
 
 router.get('/user',AdminController.getUSers)
 
@@ -106,14 +106,12 @@ router.post('/offer-remove', OfferController.removeOffer)
 
 // sales report routes
 
-router.get('/sales',salesReportController.salesReport )
-
+router.get('/sales',salesReportController.salesReport)
 router.get('/sales-report', salesReportController.salesReport)
+router.get('/export-sales-report', salesReportController.exportSalesReportToExcel)
 
 //edit coupon 
-
-router.get('/editCoupon/:id/edit',couponController.editCouponPage )
+router.get('/editCoupon/:id/edit',couponController.editCouponPage)
 router.post('/updateCoupon',couponController.editCoupon)
-
 
 module.exports = router 

@@ -1041,18 +1041,18 @@ const PlaceOrder = async (req, res) => {
       })
     );
 
-    // Get cart for discount amount
+
     const cart = await Cart.findOne({userId: user._id});
-    // Calculate final total after discount
+
     const finalTotal = total - (cart.discountAmount || 0);
 
-    // Check COD eligibility
+
     if (paymentOption === "COD") {
       console.log("COD Check - Final Total:", finalTotal);
-      if (finalTotal <= 1000) {
+      if (finalTotal >= 1000) {
         return res.status(400).json({
           success: false,
-          message: 'Cash on delivery is only available for orders above ₹1000'
+          message: 'Cash on delivery is only available for orders below ₹1000'
         });
       }
     }

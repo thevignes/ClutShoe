@@ -2,6 +2,7 @@ const Order = require('../../models/order')
 const coupon = require('../../models/couponModels')
 const product = require('../../models/product')
 const Cart = require('../../models/cart')
+const ExcelJS = require('exceljs');
 
 const salesReport = async (req, res) => {
   try {
@@ -100,7 +101,66 @@ const salesReport = async (req, res) => {
   }
 };
 
+
+
+const exportSalesReportToExcel = async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate('userId', 'name email')
+      .populate('products.productId', 'productName price')
+      .sort({ createdAt: -1 });
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Sales Report');
+
+    worksheet.columns = [
+      { header: 'Order ID', key: 'orderId', width: 20 },
+      { header: 'Date', key: 'date', width: 15 },
+      { header: 'Customer', key: 'customer', width: 25 },
+      { header: 'Product', key: 'product', width: 25 },
+      { header: 'Quantity', key: 'quantity', width: 10 },
+      { header: 'Unit Price', key: 'unitPrice', width: 15 },
+      { header: 'Total', key: 'total', width: 15 }
+    ];
+
+    orders.forEach(order => {
+      if (order.products && order.products.length > 0) {
+        order.products.forEach(product => {
+          try {
+            worksheet.addRow({
+              orderId: order._id.toString(),
+              date: order.createdAt.toLocaleDateString(),
+              customer: order.userId?.name ,
+              product: product.productId?.productName,
+              quantity: product.quantity,
+              unitPrice: product.price,
+              total: product.quantity * product.price
+            });
+          } catch (err) {
+            console.error('Error adding row:', err);
+          }
+        });
+      }
+    });
+
+    const filename = `sales_report_${new Date().toISOString().split('T')[0]}.xlsx`;
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
+
+    await workbook.xlsx.write(res);
+    res.end();
+
+  } catch (error) {
+    console.error('Error exporting sales report:', error);
+    res.status(500).json({ message: 'Error exporting sales report' });
+  }
+};
+
+
+
 module.exports = {
-    salesReport  
+    salesReport,
+    exportSalesReportToExcel
 }
   
