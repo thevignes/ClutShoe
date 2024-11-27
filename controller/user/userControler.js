@@ -15,7 +15,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const HomePage = async (req, res) => {
   try {
-    // console.log('rendering')
+   
     return res.render("home");
   } catch (error) {
     console.error(error);
@@ -30,26 +30,7 @@ const PageNotFound = async (req, res) => {
   }
 };
 
-// const homePage = async (req, res) => {
-//   try {
-//     const user = req.session.user
-//     const categories = await Category.find({isListed:true})
-//     let ProductData = await Product.find({isListed:true,
-//       category:{$in:categories.map(category => category._id)},quantity:{$gt:8}
-//     })
-//   ProductData.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt) )
-//   ProductData = ProductData.slice(0,4)
-//     // res.render("/");
-//     if(user){
-//       const userData = await User.findOne({_id:user._id})
-//       return res.render("home",{userData,ProductData})
-//     }else{
-//       return res.render("home",{ProductData})
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("Server Error");
-//   }
+
 const homePage = async (req, res) => {
   try {
     let ProductData = await Product.find({ isListed: true }).populate(
@@ -239,18 +220,18 @@ const userLogin = async (req, res) => {
     if (!user) {
       return res
         .status(404)
-        .send({ message: "User not found, please enter a valid email" });
+        .json({ success: false, message: "User not found, please enter a valid email" });
     }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       return res
         .status(401)
-        .send({ message: "Incorrect password, please try again" });
+        .json({ success: false, message: "Incorrect password, please try again" });
     }
 
     if (user.IsBlocked) {
-      return res.status(403).send({ message: "User is blocked" });
+      return res.status(403).json({ success: false, message: "User is blocked" });
     }
 
   
@@ -268,38 +249,40 @@ const userLogin = async (req, res) => {
       name: user.name,
       email: user.email,
     };
-    return res.status(200).redirect("/");
+    
+    return res.status(200).json({ 
+      success: true, 
+      message: "Login successful",
+      redirectUrl: "/"
+    });
   } catch (err) {
     console.error(err);
-    return res
-      .status(500)
-      .send({ message: "Server error, please try again later" });
+    return res.status(500).json({ 
+      success: false, 
+      message: "Server error, please try again later" 
+    });
   }
 };
 
 const resendOtp = async (req, res) => {
-  console.log("OTP is:", req.session.otp);
-  console.log("the main session", req.session.Tempuser);
+ 
   try {
-    console.log(req.session);
-    // console.log('FETCHINGGGG')
+  
 
     if (!req.session.Tempuser) {
       return res.status(400).render("verify-otp", {
         message: "Session expired, please try again.",
       });
     }
-    console.log("main", req.session.Tempuser);
+   
 
     const newOtp = Math.floor(100000 + Math.random() * 900000);
 
     req.session.otp = newOtp;
-    console.log(newOtp, "new otp");
-    console.log(req.session, "after otp");
-    console.log("main", req.session.Tempuser);
+    
 
     const { email } = req.session.Tempuser;
-    console.log(email, "email");
+ 
 
     const SendOTOption = {
       from: `ClutchShoe <${process.env.NODEMAILER_EMAIL}>`,
@@ -391,7 +374,7 @@ const profile = async (req, res) => {
   try {
     const userEmail = req.session.user.email;
 
-    console.log("Checking user email:", userEmail);
+ 
 
     if (!userEmail) {
       console.error(
@@ -405,7 +388,7 @@ const profile = async (req, res) => {
       email: new RegExp(`^${userEmail}$`, "i"),
     });
     if (!user) {
-      console.error(`No user found with email: ${userEmail}`);
+     
       return res.status(404).send("User not found");
     }
 
@@ -445,10 +428,10 @@ const editProfile = async (req, res) => {
 
     await user.save();
 
-    // console.log("Account successfully updated", user);
+   
     if (email) {
       req.session.user.email = email;
-      // console.log('the new email is' , email);
+
     }
 
     return res.redirect("/profile");
@@ -462,7 +445,7 @@ const ManageAddress = async (req, res) => {
   try {
     const userId = req.session.user.email;
     const user = await User.findOne({ email: userId });
-    // console.log('hello  mr' , user)
+
     if (!user) {
       return res.status(404).send("User not found ");
     }
@@ -477,9 +460,9 @@ const ManageAddress = async (req, res) => {
 const addAddress = async (req, res) => {
   try {
     const userId = req.session.user.email;
-    console.log(userId);
+  
     const user = await User.findOne({ email: userId });
-    console.log("hello brother ", user);
+
 
     const {
       address,
@@ -511,7 +494,7 @@ const addAddress = async (req, res) => {
 
     await newAddress.save();
 
-    console.log("the address is", newAddress);
+
     res.render("manageAddress", { user });
   } catch (err) {
     console.log(err);
@@ -539,20 +522,18 @@ const EditAddressPage = async (req, res) => {
     const userEmail = req.session.email;
     const { id } = req.params;
 
-    console.log("User email from session: ", userEmail);
-    console.log("Address ID from params: ", id);
 
 
     const address = await Address.findOne({ _id: id, email: userEmail });
 
-    console.log("Found address: ", address);
+;
 
     if (!address) {
       return res.status(404).send("Address not found");
     }
 
     const user = await User.findOne({ email: userEmail });
-    console.log("Found user: ", user);
+    
 
     res.render("editAddress", { address, user });
   } catch (err) {
@@ -566,7 +547,7 @@ const EditAddress = async (req, res) => {
     const { id } = req.params; 
     const userEmail = req.session.user.email; 
 
-    console.log("User email from session:", userEmail);
+
 
 
     const user = await User.findOne({ email: userEmail });
@@ -601,7 +582,7 @@ const EditAddress = async (req, res) => {
         .send("Address not found or not authorized to update");
     }
 
-    console.log("Updated address:", updatedAddress);
+ 
 
     // Render the view with the updated address
     res.render("editAddress", { user, addresses: updatedAddress });
@@ -700,7 +681,7 @@ const cartPage = async (req, res) => {
 const AddToCart = async (req, res) => {
   try {
     const productId = req.query.id;
-    console.log(productId);
+
     const userEmail = req.session.user.email;
     const user = await User.findOne({ email: userEmail });
 
@@ -768,7 +749,7 @@ const AddToCart = async (req, res) => {
 const removeFromCart = async (req, res) => {
   try {
     const productId = req.params.id;
-    console.log("Product ID to remove:", productId);
+  
 
     if (!mongoose.Types.ObjectId.isValid(productId)) {
       return res
@@ -824,7 +805,7 @@ const checkout = async (req, res) => {
     const userId = req.session.user.email;
     const orderValue = req.session.orderValue;
     const coupons = await Coupon.find({});
-    console.log("User ID:", userId);
+
 
     const user = await User.findOne({ email: userId });
     if (!user) {
@@ -896,17 +877,13 @@ const shopPage = async (req, res) => {
     const searchQuery = req.query.q || "";
     const categoryFilter = req.query.category || "";
 
-    console.log("Sort option selected:", sortOption);
-    console.log("Size Sort option selected:", sizeSortOption);
-    console.log("Current page:", currentPage);
-    console.log("Items per page:", itemsPerPage);
-    console.log("Category Filter:", categoryFilter);
 
-    // Get category counts
+
+   
     const categories = await Category.find();
     const categoryCounts = {};
     
-    // Count products for each category
+
     for (const category of categories) {
       const count = await Product.countDocuments({
         isListed: true,
@@ -959,7 +936,7 @@ const shopPage = async (req, res) => {
       }
     }
 
-    // Total products and pagination
+  
     const totalProducts = await Product.countDocuments({
       isListed: true,
       ...categoryFilterQuery,
@@ -967,7 +944,7 @@ const shopPage = async (req, res) => {
     const totalPages = Math.ceil(totalProducts / itemsPerPage);
     const skip = (currentPage - 1) * itemsPerPage;
 
-    // Fetch products based on the category filter and search query
+ 
     const ProductData = await Product.find({
       isListed: true,
       productName: { $regex: searchQuery, $options: "i" },
@@ -1066,7 +1043,7 @@ const PlaceOrder = async (req, res) => {
       }
 
       walletBalance.balance -= finalTotal;
-      console.log(">>>>>>", walletBalance.balance);
+   
       walletBalance.transaction.push({
         type: "debit",
         amount: finalTotal,
@@ -1092,13 +1069,13 @@ const PlaceOrder = async (req, res) => {
     });
 
     await order.save();
-    console.log("Order placed successfully:", order);
+
 
     await Cart.findOneAndUpdate(
       { userId: user._id },
       { $set: { products: [] } }
     );
-    console.log("Cart cleared successfully");
+
 
     await Promise.all(
       productDetails.map(async (item) => {
@@ -1138,12 +1115,12 @@ const successpage = async (req, res) => {
 const myOrders = async (req, res) => {
   try {
     const userEmail = req.session.user.email;
-    // console.log('uuuuuuu',userEmail);
+
     const currentPage = parseInt(req.query.page)||1
     const itemsPerPage = 5
 
     const user = await User.findOne({ email: userEmail });
-    // console.log('machane',user)
+
     if (!user) {
       return res.status(401).send("!you are not logged in");
     }
@@ -1172,11 +1149,10 @@ const cancelOrder = async (req, res) => {
     const userEmail = req.session.user.email;
 
     const user = await User.findOne({ email: userEmail });
-    console.log("/////>>>>>>>>>>>", user);
+ 
 
     // Find the order
     const order = await Order.findOne({ oid: orderId });
-    console.log("Attempting to cancel order:", orderId);
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
@@ -1187,7 +1163,6 @@ const cancelOrder = async (req, res) => {
     }
 
     const wallet = await Wallet.findOne({ userId: user?._id });
-    console.log("the wallet is", wallet, user._id);
 
     if (!wallet) {
       return res.status(404).json({ message: "Wallet not found" });
@@ -1195,13 +1170,11 @@ const cancelOrder = async (req, res) => {
 
     const refundAmount = order.total;
     wallet.balance += refundAmount;
-    console.log("returned amount is ", refundAmount);
     wallet.transaction.push({
       type: "credit",
       amount: refundAmount,
       description: `Refund for canceled order ${orderId}`,
     });
-    console.log("the wallet:", wallet.balance, order.total);
 
     await Wallet.updateOne({ userId: user?._id }, wallet);
 
@@ -1249,7 +1222,6 @@ const returnOrder = async (req, res) => {
     });
 
     await Wallet.updateOne({ userId: user?._id }, wallet);
-    console.log('the refund is', refundAmount)
     order.status = "Returned";
     await order.save();
 
@@ -1289,11 +1261,9 @@ const searchProducts = async (req, res) => {
       .skip(skip)
       .limit(itemsPerPage);
 
-    // Get categories and their counts
     const categories = await Category.find();
     const categoryCounts = {};
     
-    // Count products for each category
     for (const category of categories) {
       const count = await Product.countDocuments({
         isListed: true,
@@ -1302,7 +1272,6 @@ const searchProducts = async (req, res) => {
       categoryCounts[category.name] = count;
     }
 
-    // Render the shop page
     res.render("shop", {
       user,
       ProductData,
@@ -1315,54 +1284,13 @@ const searchProducts = async (req, res) => {
       categoryCounts
     });
 
-    console.log("Searched Products:", ProductData);
   } catch (error) {
     console.error("Error searching for products:", error);
     res.status(500).send("Server Error");
   }
 };
 
-// Controller function to update the quantity
 
-// const updateQuantity = async (req, res) => {
-//   try {
-//     const { productId, quantity } = req.body;
-//     const userEmail = req.session.email
-//     const user = await User.findOne({email:userEmail})
-//     const MAX_QUANTITY_PER_PRODUCT = 5;
-
-//     if (quantity < 1 || quantity > MAX_QUANTITY_PER_PRODUCT) {
-//       return res.status(400).json({
-//         success: false,
-//         message: `Quantity must be between 1 and ${MAX_QUANTITY_PER_PRODUCT}.`
-//       });
-//     }
-
-//     let cart = await Cart.findOne({ userId:user.  _id });
-//     console.log('heyy cart', cart);
-
-//     if (!cart) {
-//       return res.status(404).json({ success: false, message: 'Cart not found' });
-//     }
-
-//     const item = cart.products.find(
-//       (product) => product.productId.toString() === productId
-//     );
-
-//     if (item) {
-//       item.quantity = quantity;
-//       await cart.save();
-//       return res.status(200).json({ success: true, message: 'Quantity updated successfully' });
-//     } else {
-//       return res.status(404).json({ success: false, message: 'Product not found in cart' });
-//     }
-//   } catch (error) {
-//     console.error('Error updating quantity:', error);
-//     return res.status(500).json({ success: false, message: 'Server error' });
-//   }
-// };
-
-// Add this route in your routes file
 
 const ForgetPas = async (req, res) => {
   try {
@@ -1384,26 +1312,15 @@ const updateQuantity = async (req, res) => {
     console.log(cart, "<<cart>>>");
     if (!cart) return res.status(400).json({ message: "cart not found " });
 
-    console.log(itemId);
-    // const existingItem = cart.items.findIndex(
-    //   (item) => item._id.toString() == productId
-    // );
+
     const existingItem = cart.products.findIndex(
       (item) => item._id.toString() == itemId
     );
-    console.log(existingItem);
-    // console.log("SDFASDF",cart.products[existingItem].price, "SDFADSF");
-    if (existingItem == -1)
+   if (existingItem == -1)
       return res.status(400).json({ message: "Product not found in cart" });
     cart.products[existingItem].quantity = newQuantity;
-    // cart.products[existingItem].totalAmount =
-    //   newQuantity * cart.products[existingItem].price;
-    console.log(">>>>>>>>>>>>>>>>>>>...", newQuantity);
-    console.log(
-      "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< ",
-      cart.products[existingItem],
-      ">>>>>>>>>>>>>>>>>>"
-    );
+
+;
     await cart.save();
     return res.status(200).json({ message: "Quantity updated successfully" });
   } catch (error) {

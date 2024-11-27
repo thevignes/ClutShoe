@@ -244,7 +244,6 @@ const AdminVerify = async (req, res) => {
     console.log('Admin:', admin);
 
     if (admin) {
-      console.log('Admin found, checking password...');
       
 
       if (password === admin.password) {
@@ -287,9 +286,13 @@ const adminLogout = async(req,res)=>{
 
 const getUSers = async(req,res)=>{
     try{
-    const user = await User.find()
-
-    res.render('adminUsers',{user,currentPage:null,totalPages:null})
+      const currentPage = parseInt(req.query.page)
+      const itemsPerPage = 8
+      const totalUser = await User.countDocuments()
+      const totalPages = Math.ceil(totalUser/itemsPerPage)
+      const skip = (currentPage-1)*itemsPerPage
+    const user = await User.find().sort({createdAt:-1}).skip(skip).limit(itemsPerPage)
+    res.render('adminUsers',{user,currentPage,totalPages})
 
     // console.log(user)?
     }catch(err){

@@ -6,18 +6,15 @@ const path = require('path')
 
 const generateInvoice = async (req,res)=>{
     try {
-        console.log('Starting invoice generation for order ID:', req.params.id);
         const orderId = req.params.id;
         
         const order = await Order.findOne({ oid: orderId }).populate('products.productId');
-        console.log('Order found:', order);
 
         if(!order){
             return res.status(404).json({message:"Order not found"});
         }
 
         const user = await User.findById(order.userId);
-        console.log('User found:', user);
 
         if(!user){
             return res.status(404).json({message:"User not found"});
@@ -34,7 +31,7 @@ const generateInvoice = async (req,res)=>{
 
         pdfDoc.pipe(res);
 
-        // Try multiple logo paths and formats
+       
         const logoPaths = [
             'c:/Users/vigne/OneDrive/Desktop/Myproject/public/public/evara-frontend/assets/imgs/shop/clutchshoe.jpg',
             'c:/Users/vigne/OneDrive/Desktop/Myproject/public/public/evara-frontend/assets/imgs/theme/logo.png',
@@ -43,14 +40,12 @@ const generateInvoice = async (req,res)=>{
 
         let logoLoaded = false;
         for (const logoPath of logoPaths) {
-            if (logoLoaded) break;
+            if (logoLoaded) 
             
-            console.log('Attempting to load logo from:', logoPath);
             try {
                 if (fs.existsSync(logoPath)) {
                     const imageData = fs.readFileSync(logoPath);
                     const dimensions = require('image-size')(logoPath);
-                    console.log('Image dimensions:', dimensions);
                     
                     const width = 100;
                     const height = (width * dimensions.height) / dimensions.width;
@@ -60,7 +55,6 @@ const generateInvoice = async (req,res)=>{
                         height: height
                     });
                     logoLoaded = true;
-                    console.log('Successfully loaded logo from:', logoPath);
                     break;
                 }
             } catch(err) {

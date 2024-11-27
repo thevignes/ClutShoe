@@ -333,7 +333,7 @@
 <body>
     <nav class="modern-nav">
         <div class="nav-container">
-            <div class="nav-flex">
+            <div class="nav-flex ">
                 <a href="/" class="brand-logo">ClutchShoe</a>
 
                 <button class="mobile-menu-btn">
@@ -563,3 +563,47 @@
         </div>
     </div>
 </body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        let isMenuOpen = false;
+
+        // Toggle mobile menu
+        mobileMenuBtn.addEventListener('click', function() {
+            isMenuOpen = !isMenuOpen;
+            navMenu.classList.toggle('active');
+            this.setAttribute('aria-expanded', isMenuOpen);
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (isMenuOpen && !navMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                isMenuOpen = false;
+                navMenu.classList.remove('active');
+                mobileMenuBtn.setAttribute('aria-expanded', false);
+            }
+        });
+
+        // Close menu on escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && isMenuOpen) {
+                isMenuOpen = false;
+                navMenu.classList.remove('active');
+                mobileMenuBtn.setAttribute('aria-expanded', false);
+            }
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 992 && isMenuOpen) {
+                isMenuOpen = false;
+                navMenu.classList.remove('active');
+                mobileMenuBtn.setAttribute('aria-expanded', false);
+            }
+        });
+    });
+</script>
+</html>

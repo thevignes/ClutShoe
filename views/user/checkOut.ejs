@@ -1076,7 +1076,7 @@ document.getElementById('onlinePayment').addEventListener('click', async functio
             key: "rzp_test_qT7pjheiiJYL7l",
             amount: order.amount,
             currency: "INR",
-            name: "Test Company",
+            name: "ClutchShoe",
             description: "Test Transaction",
             order_id: order.id,
             handler: async function (response) {
@@ -1134,7 +1134,7 @@ document.getElementById('onlinePayment').addEventListener('click', async functio
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
                                 orderId: pendingOrder.orderId,
-                                status: "payment_pending"
+                                status: "failed"
                             })
                         });
                         

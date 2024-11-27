@@ -50,7 +50,7 @@ const addToWishlist = async (req, res) => {
     try {
         const userEmail = req.session.user.email;
         const productId = req.body.productId;
-            console.log('the ', productId)
+     
         if (!userEmail) {
             return res.status(401).json({ message: 'User not logged in' });
         }
@@ -66,7 +66,7 @@ const addToWishlist = async (req, res) => {
             wishlist.products.push(productId);
             await wishlist.save();
         }
-            console.log('product added ws successfullu :', wishlist)
+            
         return res.json({ message: 'Product added to wishlist!' });
 
     } catch (error) {
@@ -76,10 +76,8 @@ const addToWishlist = async (req, res) => {
 };
 
 const removeFromWish = async (req, res) => {
-    console.log('Attempting to remove product from wishlist');
     try {
         const productId = req.params.id || req.body.productId;
-        console.log('the id is ', productId)
 
         if (!productId) {
             return res.status(404).send('This product is not found');
@@ -100,7 +98,6 @@ const removeFromWish = async (req, res) => {
             { $pull: { products: productId } },
             { new: true }
         );
-        console.log('the product is remove ', updateWishlist)
 
         if (!updateWishlist) {
             return res.status(404).send('Wishlist or product not found');

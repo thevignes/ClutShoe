@@ -9,10 +9,10 @@ const forgetPassword = async (req, res) => {
     const { email } = req.body;
 
     const user = await User.findOne({ email });
-    console.log("hello", user);
+  
 
     if (!user) {
-      // Send an error message to the EJS template
+
       return res.render('forgetPassword', { errorMessage: 'User not found.' });
     }
 
@@ -44,7 +44,7 @@ const forgetPassword = async (req, res) => {
     await transport.sendMail(mailOptions);
     console.log(`OTP sent successfully to ${email}: ${resetPas}`);
 
-    // Send a success message to the EJS template
+   
     res.render('verification', { successMessage: 'OTP sent successfully! Please check your email.' });
     
   } catch (error) {
@@ -57,7 +57,6 @@ const verify = async (req, res) => {
   try {
     res.render("verification");
   } catch (error) {
-    console.log("Error in verification:", error);
     res.status(500).send("Oops, server error!");
   }
 };

@@ -327,14 +327,14 @@
                                           <input
                                             name="quantity"
                                             min="1"
-                                            max="10"
-                                            value="<%= item.quantity %>" 
+                                            max="<%= item.productId.stock || 10 %>"
+                                            value="<%= item.quantity %>"
                                             size="2"
                                             type="number"
-                                            onchange="updateQuantity('<%= item._id %>', this.value, this.max)" 
-                                            style="width: 60px; text-align: center;" 
-                                            data-product-id="<%= item._id %>" 
-                                          />    
+                                            onchange="updateQuantity('<%= item._id %>', this.value, this.max)"
+                                            style="width: 60px; text-align: center;"
+                                            data-product-id="<%= item._id %>"
+                                          />
                                         </div>
                                       </td>
                                       

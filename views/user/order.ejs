@@ -639,7 +639,7 @@
                              style="width: 150px; margin-bottom: 1rem;">
                         <p style="color: #212121; font-size: 1.2rem; margin-bottom: 0.5rem;">No Orders Yet</p>
                         <p style="color: #878787; margin-bottom: 1rem;">When you place your first order, it will appear here</p>
-                        <a href="/" class="cancel" style="text-decoration: none; display: inline-block;">Start Shopping</a>
+                        <a href="/shop" class="cancel" style="text-decoration: none; display: inline-block;">Start Shopping</a>
                       </div>
                     <% } %>
                   </div>
@@ -826,7 +826,7 @@
                                         headers: { "Content-Type": "application/json" },
                                         body: JSON.stringify({
                                             orderId: orderId,
-                                            status: "payment_pending"
+                                            status: "failed"
                                         })
                                     });
                                     

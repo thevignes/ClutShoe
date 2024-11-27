@@ -1,0 +1,399 @@
+/* Order Page Styles */
+.page-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    background: #f5f5f5;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.content-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.main-container {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 20px;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: fit-content;
+}
+
+.profile {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.profile img {
+    border-radius: 50%;
+    margin-bottom: 10px;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.menu li a {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    color: #333;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+}
+
+.menu li a i {
+    margin-right: 10px;
+    width: 20px;
+}
+
+.menu li a.active,
+.menu li a:hover {
+    background: #f0f0f0;
+}
+
+.logout button {
+    width: 100%;
+    padding: 12px;
+    background: #ff4444;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.logout button:hover {
+    background: #ff2020;
+}
+
+.logout a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+/* Container Styles */
+.container {
+    display: grid;
+    gap: 20px;
+}
+
+.order-item {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.order-date {
+    font-weight: 500;
+    color: #666;
+}
+
+.order-id {
+    color: #333;
+    font-weight: bold;
+}
+
+.discount-tag {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.product {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 15px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    flex-wrap: wrap;
+}
+
+.product-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.product-details {
+    flex: 1;
+    min-width: 200px;
+}
+
+.product-title {
+    margin: 0 0 10px 0;
+    font-size: 1.1em;
+}
+
+.product-info {
+    color: #666;
+    margin: 0;
+}
+
+.product-price {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.order-status {
+    padding: 15px 0;
+}
+
+.status-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-cancelled {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.order-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 15px 0;
+}
+
+.order-actions button {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.return-btn {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.download-invoice-btn {
+    background: #2196f3;
+    color: white;
+}
+
+.retry-payment-btn {
+    background: #ff9800;
+    color: white;
+}
+
+.order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.order-total {
+    font-size: 1.1em;
+}
+
+.cancel {
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cancel:hover {
+    background: #ff2020;
+}
+
+.cancel:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.pagination a {
+    padding: 8px 12px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.pagination a:hover {
+    background: #f0f0f0;
+}
+
+.pagination a.active {
+    background: #2196f3;
+    color: white;
+    border-color: #2196f3;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 1200px) {
+    .main-container {
+        grid-template-columns: 250px 1fr;
+    }
+}
+
+@media screen and (max-width: 992px) {
+    .page-wrapper {
+        padding: 15px;
+    }
+    
+    .main-container {
+        grid-template-columns: 220px 1fr;
+        gap: 15px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .page-wrapper {
+        padding: 10px;
+    }
+    
+    .main-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .sidebar {
+        width: 280px;
+        background: #fff;
+    }
+    
+    .product {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .product-image {
+        margin: 0 auto;
+    }
+    
+    .order-header,
+    .order-footer {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .order-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .order-actions button {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .page-wrapper {
+        padding: 5px;
+    }
+    
+    .order-item {
+        padding: 15px;
+    }
+    
+    .sidebar {
+        width: 260px;
+    }
+    
+    .profile img {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .menu li a {
+        padding: 10px;
+    }
+    
+    .product-image {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .pagination {
+        gap: 5px;
+    }
+    
+    .pagination a {
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+}
+
+/* Empty Order State */
+.order-item.empty {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.empty img {
+    max-width: 150px;
+    margin-bottom: 20px;
+}
+
+/* Dark Mode Overlay */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+}
+
+@media screen and (max-width: 768px) {
+    .sidebar-overlay.active {
+        display: block;
+    }
+}

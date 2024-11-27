@@ -63,6 +63,7 @@ router.get('/ProducDetial/:id',userControler.ProducDetial)
 
 router.get('/ProductDetail/:productId', userControler.ProducDetial);
 
+router.get('/products/:id',userControler.ProducDetial)
 
 router.get('/userLogout' , userControler.userLogout )
 
@@ -282,7 +283,6 @@ router.post('/create-pending-order', async (req, res) => {
             return res.status(400).json({ success: false, message: 'User not found' });
         }
 
-        // Get cart items
         const cart = await Cart.findOne({ userId: user._id })
             .populate({
                 path: 'products.productId',
@@ -295,13 +295,13 @@ router.post('/create-pending-order', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Cart is empty' });
         }
 
-        // Get shipping address
+    
         const address = await Address.findById(addressId);
         if (!address) {
             return res.status(400).json({ success: false, message: 'Address not found' });
         }
 
-        // Create order items from cart
+       
         const orderItems = cart.products.map(item => ({
             productId: item.productId._id,
             quantity: item.quantity,
@@ -313,7 +313,7 @@ router.post('/create-pending-order', async (req, res) => {
 
         const generatedOid = uuidv4();
 
-        // Create the pending order
+     
         const order = new Order({
             oid: generatedOid,
             total: amount,
@@ -380,12 +380,12 @@ router.post('/update-order-status', async (req, res) => {
     }
 });
 
-// Retry payment for a pending order
+
 router.post('/retry-payment', async (req, res) => {
     try {
         const { orderId, total } = req.body;
         
-        // Find the order and verify it's eligible for retry
+ 
         const order = await Order.findById(orderId);
         if (!order) {
             return res.status(404).json({ 
@@ -394,17 +394,17 @@ router.post('/retry-payment', async (req, res) => {
             });
         }
 
-        // Create a new Razorpay order with a shorter receipt ID
+   
         const razorpayOrder = await razorpay.orders.create({
-            amount: Math.round(order.total * 100), // Convert to paise and ensure it's an integer
+            amount: Math.round(order.total * 100),
             currency: 'INR',
-            receipt: `retry_${order.oid.slice(-30)}`, // Ensure receipt is not longer than 40 chars
+            receipt: `retry_${order.oid.slice(-30)}`, 
             notes: {
                 order_id: order._id.toString()
             }
         });
 
-        // Update the order with new Razorpay order ID
+   
         order.razorpay_order_id = razorpayOrder.id;
         order.paymentStatus = 'pending';
         await order.save();
