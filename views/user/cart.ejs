@@ -277,6 +277,19 @@
             font-size: 0.8rem;
         }
     }
+
+    .quantity-control input::-webkit-outer-spin-button,
+    .quantity-control input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    .quantity-control input[type=number] {
+        -moz-appearance: textfield;
+    }
+    .quantity-control .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
 </style>
 
 <main class="main">
@@ -323,20 +336,24 @@
                                         </td>
                                     </td>
                                     <td class="text-center" data-title="Stock">
-                                        <div class="cp_quntty">
-                                          <input
-                                            name="quantity"
-                                            min="1"
-                                            max="<%= item.productId.stock || 10 %>"
-                                            value="<%= item.quantity %>"
-                                            size="2"
-                                            type="number"
-                                            onchange="updateQuantity('<%= item._id %>', this.value, this.max)"
-                                            style="width: 60px; text-align: center;"
-                                            data-product-id="<%= item._id %>"
-                                          />
+                                        <div class="quantity-control d-flex align-items-center justify-content-center">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="decrementQuantity('<%= item._id %>', <%= item.productId.stock || 10 %>)">-</button>
+                                            <input
+                                                name="quantity"
+                                                min="1"
+                                                max="<%= item.productId.stock || 10 %>"
+                                                value="<%= item.quantity %>"
+                                                size="2"
+                                                type="number"
+                                                class="form-control mx-2"
+                                                id="quantity-<%= item._id %>"
+                                                readonly
+                                                style="width: 60px; text-align: center;"
+                                                data-product-id="<%= item._id %>"
+                                            />
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="incrementQuantity('<%= item._id %>', <%= item.productId.stock || 10 %>)">+</button>
                                         </div>
-                                      </td>
+                                    </td>
                                       
                                         <td class="text-right" data-title="Cart">
                                             <span><%= item.subtotal.toFixed(2) %></span>
@@ -428,70 +445,64 @@
         return false;
     }
 
-    function updateQuantity(itemId, value, max) {
-        if (value > max) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Maximum quantity allowed is ' + max,
-                confirmButtonColor: '#006A67'
-            });
-            return;
+    function incrementQuantity(itemId, maxStock) {
+        const input = document.getElementById(`quantity-${itemId}`);
+        const currentValue = parseInt(input.value);
+        if (currentValue < maxStock) {
+            const newValue = currentValue + 1;
+            input.value = newValue;
+            updateQuantity(itemId, newValue, maxStock);
         }
-   
+    }
+
+    function decrementQuantity(itemId, maxStock) {
+        const input = document.getElementById(`quantity-${itemId}`);
+        const currentValue = parseInt(input.value);
+        if (currentValue > 1) {
+            const newValue = currentValue - 1;
+            input.value = newValue;
+            updateQuantity(itemId, newValue, maxStock);
+        }
+    }
+
+    async function updateQuantity(itemId, newQuantity, maxStock) {
+        try {
+            if (parseInt(newQuantity) > parseInt(maxStock)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Quantity Exceeded',
+                    text: `Only ${maxStock} items are available for this product.`,
+                    confirmButtonText: 'OK'
+                });
+                document.querySelector(`input[name="quantity"][data-product-id="${itemId}"]`).value = maxStock;
+                return;  
+            }
+            
+            const response = await fetch("http://localhost:3100/updateQuantity", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json", 
+                },
+                body: JSON.stringify({
+                    newQuantity,
+                    itemId, 
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update quantity');
+            }
+
+            const data = await response.json(); 
+
+            console.log(data);
+
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+            alert('An error occurred while updating the quantity.');
+        }
     }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-<script>
-  async function updateQuantity(itemId, newQuantity, maxStock) {
-      try {
-        
- 
-      if (parseInt(newQuantity) > parseInt(maxStock)) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Quantity Exceeded',
-          text: `Only ${maxStock} items are available for this product.`,
-          confirmButtonText: 'OK'
-        });
-        
-      
-        document.querySelector(`input[name="quantity"][data-product-id="${itemId}"]`).value = maxStock;
-        return;  
-      }
-      
-        
-      const response = await fetch("http://localhost:3100/updateQuantity", {
-  method: "PATCH",
-  headers: {
-    "Content-Type": "application/json", 
-  },
-  body: JSON.stringify({
-    newQuantity,
-    itemId, 
-  }),
-});
-
-if (!response.ok) {
-
-  throw new Error('Failed to update quantity');
-}
-
-const data = await response.json(); 
-
-
-console.log(data);
-
-        
-
-      window.location.reload();
-    } catch (error) {
-      console.error(error);
-      alert('An error occurred while updating the quantity.');
-    }
-  }
-</script>
-
-<!-- <%-include('../../views/partial/user/footer')%> -->

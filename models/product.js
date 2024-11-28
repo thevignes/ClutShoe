@@ -14,7 +14,14 @@ const ProductSchema = new mongoose.Schema({
     },
     quantity:{
         type: Number,
-        required: true
+        required: false,
+        default: 0
+    },
+    sizeQuantities: {
+        type: Map,
+        of: Number,
+        required: true,
+        default: () => new Map()
     },
     images: {
         type: [String],  
@@ -26,15 +33,11 @@ const ProductSchema = new mongoose.Schema({
         default:0  
     },
     category:{
-        type:mongoose.Schema.ObjectId,
-        ref:'Category',
-        required:true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true
     },
-    size:{
-        type: String,  
-        required: false,
-        trim: true
-    },
+    size: { type: Map, of: Number },
     status:{
         type: String,
         required: true,

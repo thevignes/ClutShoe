@@ -7,24 +7,32 @@ const Sharp = require('sharp')
 const path = require('path')
 const Category = require('../../models/categoryModel')
 
-// const { upload } = require('../middleware/upload')
+
 
 const ProductList = async (req,res)=>{
     try {
         const currentPage = parseInt(req.query.page ) || 1
-        const itemsPerPage = 6 ;
+        const itemsPerPage = 6;
 
-        const totalProduct = await Product.countDocuments()
+        const totalProduct = await Product.countDocuments();
         
-        const totalPages = Math.ceil(totalProduct/itemsPerPage)
-        console.log(totalPages)
-        console.log(currentPage)
-        const skip = (currentPage-1)*itemsPerPage
-        const products = await Product.find().populate('category', 'name').skip(skip).limit(itemsPerPage);
-        res.render('product',{products,currentPage,totalPages})
+        const totalPages = Math.ceil(totalProduct/itemsPerPage);
+        console.log(totalPages);
+        console.log(currentPage);
+        const skip = (currentPage-1)*itemsPerPage;
+        
+        const products = await Product.find()
+            .populate({
+                path: 'category',
+                select: 'name'
+            })
+            .skip(skip)
+            .limit(itemsPerPage);
+
+        res.render('product',{products,currentPage,totalPages});
     } catch (error) {
-         console.log(error)
-         res.status(500).send('Server Error')
+         console.log(error);
+         res.status(500).send('Server Error');
     }
     
 }
@@ -43,25 +51,29 @@ const AddProductPage = async (req,res) => {
         }
     
 }
+
+
+
+
 const addProduct = async (req, res) => {
             
     try {
         console.log("Processing the product addition...");
-        // const product = req.body
+  
         const {productName, description, price, images, sizes, category, regularPrice, salePrice, colors, review, quantity, isListed, stock, status} = req.body
         console.log(req.body)
-        // const { category: categoryName } = req.body;
-        // Check if the product already exists
+   
+   
         const productExist = await Product.findOne({ productName });
 
         if (productExist) {
             return res.status(400).json({ error: 'Product already exists' });
         }
 
-        // Array to store image filenames
+
         const uploadImages = [];
 
-        // Handle file uploads using multer
+    
         if (req.files && req.files.length > 0) {
             for (let i = 0; i < req.files.length; i++) {
                 
@@ -91,14 +103,12 @@ const addProduct = async (req, res) => {
             }
         }
 
-        // Find category by name
         const categoryData = await Category.findOne({ name: category });
         if (!categoryData) {
             return res.status(404).json({ error: 'Category not found' });
         }
-      
-        // Create a new product with all details
 
+     
         const newProduct = new Product({
             productName,
             price,
@@ -113,14 +123,14 @@ const addProduct = async (req, res) => {
             isListed,
             stock,
             review,
-            status
+            status,
+            sizeQuantities
         });
     
             
-        // Save product to the database
         await newProduct.save();
-        // console.log("Product added successfully:", newProduct);
-        return res.redirect('/admin/addProduct');  // Redirect after success
+ 
+        return res.redirect('/admin/addProduct'); 
     } catch (error) {
         console.log('Error saving product:', error);
         return res.status(500).json({ error: 'An error occurred while saving the product' });
@@ -129,7 +139,6 @@ const addProduct = async (req, res) => {
         
         const editProduct = async (req, res) => {
             try {
-            //   const product = req.body.
               
 
               const id = req.params.id;
@@ -145,7 +154,6 @@ const addProduct = async (req, res) => {
                 return res.status(404).send({ message: "Product not found" });
               }
           
-              // console.log(category, " is edited");
           
               return res.redirect('/admin/product '); 
             } catch (error) {
@@ -188,7 +196,6 @@ const UpdateProduct = async (req, res) => {
         const data = req.body;
         console.log('Data received for update:', data);
 
-        // Check if another product with the same name exists
         const existingProduct = await Product.findOne({
             productName: data.productName,
             _id: { $ne: id }
@@ -199,7 +206,6 @@ const UpdateProduct = async (req, res) => {
         }
         const uploadImages = [];
 
-        // Handle file uploads using multer
         if (req.files && req.files.length > 0) {
             for (let i = 0; i < req.files.length; i++) {
                 
@@ -229,7 +235,6 @@ const UpdateProduct = async (req, res) => {
             }
         }
 
-        // Build the update object
         const updateField = {
             productName: data.productName || product.productName,
             description: data.description || product.description,
@@ -240,15 +245,14 @@ const UpdateProduct = async (req, res) => {
             size:data.size || product.size
         };
 
-        // Update product in the database
         if (uploadImages.length > 0) {
-            // If there are new images, push them into the existing array
+        
             await Product.findByIdAndUpdate(id, {
                 $set: updateField,
-                $push: { images: { $each: uploadImages } } // Ensure 'images' matches your model's field name
+                $push: { images: { $each: uploadImages } }
             }, { new: true });
         } else {
-            // If no new images, just update the product details
+         
             await Product.findByIdAndUpdate(id, { $set: updateField }, { new: true });
         }
 

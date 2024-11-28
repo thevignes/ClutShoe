@@ -34,7 +34,7 @@ const PageNotFound = async (req, res) => {
 const homePage = async (req, res) => {
   try {
     let ProductData = await Product.find({ isListed: true }).populate(
-      "category"
+      "category.name"
     );
 
     const user = req.session.user || null;
@@ -1195,7 +1195,6 @@ const returnOrder = async (req, res) => {
 
     const user = await User.findOne({ email: userEmail });
 
-    // Find the order
     const order = await Order.findOne({ oid: orderId });
 
     if (!order) {

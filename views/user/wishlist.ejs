@@ -290,7 +290,7 @@
 
         <% if (products.length > 0) { %>
             <% products.forEach(product => { %>
-                <div class="wishlist-item">
+                <div class="wishlist-item" id="wishlist-item-<%= product._id %>">
                     <img src="/uploads/re-image/<%= product.images[0] %>" alt="Product Image">
                     <div class="wishlist-item-details">
                         <div class="wishlist-item-title">
@@ -369,12 +369,7 @@
                   timer: 3000,
                   timerProgressBar: true,
               });
-              // alert('heyyy')
-              // Optional delay before redirecting
-              // setTimeout(() => {
-              //     window.location.href = `/ProductDetail/${productId}`;
-
-              // }, 3000); // Redirect after toast disappears
+              
           } else {
               // Show error toast notification
               Swal.fire({
@@ -414,57 +409,47 @@
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Show success toast notification
+                document.getElementById(`wishlist-item-${productId}`).remove();
                 Swal.fire({
-                    icon: 'error',
+                    icon: 'success',
                     title: data.message || 'Removed from wishlist',
                     toast: true,
                     position: 'top-end',
                     showConfirmButton: false,
-                    timer: 3000,
+                    timer: 1500,
                     timerProgressBar: true,
-                    background: 'white', // Green color for success
+                    background: 'white', 
                     iconColor: 'green',
+                }).then(() => {
+                    window.location.href = window.location.href;
                 });
-                
-                // Optional: remove item from DOM if successful
-                document.getElementById(`wishlist-item-${productId}`).remove();
             } else {
-                // Show error toast notification
                 Swal.fire({
-                    icon: 'success',
+                    icon: 'error',
                     title: data.message || 'Something went wrong!',
                     toast: true,
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 3000,
                     timerProgressBar: true,
-                    background: 'white', // Red color for error
-                    iconColor: 'green'
+                    background: 'white', 
+                    iconColor: 'red'
                 });
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            // Show general error toast notification
             Swal.fire({
-                icon: 'success',
-                title: 'removed successfully.',
+                icon: 'error',
+                title: 'Something went wrong!',
                 toast: true,
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 3000,
                 timerProgressBar: true,
-                background: 'white', // Red color for general error
-                iconColor: 'green',
+                background: 'white',
+                iconColor: 'red',
             });
         });
     }
 </script>
-
-
-
-
-
-    
-    </html>
