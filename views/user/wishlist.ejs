@@ -421,7 +421,9 @@
                     background: 'white', 
                     iconColor: 'green',
                 }).then(() => {
-                    window.location.href = window.location.href;
+                   setTimeout(()=>{
+                    window.location.href='/wishlist'
+                   },1500)
                 });
             } else {
                 Swal.fire({

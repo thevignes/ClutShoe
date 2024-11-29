@@ -48,12 +48,12 @@ const wishlistPage = async (req, res) => {
 
 const addToWishlist = async (req, res) => {
     try {
-        const userEmail = req.session.user.email;
-        const productId = req.body.productId;
-     
-        if (!userEmail) {
+        if (!req.session.user) {
             return res.status(401).json({ message: 'User not logged in' });
         }
+
+        const userEmail = req.session.user.email;
+        const productId = req.body.productId;
 
         const userDoc = await User.findOne({ email: userEmail });
         let wishlist = await Wishlist.findOne({ userId: userDoc._id });
@@ -67,11 +67,11 @@ const addToWishlist = async (req, res) => {
             await wishlist.save();
         }
             
-        return res.json({ message: 'Product added to wishlist!' });
+        return res.status(200).json({ message: 'Product added to wishlist!' });
 
     } catch (error) {
-        console.log('cannot add product into the wis adding to wishlist:', error);
-        res.status(500).json({ message: 'plaese login and add product' });
+        console.log('Error adding to wishlist:', error);
+        return res.status(500).json({ message: 'Error adding product to wishlist' });
     }
 };
 

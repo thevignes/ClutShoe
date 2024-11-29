@@ -737,6 +737,297 @@
     </div>
  
 
+  <div class="nike-banner-section">
+    <style>
+      .nike-banner-section {
+        padding: 40px 0;
+        background: #f5f5f5;
+        overflow: hidden;
+        margin-top: 40px;
+      }
+
+      .banner-slider {
+        position: relative;
+        width: 100%;
+        background: #fff;
+      }
+
+      .banner-slide {
+        display: none;
+        width: 100%;
+        position: relative;
+        opacity: 0;
+        transition: all 0.5s ease-in-out;
+        background: linear-gradient(45deg, #f8f8f8, #ffffff);
+      }
+
+      .banner-slide.active {
+        display: block;
+        opacity: 1;
+      }
+
+      .banner-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 60px 8%;
+        max-width: 1400px;
+        margin: 0 auto;
+        min-height: 400px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .banner-text {
+        flex: 1;
+        padding-right: 50px;
+        max-width: 550px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .banner-text h2 {
+        font-size: 3.8rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        line-height: 1.1;
+        color: #111;
+        text-transform: uppercase;
+        letter-spacing: -1px;
+      }
+
+      .banner-text p {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        color: #666;
+        margin-bottom: 30px;
+        max-width: 450px;
+      }
+
+      .banner-text .btn {
+        padding: 12px 30px;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+        background: #111;
+        color: #fff;
+        border: none;
+        border-radius: 30px;
+      }
+
+      .banner-text .btn:hover {
+        background: #333;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      }
+
+      .banner-image {
+        flex: 1;
+        position: relative;
+        z-index: 1;
+      }
+
+      .banner-image img {
+        width: 100%;
+        max-width: 650px;
+        height: auto;
+        object-fit: cover;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        transform: perspective(1000px) rotateY(-5deg);
+        transition: all 0.5s ease;
+      }
+
+      .banner-image:hover img {
+        transform: perspective(1000px) rotateY(0deg);
+      }
+
+      .banner-dots {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 12px;
+        z-index: 3;
+      }
+
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(0,0,0,0.2);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .dot.active {
+        background: #111;
+        transform: scale(1.2);
+      }
+
+      .dot:hover {
+        background: #333;
+      }
+
+      @media (max-width: 1200px) {
+        .banner-text h2 {
+          font-size: 3.2rem;
+        }
+      }
+
+      @media (max-width: 992px) {
+        .banner-content {
+          flex-direction: column;
+          text-align: center;
+          padding: 40px 20px;
+        }
+
+        .banner-text {
+          padding-right: 0;
+          margin-bottom: 40px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .banner-text h2 {
+          font-size: 2.8rem;
+        }
+
+        .banner-text p {
+          margin: 0 auto 30px;
+        }
+
+        .banner-image {
+          width: 100%;
+          max-width: 500px;
+          margin: 0 auto;
+        }
+
+        .banner-image img {
+          transform: none;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .banner-text h2 {
+          font-size: 2.2rem;
+        }
+
+        .banner-text p {
+          font-size: 1rem;
+        }
+
+        .banner-content {
+          min-height: 300px;
+          padding: 30px 15px;
+        }
+      }
+    </style>
+
+    <div class="banner-slider">
+      <!-- Slide 1 -->
+      <div class="banner-slide active">
+        <div class="banner-content">
+          <div class="banner-text">
+            <h2>Just Do It</h2>
+            <p>Push your limits with our latest collection. Engineered for peak performance, designed for greatness.</p>
+            <a href="/shop" class="btn">Shop Now</a>
+          </div>
+          <div class="banner-image">
+            <img src="https://static.nike.com/a/images/f_auto/dpr_1.3,cs_srgb/w_466,c_limit/38ed4b8e-9cfc-4e66-9ddd-02a52314eed9/nike-just-do-it.jpg" alt="Nike Just Do It">
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="banner-slide">
+        <div class="banner-content">
+          <div class="banner-text">
+            <h2>Own The Game</h2>
+            <p>Elevate your performance with innovative designs. Created for champions, worn by legends.</p>
+            <a href="/shop" class="btn">Shop Now</a>
+          </div>
+          <div class="banner-image">
+            <img src="https://static.nike.com/a/images/f_auto/dpr_1.3,cs_srgb/h_466,c_limit/7ce96f81-bf80-45b9-918e-f2534f14015d/nike-just-do-it.jpg" alt="Nike Performance Collection">
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="banner-slide">
+        <div class="banner-content">
+          <div class="banner-text">
+            <h2>Break Barriers</h2>
+            <p>Unleash your potential with gear that defies limits. Every milestone starts with the right equipment.</p>
+            <a href="/shop" class="btn">Shop Now</a>
+          </div>
+          <div class="banner-image">
+            <img src="https://static.nike.com/a/images/f_auto/dpr_1.3,cs_srgb/h_466,c_limit/e4695209-3f23-4a05-a9f9-d0edde31b653/nike-just-do-it.jpg" alt="Nike Innovation Collection">
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Dots -->
+      <div class="banner-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+      </div>
+    </div>
+
+    <script>
+      // Banner Slider functionality
+      document.addEventListener('DOMContentLoaded', function() {
+        const slides = document.querySelectorAll('.banner-slide');
+        const dots = document.querySelectorAll('.dot');
+        let currentSlide = 0;
+        let isAnimating = false;
+
+        function showSlide(index) {
+          if (isAnimating) return;
+          isAnimating = true;
+
+          slides.forEach(slide => {
+            slide.style.opacity = '0';
+            setTimeout(() => slide.style.display = 'none', 500);
+          });
+          dots.forEach(dot => dot.classList.remove('active'));
+          
+          setTimeout(() => {
+            slides[index].style.display = 'block';
+            setTimeout(() => {
+              slides[index].style.opacity = '1';
+              isAnimating = false;
+            }, 50);
+          }, 500);
+          
+          dots[index].classList.add('active');
+        }
+
+        function nextSlide() {
+          currentSlide = (currentSlide + 1) % slides.length;
+          showSlide(currentSlide);
+        }
+
+        // Add click events to dots
+        dots.forEach((dot, index) => {
+          dot.addEventListener('click', () => {
+            if (currentSlide !== index) {
+              currentSlide = index;
+              showSlide(currentSlide);
+            }
+          });
+        });
+
+        // Auto-advance slides
+        setInterval(nextSlide, 5000);
+      });
+    </script>
+  </div>
+
   <script src="/public/public/evara-frontend/assets/js/zoom.js"></script>
   <%-include('../../views/partial/user/footer')%>
 </main>

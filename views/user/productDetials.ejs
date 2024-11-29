@@ -462,11 +462,11 @@
                                         </div>
                                    <h6 class="mb-2">Select Size:</h6>
                                    <div class="d-flex flex-wrap gap-2">
-                                       <% const sizes = ProductData.size ? ProductData.size.split(',') : []; %>
+                                       <% const sizes = ProductData.size ? Array.from(ProductData.size.keys()) : []; %>
                                        <% if (sizes.length > 0) { %>
                                            <% sizes.forEach(size => { %>
-                                               <button type="button" class="btn btn-outline-dark size-btn" onclick="selectSize(this, '<%= size.trim() %>')">
-                                                   <%= size.trim() %>
+                                               <button type="button" class="btn btn-outline-dark size-btn" onclick="selectSize(this, '<%= size %>')">
+                                                   <%= size %>
                                                </button>
                                            <% }); %>
                                        <% } else { %>
@@ -866,8 +866,22 @@
             })
             .then(response => response.json())
             .then(data => {
-                if (data.success) {
-    
+                if (data.message === 'User not logged in') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Please login first',
+                        toast: true,
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        timerProgressBar: true,
+                        background: 'white',
+                        iconColor: 'orange',
+                    });
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
+                } else {
                     Swal.fire({
                         icon: 'success',
                         title: data.message,
@@ -879,34 +893,20 @@
                         background: 'white', 
                         iconColor: 'green',
                     });
-                } else {
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: data.message || 'Something went wrong!',
-                        toast: true,
-                        position: 'top-end',
-                        showConfirmButton: false,
-                        timer: 3000,
-                        timerProgressBar: true,
-                        background: 'white', // Red color for error
-                        iconColor: 'green',
-                    });
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                // Show general error toast notification
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Failed to add to wishlist.',
+                    icon: 'error',
+                    title: 'Failed to add to wishlist',
                     toast: true,
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 3000,
                     timerProgressBar: true,
-                    background: 'white', // Red color for general error
-                    iconColor: 'green',
+                    background: 'white',
+                    iconColor: 'red',
                 });
             });
         }
@@ -914,58 +914,67 @@
     
 
     <script>
-          async function addToCart(productId) {
-        try {
-            const response = await fetch(`http://localhost:3100/add-to-cart?id=${productId}`, {
-                method: 'POST', 
-                credentials: 'include'
-            });
+        async function addToCart(productId) {
+            try {
+                const response = await fetch(`/add-to-cart?id=${productId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                });
 
-            const data = await response.json();
+                const data = await response.json();
 
-            if (data.success) {
-                // Show success toast notification
+                if (!response.ok) {
+                    if (data.message === 'please login first' || response.status === 401) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Please login first',
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                            background: 'white',
+                            iconColor: 'orange',
+                        });
+                        setTimeout(() => {
+                            window.location.href = '/login';
+                        }, 2000);
+                        return;
+                    }
+                    throw new Error(data.message || 'Failed to add to cart');
+                }
+
+                // Success case
                 Swal.fire({
                     icon: 'success',
-                    title: data.message,
+                    title: data.message || 'Added to cart successfully',
                     toast: true,
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 3000,
                     timerProgressBar: true,
+                    background: 'white',
+                    iconColor: 'green',
                 });
-                // alert('heyyy')
-                // Optional delay before redirecting
-                // setTimeout(() => {
-                //     window.location.href = `/ProductDetail/${productId}`;
 
-                // }, 3000); // Redirect after toast disappears
-            } else {
-                // Show error toast notification
+            } catch (error) {
+                console.error("Error adding to cart:", error);
                 Swal.fire({
                     icon: 'error',
-                    title: data.message,
+                    title: error.message || 'Something went wrong. Please try again.',
                     toast: true,
                     position: 'top-end',
                     showConfirmButton: false,
                     timer: 3000,
                     timerProgressBar: true,
+                    background: 'white',
+                    iconColor: 'red'
                 });
             }
-        } catch (error) {
-            console.error("Error adding to cart:", error);
-            // Show general error toast notification
-            Swal.fire({
-                icon: 'error',
-                title: 'Something went wrong. Please try again.',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-            });
         }
-    }
     </script>
 
     </script>

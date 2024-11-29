@@ -681,10 +681,17 @@ const cartPage = async (req, res) => {
 const AddToCart = async (req, res) => {
   try {
     const productId = req.query.id;
+    
+    if (!req.session.user) {
+      return res.status(401).json({ message: 'please login first' });
+    }
 
     const userEmail = req.session.user.email;
     const user = await User.findOne({ email: userEmail });
-
+    
+    if (!user) {
+      return res.status(401).json({ message: 'please login first' });
+    }
 
     const product = await Product.findById(productId);
 
