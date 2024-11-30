@@ -45,7 +45,7 @@ app.use((req, res, next) => {
 });
 // /connect to mongodb//
 mongoose
-  .connect("mongodb://127.0.0.1:27017/ClutchShoe", {})
+  .connect(process.env.MONGO_URI, {})
 
   .then(() => console.log("MongoDB Connected...."))
   .catch((err) => console.error("MongoDB connection error:", err));
