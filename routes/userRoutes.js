@@ -147,7 +147,7 @@ router.post('/resetCode', ForgetController.codeVerification)
 
  router.post('/Resetpassword', ForgetController.resetpassword)
 
- router.patch('/updateQuantity', userControler.updateQuantity);
+ router.post('/updateQuantity', userControler.updateQuantity);
 
  ///wishlist routes
 
