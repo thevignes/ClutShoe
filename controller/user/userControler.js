@@ -850,6 +850,13 @@ const checkout = async (req, res) => {
       },
       { total: 0 }
     );
+
+    cartTotals.deliveryCharge = cartTotals.total < 1000? 40:0;
+    cartTotals.finalTotal = cartTotals.total + cartTotals.deliveryCharge;
+
+
+
+
     let couponDetails = null;
     if (cart && cart.couponCode) {
       couponDetails = await Coupon.findOne({ couponCode: cart.couponCode });

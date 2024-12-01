@@ -242,7 +242,7 @@ const UpdateProduct = async (req, res) => {
             regularPrice: data.regularPrice || product.regularPrice,
             salePrice: data.salePrice || product.salePrice,
             quantity: data.quantity || product.quantity,
-            size:data.size || product.size
+            sizeQuantities: new Map(Object.entries(data.size || {}))
         };
 
         if (uploadImages.length > 0) {

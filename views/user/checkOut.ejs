@@ -104,6 +104,16 @@
                               <th>Discount</th>
                               <td colspan="2"><span id="discountAmount"><%= cart.discountAmount ? cart.discountAmount.toFixed(2) : '0.00' %></span></td>
                             </tr>
+                            <tr>
+                                <th>Delivery Charge</th>
+                                <td colspan="2">
+                                  <% if (cartTotals.deliveryCharge > 0) { %>
+                                    ₹<%= cartTotals.deliveryCharge.toFixed(2) %>
+                                  <% } else { %>
+                                    <em>Free Delivery</em>
+                                  <% } %>
+                                </td>
+                              </tr>
                       
                             <tr>
                               <th>Final Total</th>
