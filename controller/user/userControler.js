@@ -1308,29 +1308,37 @@ const ForgetPas = async (req, res) => {
 
 const updateQuantity = async (req, res) => {
   try {
-    console.log("hey");
     const { newQuantity, itemId } = req.body;
     const email = req.session.user.email;
-    console.log("heyyoooo", newQuantity, itemId);
-    const user = await User.findOne({ email });
-    console.log(user);
-    const cart = await Cart.findOne({ userId: user._id });
-    console.log(cart, "<<cart>>>");
-    if (!cart) return res.status(400).json({ message: "cart not found " });
 
+    if (!email) {
+      return res.status(401).json({ message: "Please login to update cart" });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    const cart = await Cart.findOne({ userId: user._id });
+    if (!cart) {
+      return res.status(400).json({ message: "Cart not found" });
+    }
 
     const existingItem = cart.products.findIndex(
       (item) => item._id.toString() == itemId
     );
-   if (existingItem == -1)
+    if (existingItem == -1) {
       return res.status(400).json({ message: "Product not found in cart" });
-    cart.products[existingItem].quantity = newQuantity;
+    }
 
-;
+    cart.products[existingItem].quantity = newQuantity;
     await cart.save();
+    
     return res.status(200).json({ message: "Quantity updated successfully" });
   } catch (error) {
-    console.log(error);
+    console.error("Error in updateQuantity:", error);
+    return res.status(500).json({ message: "Failed to update quantity" });
   }
 };
 module.exports = {

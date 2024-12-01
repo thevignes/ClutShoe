@@ -337,7 +337,7 @@
                                     </td>
                                     <td class="text-center" data-title="Stock">
                                         <div class="quantity-control d-flex align-items-center justify-content-center">
-                                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="decrementQuantity('<%= item._id %>', <%= item.productId.stock || 10 %>)">-</button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="decrementQuantity('<%= item._id %>', <%= item.productId.stock || 5 %>)">-</button>
                                             <input
                                                 name="quantity"
                                                 min="1"
@@ -351,7 +351,7 @@
                                                 style="width: 60px; text-align: center;"
                                                 data-product-id="<%= item._id %>"
                                             />
-                                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="incrementQuantity('<%= item._id %>', <%= item.productId.stock || 10 %>)">+</button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="incrementQuantity('<%= item._id %>', <%= item.productId.stock || 5 %>)">+</button>
                                         </div>
                                     </td>
                                       
@@ -490,17 +490,26 @@
             });
 
             if (!response.ok) {
-                throw new Error('Failed to update quantity');
+                const errorData = await response.json();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorData.message || 'Failed to update quantity',
+                    confirmButtonText: 'OK'
+                });
+                return;
             }
 
             const data = await response.json(); 
-
-            console.log(data);
-
             window.location.reload();
         } catch (error) {
             console.error(error);
-            alert('An error occurred while updating the quantity.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred while updating the quantity.',
+                confirmButtonText: 'OK'
+            });
         }
     }
 </script>

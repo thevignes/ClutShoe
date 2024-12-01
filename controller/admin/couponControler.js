@@ -64,7 +64,7 @@ const addCoupon = async (req, res) => {
     const  couponList = async(req,res)=>{
         try {
             const coupons = await Coupon.find()
-            res.render('couponList',{coupons})
+            res.render('couponList',{coupons}) 
         } catch (error) {
             console.log(error, 'server error')
             return res.status(500).send('server error oops!')
