@@ -478,7 +478,7 @@
                 return;  
             }
             
-            const response = await fetch("http://localhost:3100/updateQuantity", {
+            const response = await fetch("/updateQuantity", {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json", 
