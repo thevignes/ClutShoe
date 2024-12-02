@@ -11,7 +11,7 @@ const LoadWallet = async (req,res)=>{
         const user = await User.findOne({email:userEmail})
         let wallet = await Wallet.findOne({userId:user._id}).sort({createdAt:-1})
         
-        // Create wallet if it doesn't exist
+    
         if (!wallet) {
             wallet = new Wallet({
                 userId: user._id,

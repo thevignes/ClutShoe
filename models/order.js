@@ -29,6 +29,10 @@ const OrderSchema = new mongoose.Schema({
             type: Number,
             required: true
         },
+        size: {
+            type: Number,
+            required: true
+        },
         price: {
             type: Number,
             required: true
@@ -46,7 +50,6 @@ const OrderSchema = new mongoose.Schema({
     paymentStatus: {
         type: String,
         enum: ['pending', 'paid', 'failed'],
-       
     },
     total: {
         type: Number,

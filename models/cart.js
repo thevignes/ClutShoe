@@ -17,6 +17,10 @@ const cartSchema = new mongoose.Schema({
         type: Number,
         default: 1,
       },
+      size: {
+        type: Number,
+        required: true
+      },
       price: {
         type: Number,
       },
@@ -33,7 +37,6 @@ const cartSchema = new mongoose.Schema({
   
   totalAmount: {
     type: Number,
-
     default: 0,
   },
   discountAmount:{
@@ -42,7 +45,6 @@ const cartSchema = new mongoose.Schema({
   },
   isCompleted: {
     type: Boolean,
-
     default: false,
   },
   couponCode: { 

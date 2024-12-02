@@ -60,36 +60,43 @@ const addProduct = async (req, res) => {
     try {
         console.log("Processing the product addition...");
   
-        const {productName, description, price, images, sizes, category, regularPrice, salePrice, colors, review, quantity, isListed, stock, status} = req.body
-        console.log(req.body)
-   
+        const {
+            productName, 
+            description, 
+            price, 
+            images, 
+            sizes, 
+            quantities,
+            category, 
+            regularPrice, 
+            salePrice, 
+            colors, 
+            review, 
+            isListed, 
+            stock, 
+            status
+        } = req.body;
+        
+        console.log(req.body);
    
         const productExist = await Product.findOne({ productName });
-
         if (productExist) {
             return res.status(400).json({ error: 'Product already exists' });
         }
 
-
         const uploadImages = [];
-
-    
         if (req.files && req.files.length > 0) {
             for (let i = 0; i < req.files.length; i++) {
-                
                 const originalImagePath = req.files[i].path;
-                console.log(originalImagePath,"its wwwww")
-                const resizedImagesPath = path.join( 'public','public','uploads','re-image', req.files[i].filename);
-                const resizedFilename = Date.now()+req.files[i].filename 
-                const rePath =  path.join( 'public','public','uploads','re-image', resizedFilename);
-                console.log(resizedImagesPath,"its also")
+                const resizedImagesPath = path.join('public', 'public', 'uploads', 're-image', req.files[i].filename);
+                const resizedFilename = Date.now() + req.files[i].filename;
+                const rePath = path.join('public', 'public', 'uploads', 're-image', resizedFilename);
                 
                 const supportedFormats = ['image/jpeg', 'image/png', 'image/webp'];
                 if (!supportedFormats.includes(req.files[i].mimetype)) {
                     return res.status(400).json({ error: 'Unsupported image format' });
                 }
 
-                
                 try {
                     await Sharp(resizedImagesPath)
                         .resize({ width: 440, height: 440 })
@@ -108,28 +115,39 @@ const addProduct = async (req, res) => {
             return res.status(404).json({ error: 'Category not found' });
         }
 
-     
+        // Process sizes and quantities
+        let sizeQuantitiesArray = [];
+        if (Array.isArray(sizes) && Array.isArray(quantities)) {
+            sizeQuantitiesArray = sizes.map((size, index) => ({
+                size: Number(size),
+                quantity: Number(quantities[index] || 0)
+            }));
+        } else if (typeof sizes === 'string' && typeof quantities === 'string') {
+            sizeQuantitiesArray = [{
+                size: Number(sizes),
+                quantity: Number(quantities || 0)
+            }];
+        }
+
+        // Calculate total stock from size quantities
+        const totalStock = sizeQuantitiesArray.reduce((sum, item) => sum + item.quantity, 0);
+
         const newProduct = new Product({
             productName,
-            price,
             description,
-            images : uploadImages,
-            category:categoryData?._id,
+            images: uploadImages,
+            category: categoryData?._id,
             regularPrice,
             salePrice,
-            quantity,
-            size: Array.isArray(sizes) ? sizes.join(',') : sizes,
+            sizes: sizeQuantitiesArray,
             colors,
             isListed,
-            stock,
+            stock: totalStock,
             review,
-            status,
-            sizeQuantities
+            status
         });
     
-            
         await newProduct.save();
- 
         return res.redirect('/admin/addProduct'); 
     } catch (error) {
         console.log('Error saving product:', error);
@@ -193,72 +211,68 @@ const UpdateProduct = async (req, res) => {
             return res.status(404).send({ message: "Product not found" });
         }
 
-        const data = req.body;
-        console.log('Data received for update:', data);
+        const {
+            productName,
+            description,
+            regularPrice,
+            salePrice,
+            sizes,
+            quantities,
+            colors,
+            status,
+            isListed
+        } = req.body;
 
-        const existingProduct = await Product.findOne({
-            productName: data.productName,
-            _id: { $ne: id }
-        });
-
-        if (existingProduct) {
-            return res.status(400).send({ message: "Product already exists" });
+        // Process sizes and quantities
+        let sizeQuantitiesArray = [];
+        if (Array.isArray(sizes) && Array.isArray(quantities)) {
+            sizeQuantitiesArray = sizes.map((size, index) => ({
+                size: Number(size),
+                quantity: Number(quantities[index] || 0)
+            }));
+        } else if (typeof sizes === 'string' && typeof quantities === 'string') {
+            sizeQuantitiesArray = [{
+                size: Number(sizes),
+                quantity: Number(quantities || 0)
+            }];
         }
-        const uploadImages = [];
 
+        // Calculate total stock from size quantities
+        const totalStock = sizeQuantitiesArray.reduce((sum, item) => sum + item.quantity, 0);
+
+        // Update the product with new values
+        product.productName = productName;
+        product.description = description;
+        product.regularPrice = regularPrice;
+        product.salePrice = salePrice;
+        product.sizes = sizeQuantitiesArray;
+        product.colors = colors;
+        product.status = status;
+        product.isListed = isListed;
+        product.stock = totalStock;
+
+        // Handle image uploads if any
         if (req.files && req.files.length > 0) {
-            for (let i = 0; i < req.files.length; i++) {
-                
-                const originalImagePath = req.files[i].path;
-                console.log(originalImagePath,"its wwwww")
-                const resizedImagesPath = path.join( 'public','public','uploads','re-image', req.files[i].filename);
-                const resizedFilename = Date.now()+req.files[i].filename 
-                const rePath =  path.join( 'public','public','uploads','re-image', resizedFilename);
-                console.log(resizedImagesPath,"its also")
-                
-                const supportedFormats = ['image/jpeg', 'image/png', 'image/webp'];
-                if (!supportedFormats.includes(req.files[i].mimetype)) {
-                    return res.status(400).json({ error: 'Unsupported image format' });
-                }
-
+            const uploadImages = [];
+            for (let i = 0; i <req.files.length; i++) {
+                const resizedFilename = Date.now() + req.files[i].filename;
+                const rePath = path.join('public', 'public', 'uploads', 're-image', resizedFilename);
                 
                 try {
-                    await Sharp(resizedImagesPath)
+                    await Sharp(req.files[i].path)
                         .resize({ width: 440, height: 440 })
-                        .toFile(rePath); 
+                        .toFile(rePath);
+                    uploadImages.push(resizedFilename);
                 } catch (sharpError) {
                     console.log('Error processing image with Sharp:', sharpError);
                     return res.status(500).json({ error: 'Error processing image' });
                 }
-
-                uploadImages.push(resizedFilename); 
             }
+            product.images = uploadImages;
         }
 
-        const updateField = {
-            productName: data.productName || product.productName,
-            description: data.description || product.description,
-            category: data.category || product.category,
-            regularPrice: data.regularPrice || product.regularPrice,
-            salePrice: data.salePrice || product.salePrice,
-            quantity: data.quantity || product.quantity,
-            sizeQuantities: new Map(Object.entries(data.size || {}))
-        };
-
-        if (uploadImages.length > 0) {
-        
-            await Product.findByIdAndUpdate(id, {
-                $set: updateField,
-                $push: { images: { $each: uploadImages } }
-            }, { new: true });
-        } else {
-         
-            await Product.findByIdAndUpdate(id, { $set: updateField }, { new: true });
-        }
-
-        console.log('Product edited successfully:', updateField);
-        res.redirect('/admin/product');
-
+        await product.save();
+        return res.redirect('/admin/product');
     } catch (error) {
         console.error('Error updating product:', error);
         return res.status(500).send({ message: "Internal Server Error" });

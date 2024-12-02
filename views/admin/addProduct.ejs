@@ -173,47 +173,76 @@
                                         <div id="salePrice-error" class="error-message"></div>
                                     </div>
 
-                                    <div class="col-md-4 mb-4">
+                                    <!-- <div class="col-md-4 mb-4">
                                         <label class="form-label">Quantity</label>
                                         <input type="number" name="quantity" class="form-control">
                                         <div id="quantity-error" class="error-message"></div>
-                                    </div>
+                                    </div> -->
 
                                     <!-- Additional Info -->
-                                    <div class="col-md-6 mb-4">
-                                        <label class="form-label">Shoe Sizes</label>
-                                        <div class="size-variants">
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input size-checkbox" type="checkbox" name="sizes[]" value="6" id="size6">
-                                                <label class="form-check-label" for="size6">6</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input size-checkbox" type="checkbox" name="sizes[]" value="7" id="size7">
-                                                <label class="form-check-label" for="size7">7</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input size-checkbox" type="checkbox" name="sizes[]" value="8" id="size8">
-                                                <label class="form-check-label" for="size8">8</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input size-checkbox" type="checkbox" name="sizes[]" value="9" id="size9">
-                                                <label class="form-check-label" for="size9">9</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input size-checkbox" type="checkbox" name="sizes[]" value="10" id="size10">
-                                                <label class="form-check-label" for="size10">10</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input size-checkbox" type="checkbox" name="sizes[]" value="11" id="size11">
-                                                <label class="form-check-label" for="size11">11</label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="form-check-input size-checkbox" type="checkbox" name="sizes[]" value="12" id="size12">
-                                                <label class="form-check-label" for="size12">12</label>
+                                    <div class="col-12 mb-4">
+                                        <label class="form-label">Shoe Sizes and Quantities</label>
+                                        <div id="sizeQuantityContainer" class="row g-3">
+                                            <div class="size-quantity-row row align-items-center mb-2">
+                                                <div class="col-md-4">
+                                                    <select class="form-select" name="sizes[]" required>
+                                                        <option value="">Select Size</option>
+                                                        <% for(let i = 6; i <= 12; i++) { %>
+                                                            <option value="<%= i %>">Size <%= i %></option>
+                                                        <% } %>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="number" class="form-control" name="quantities[]" placeholder="Quantity" min="0" required>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <button type="button" class="btn btn-danger remove-size" style="display: none;">Remove</button>
+                                                </div>
                                             </div>
                                         </div>
-                                        <small id="sizeError" class="text-danger d-none">Please select at least one size</small>
+                                        <div class="mt-2">
+                                            <button type="button" class="btn btn-secondary" id="addMoreSizes">Add Another Size</button>
+                                        </div>
                                     </div>
+
+                                    <script>
+                                        document.addEventListener('DOMContentLoaded', function() {
+                                            const container = document.getElementById('sizeQuantityContainer');
+                                            const addButton = document.getElementById('addMoreSizes');
+
+                                            // Function to update remove buttons visibility
+                                            function updateRemoveButtons() {
+                                                const rows = container.getElementsByClassName('size-quantity-row');
+                                                Array.from(rows).forEach((row, index) => {
+                                                    const removeBtn = row.querySelector('.remove-size');
+                                                    removeBtn.style.display = rows.length > 1 ? 'block' : 'none';
+                                                });
+                                            }
+
+                                            // Add new size-quantity row
+                                            addButton.addEventListener('click', function() {
+                                                const newRow = container.querySelector('.size-quantity-row').cloneNode(true);
+                                                newRow.querySelector('select').value = '';
+                                                newRow.querySelector('input[type="number"]').value = '';
+                                                container.appendChild(newRow);
+                                                updateRemoveButtons();
+
+                                                // Add event listener to new remove button
+                                                newRow.querySelector('.remove-size').addEventListener('click', function() {
+                                                    newRow.remove();
+                                                    updateRemoveButtons();
+                                                });
+                                            });
+
+                                            // Add event listeners to existing remove buttons
+                                            document.querySelectorAll('.remove-size').forEach(button => {
+                                                button.addEventListener('click', function() {
+                                                    this.closest('.size-quantity-row').remove();
+                                                    updateRemoveButtons();
+                                                });
+                                            });
+                                        });
+                                    </script>
 
                                     <div class="col-md-6 mb-4">
                                         <label class="form-label">Category</label>
