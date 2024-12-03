@@ -1044,40 +1044,26 @@
                 const response = await fetch(`/add-to-cart?id=${productId}`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
-                    body: JSON.stringify({ size: selectedSize }),
-                    credentials: 'include'
+                    body: JSON.stringify({ 
+                        size: selectedSize,
+                        quantity: 1
+                    }),
+                    credentials: 'same-origin'
                 });
 
-                console.log('response', response)
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
 
                 const data = await response.json();
-
-                console.log('data', data)
+                console.log('Response data:', data);
 
                 if (!response.ok) {
-                    if (data.message === 'please login first' || response.status === 401) {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Please login first',
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 2000,
-                            timerProgressBar: true,
-                            background: 'white',
-                            iconColor: 'orange',
-                        });
-                        setTimeout(() => {
-                            window.location.href = '/login';
-                        }, 2000);
-                        return;
-                    }
                     throw new Error(data.message || 'Failed to add to cart');
                 }
 
-                // Success 
                 Swal.fire({
                     icon: 'success',
                     title: data.message || 'Added to cart successfully',

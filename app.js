@@ -23,10 +23,24 @@ app.use(session({
   cookie: { 
     maxAge: 60000*60000,
     httpOnly: true,         
-    cookie: { secure: false } 
+    secure: process.env.NODE_ENV === 'production', 
+    sameSite: 'lax' 
   }
 
 }));
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
 
 app.use((req,res,next)=>{
   res.set('cache-control','no-store')
