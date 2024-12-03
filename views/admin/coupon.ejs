@@ -131,6 +131,9 @@
                         <div class="floating-input">
                             <input type="text" id="code" name="couponCode" required>
                             <label for="code">Coupon Code</label>
+                            <button type="button" id="generateCoupon" class="generate-btn">
+                                <i class="fas fa-sync-alt"></i> Generate
+                            </button>
                         </div>
                         <p id="codeError" class="error-message"></p>
                     </div>
@@ -421,16 +424,13 @@
 </body>
 <script>
    document.getElementById('couponForm').addEventListener('submit', function(event) {
-        // Prevent the form from submitting if validation fails
         event.preventDefault();
 
         let isValid = true;
 
-        // Clear previous error messages
         const errorMessages = document.querySelectorAll('.error-message');
         errorMessages.forEach(message => message.textContent = '');
 
-        // Validate coupon name
         const name = document.getElementById('name');
         if (name.value.trim() === '') {
             isValid = false;
@@ -444,14 +444,12 @@
           document.getElementById('descriptionError').textContent = 'Description is required.';
         }
 
-        // Validate coupon amount (must be a positive number)
         const amount = document.getElementById('amount');
         if (amount.value <= 0) {
             isValid = false;
             document.getElementById('amountError').textContent = 'Coupon amount must be greater than 0.';
         }
 
-        // Validate coupon code (must match pattern)
         const code = document.getElementById('code');
         const codePattern = /^[A-Za-z0-9]{5,10}$/;
         if (!codePattern.test(code.value)) {
@@ -485,7 +483,7 @@
           document.getElementById('maxDiscountError').textContent = ' max discount is require'
         }
 
-        // If all validations pass, submit the form
+      
         if (isValid) {
             this.submit();
         }
@@ -494,14 +492,14 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.querySelector('.add-coupon').addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent the default form submission
+    event.preventDefault(); 
 
-    // Collect form data
+  
     const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries()); // Convert FormData to a JSON object
+    const data = Object.fromEntries(formData.entries()); 
 
     try {
-        // Send POST request
+     
         const response = await fetch('/admin/coupons/add', {
             method: 'POST',
             headers: {
@@ -510,11 +508,11 @@ document.querySelector('.add-coupon').addEventListener('submit', async (event) =
             body: JSON.stringify(data)
         });
 
-        // Handle response based on success or failure
+      
         const result = await response.json();
 
         if (response.ok) {
-            // Success toast notification with SweetAlert
+          
             Swal.fire({
                 icon: 'success',
                 title: result.message,
@@ -552,6 +550,23 @@ document.querySelector('.add-coupon').addEventListener('submit', async (event) =
         console.error(error);
     }
 });
+</script>
+
+<script>
+    // Function to generate random coupon code
+    function generateRandomCoupon() {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let couponCode = '';
+        for (let i = 0; i < 6; i++) {
+            couponCode += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return couponCode;
+    }
+
+    // Event listener for generate button
+    document.getElementById('generateCoupon').addEventListener('click', function() {
+        document.getElementById('code').value = generateRandomCoupon();
+    });
 </script>
 
 <!-- 
