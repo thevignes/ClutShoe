@@ -526,7 +526,7 @@ const EditAddressPage = async (req, res) => {
 
     const address = await Address.findOne({ _id: id, email: userEmail });
 
-;
+
 
     if (!address) {
       return res.status(404).send("Address not found");
@@ -584,7 +584,6 @@ const EditAddress = async (req, res) => {
 
  
 
-    // Render the view with the updated address
     res.render("editAddress", { user, addresses: updatedAddress });
   } catch (err) {
     console.error("Error updating address:", err);
@@ -668,10 +667,7 @@ const cartPage = async (req, res) => {
       cart,
     });
 
-    console.log(
-      "the cart >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",
-      cart.discountAmount
-    );
+;
   } catch (error) {
     console.error(error);
     res.status(500).send("Oops, server error!");
@@ -700,25 +696,13 @@ const AddToCart = async (req, res) => {
       return res.status(404).json({ success: false, message: "Product not found." });
     }
 
-    // Debug logs
-    console.log('Product:', product);
-    console.log('Product sizes:', product.sizes);
-    console.log('Selected size type:', typeof selectedSize);
-    console.log('Selected size value:', selectedSize);
-    console.log('First size in array type:', product.sizes.length > 0 ? typeof product.sizes[0].size : 'no sizes');
-    console.log('First size in array:', product.sizes.length > 0 ? product.sizes[0].size : 'no sizes');
 
-    // Validate size and check stock
    
-    console.log('Product sizes:', product.sizes);
-    console.log('Selected size (before conversion):', selectedSize, typeof selectedSize);
+   
     
-    // Convert selectedSize to number for comparison
     const sizeNumber = Number(selectedSize);
-    console.log('Selected size (after conversion):', sizeNumber, typeof sizeNumber);
     
     const sizeObj = product.sizes.find(sizeData => sizeData.size === sizeNumber);
-    console.log('Found size object:', sizeObj);
 
     if (!sizeObj) {
         return res.status(400).json({ success: false, message: "Please select a valid size." });
@@ -729,9 +713,7 @@ const AddToCart = async (req, res) => {
     }
 
     const quantity = parseInt(req.body.quantity, 10) || 1;
-    console.log(quantity, '//////')
 
-    // Check if requested quantity is available
     if (sizeObj.quantity < quantity) {
       return res.status(400).json({ 
         success: false, 
@@ -750,7 +732,6 @@ const AddToCart = async (req, res) => {
     );
 
     if (existingProduct) {
-      // Check if increasing quantity exceeds available stock
       if (existingProduct.quantity + quantity > sizeObj.quantity) {
         return res.status(400).json({ 
           success: false, 
@@ -899,8 +880,7 @@ const checkout = async (req, res) => {
     if (cart && cart.couponCode) {
       couponDetails = await Coupon.findOne({ couponCode: cart.couponCode });
     }
-    // cartTotals.discount = 0;
-    // cartTotals.finalTotal = cartTotals.total;
+   
 
     res.render("checkOut", {
       products: cart.products,
@@ -1125,7 +1105,7 @@ const PlaceOrder = async (req, res) => {
       productDetails.map(async (item) => {
         const product = await Product.findById(item.productId);
         if (product) {
-          // Find the size object for this order
+    
           const sizeObj = product.sizes.find(s => s.size === item.size);
           
           if (!sizeObj) {
@@ -1133,7 +1113,7 @@ const PlaceOrder = async (req, res) => {
           }
           
           if (sizeObj.quantity >= item.quantity) {
-            // Update the quantity for this specific size
+    
             sizeObj.quantity -= item.quantity;
             await product.save();
             console.log(`Updated quantity for product ID: ${item.productId}, size: ${item.size}`);
@@ -1208,7 +1188,7 @@ const cancelOrder = async (req, res) => {
     const user = await User.findOne({ email: userEmail });
  
 
-    // Find the order
+
     const order = await Order.findOne({ oid: orderId });
 
     if (!order) {

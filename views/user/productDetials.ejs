@@ -925,7 +925,7 @@
         function updateQuantity(selectElement, productId) {
             const newQuantity = selectElement.value;
 
-            // Make a POST request to update the quantity in the cart
+   
             fetch('/cart/update-quantity', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -935,10 +935,10 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Update the cart UI, reload the page, or notify the user
-                        location.reload(); // Simple way to reflect changes
+                     
+                        location.reload();
                     } else {
-                        alert(data.message); // Show an error message
+                        alert(data.message);
                     }
                 })
                 .catch(error => {
@@ -1022,7 +1022,7 @@
     <script>
         async function addToCart(productId) {
             try {
-                // Get the selected size from the hidden input
+             
                 const selectedSize = document.getElementById('selectedSizeMain').value;
                 console.log('Selected size:', selectedSize);   
                 
@@ -1077,7 +1077,7 @@
                     throw new Error(data.message || 'Failed to add to cart');
                 }
 
-                // Success case
+                // Success 
                 Swal.fire({
                     icon: 'success',
                     title: data.message || 'Added to cart successfully',
@@ -1128,18 +1128,17 @@
         function zoomIn(event) {
             const zoomableImage = document.getElementById('zoomable-image');
 
-            // Get the bounding rectangle of the image
+           
             const rect = zoomableImage.getBoundingClientRect();
 
-            // Calculate the mouse position relative to the image
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
 
-            // Calculate the transform origin to keep the zoom centered on the cursor
+          
             const originX = (x / rect.width) * 100;
             const originY = (y / rect.height) * 100;
 
-            // Apply transform with scale and origin
+         
             zoomableImage.style.transformOrigin = `${originX}% ${originY}%`;
             zoomableImage.style.transform = `scale(${zoomFactor})`;
         }
@@ -1163,18 +1162,15 @@ function showQuantity(size, qty) {
     document.getElementById('qtyInfo').style.display = 'block';
 }
 function selectSize(button, size, maxQuantity) {
-    // Remove selected class from all buttons
     document.querySelectorAll('.size-btn').forEach(btn => {
         btn.classList.remove('selected');
     });
     
-    // Add selected class to clicked button
     button.classList.add('selected');
     
-    // Store selected size
     document.getElementById('selectedSizeMain').value = size;
     
-    // Hide error message if shown
+ 
     document.getElementById('sizeError').classList.add('d-none');
 }
 </script>

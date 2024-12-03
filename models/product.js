@@ -37,12 +37,12 @@ const ProductSchema = new mongoose.Schema({
         ref: 'Category',
         required: true
     },
-    status:{
-        type: String,
-        required: true,
-        default:"Available",
-        enum:['Available','Out of Stock']
-    },
+    // status:{
+    //     type: String,
+    //     required: true,
+    //     default:"Available",
+    //     enum:['Available','Out of Stock']
+    // },
     regularPrice:{
         type: Number,
         required: true

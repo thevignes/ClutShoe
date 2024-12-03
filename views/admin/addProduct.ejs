@@ -181,7 +181,6 @@
 
                                     <!-- Additional Info -->
                                     <div class="col-12 mb-4">
-                                        <label class="form-label">Shoe Sizes and Quantities</label>
                                         <div id="sizeQuantityContainer" class="row g-3">
                                             <div class="size-quantity-row row align-items-center mb-2">
                                                 <div class="col-md-4">
@@ -210,7 +209,6 @@
                                             const container = document.getElementById('sizeQuantityContainer');
                                             const addButton = document.getElementById('addMoreSizes');
 
-                                            // Function to update remove buttons visibility
                                             function updateRemoveButtons() {
                                                 const rows = container.getElementsByClassName('size-quantity-row');
                                                 Array.from(rows).forEach((row, index) => {
@@ -219,7 +217,6 @@
                                                 });
                                             }
 
-                                            // Add new size-quantity row
                                             addButton.addEventListener('click', function() {
                                                 const newRow = container.querySelector('.size-quantity-row').cloneNode(true);
                                                 newRow.querySelector('select').value = '';
@@ -227,14 +224,12 @@
                                                 container.appendChild(newRow);
                                                 updateRemoveButtons();
 
-                                                // Add event listener to new remove button
                                                 newRow.querySelector('.remove-size').addEventListener('click', function() {
                                                     newRow.remove();
                                                     updateRemoveButtons();
                                                 });
                                             });
 
-                                            // Add event listeners to existing remove buttons
                                             document.querySelectorAll('.remove-size').forEach(button => {
                                                 button.addEventListener('click', function() {
                                                     this.closest('.size-quantity-row').remove();
