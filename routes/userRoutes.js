@@ -305,6 +305,7 @@ router.post('/create-pending-order', async (req, res) => {
         const orderItems = cart.products.map(item => ({
             productId: item.productId._id,
             quantity: item.quantity,
+            size: item.size, // Add the size field
             price: item.productId.salePrice,
             subtotal: item.productId.salePrice * item.quantity,
             image: item.productId.images,
