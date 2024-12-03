@@ -1041,7 +1041,9 @@
                     return;
                 }
 
-                const response = await fetch(`/add-to-cart?id=${productId}`, {
+                // Get the base URL dynamically
+                const baseUrl = window.location.origin;
+                const response = await fetch(`${baseUrl}/add-to-cart?id=${productId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1050,11 +1052,11 @@
                     credentials: 'include'
                 });
 
-                console.log('response', response)
+                console.log('Response URL:', response.url);
+                console.log('Response status:', response.status);
 
                 const data = await response.json();
-
-                console.log('data', data)
+                console.log('Response data:', data);
 
                 if (!response.ok) {
                     if (data.message === 'please login first' || response.status === 401) {
